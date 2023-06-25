@@ -1,0 +1,82 @@
+FROM node:16 AS base
+
+LABEL version="0.0.1"
+LABEL name="rocco-api"
+LABEL description="rocco core api"
+LABEL maintainer="Chase Ponti <cj@ponti.io>"
+
+ENV PNPM_HOME="/root/.local/share/pnpm"
+ENV PATH="${PATH}:${PNPM_HOME}"
+RUN npm install --global pnpm@7.29.1
+RUN apt-get update
+
+# Required for Prisma
+RUN apt-get install -y openssl
+
+# Add the Turbo CLI
+RUN pnpm add -g turbo
+
+# ------------------------------------------------------------------------------
+
+FROM base AS pruner
+
+WORKDIR /app
+
+COPY . .
+
+RUN turbo prune --scope=rocco-api --docker
+
+# ------------------------------------------------------------------------------
+
+FROM base AS builder
+RUN apt-get update
+
+WORKDIR /app
+
+# Copy the lockfile, package files, and of the isolated subworkspace
+COPY --from=pruner /app/out/json/ /app/
+COPY --from=pruner /app/out/pnpm-lock.yaml /app/pnpm-lock.yaml
+COPY --from=pruner /app/out/full/ /app/
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile --prefer-frozen-lockfile --ignore-scripts
+
+# Set build-time environment variables
+ARG APP_URL
+ARG DATABASE_URL
+ARG NODE_ENV=production
+ARG COOKIE_SECRET
+ARG COOKIE_SALT
+ARG SENDGRID_API_KEY
+
+# Set runtime environment variables
+ENV APP_URL=${APP_URL}
+ENV DATABASE_URL=${DATABASE_URL}
+ENV NODE_ENV=${NODE_ENV}
+ENV COOKIE_SECRET=${COOKIE_SECRET}
+ENV COOKIE_SALT=${COOKIE_SALT}
+ENV SENDGRID_API_KEY=${SENDGRID_API_KEY}
+
+# Build the app
+RUN turbo run build --filter=rocco-api
+
+# Generate the Prisma client
+RUN turbo run prisma:generate --scope=rocco-api
+
+# ------------------------------------------------------------------------------
+
+FROM base as runner
+
+WORKDIR /app
+
+# Create a non-root user
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 rocco
+USER rocco
+
+COPY --from=builder --chown=rocco:nodejs /app/ .
+
+# Expose the port that the app listens on
+EXPOSE 4444
+
+CMD ["node", "apps/api/build/src/index.js"]

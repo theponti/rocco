@@ -1,0 +1,57 @@
+{
+  "name": "rocco-api",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "build": "pnpm clean && prisma generate && tsc",
+    "clean": "rm -rf build",
+    "dev": "pnpm build && nodemon --config nodemon.json",
+    "lint": "eslint src/**/*.ts",
+    "prisma:deploy": "prisma migrate deploy",
+    "prisma:dev": "prisma migrate dev",
+    "prisma:generate": "prisma generate",
+    "prisma:push": "prisma db push",
+    "prisma:reset": "prisma migrate reset",
+    "start": "node build/src/index",
+    "test": "NODE_ENV=test jest"
+  },
+  "dependencies": {
+    "@fastify/circuit-breaker": "2.0.0",
+    "@fastify/cors": "7.0.0",
+    "@fastify/helmet": "8.0.0",
+    "@fastify/rate-limit": "6.0.0",
+    "@fastify/secure-session": "4.0.0",
+    "@prisma/client": "^4.11.0",
+    "@sendgrid/mail": "^7.6.1",
+    "@sentry/node": "6.2.5",
+    "@sentry/tracing": "6.2.5",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/jsonwebtoken": "^8.5.8",
+    "bcryptjs": "^2.4.3",
+    "date-fns": "^2.28.0",
+    "dotenv": "8.2.0",
+    "fastify": "3.29.4",
+    "fastify-csrf": "^3.1.0",
+    "fastify-plugin": "^3.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "nodemon": "^2.0.15",
+    "pino-pretty": "^7.5.3"
+  },
+  "devDependencies": {
+    "@tsconfig/node14": "^1.0.1",
+    "@types/jest": "29.5.2",
+    "@types/node": "^14.11.2",
+    "config": "workspace:*",
+    "jest": "29.5.0",
+    "prisma": "^4.11.0",
+    "ts-jest": "29.1.0",
+    "ts-node": "10.4.0",
+    "ts-node-dev": "1.1.8",
+    "tsconfig": "workspace:*",
+    "typescript": "4.5.x"
+  },
+  "engines": {
+    "node": "^16.0.0"
+  }
+}

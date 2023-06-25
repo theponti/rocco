@@ -1,0 +1,5 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Before allowing the commit, ensure the tests pass and the app builds.
+pnpm test && pnpm lint-staged

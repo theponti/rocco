@@ -1,32 +1,39 @@
-# Turborepo react-native starter
+# rocco
 
-This is an official starter Turborepo.
+This monorepo holds the services for Rocco.
 
-## Using this example
+### Apps
+- `api`: Fastify API server
+- `web`: React web application
+- `ios`: React Native iOS application (not included in turbo)
 
-Run the following command:
+## Packages
 
-```sh
-npx create-turbo@latest -e with-react-native-web
-```
-
-## What's inside?
-
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `native`: a [react-native](https://reactnative.dev/) app built with [expo](https://docs.expo.dev/)
-- `web`: a [Next.js](https://nextjs.org/) app built with [react-native-web](https://necolas.github.io/react-native-web/)
-- `ui`: a stub [react-native](https://reactnative.dev/) component library shared by both `web` and `native` applications
-- `tsconfig`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+- `config`: ESLint configurations
+- `ui`: a base React component library
+- `tsconfig`: TypeScript configurations
 
 ### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [Expo](https://docs.expo.dev/) for native development
 - [TypeScript](https://www.typescriptlang.org/) for static type checking
+- [ESLint](https://eslint.org/) for code linting
 - [Prettier](https://prettier.io) for code formatting
+
+## Setup
+
+1. Install dependencies: `pnpm install`
+2. Build all apps and packages: `pnpm build`
+3. Start postgres and redis: `docker-compose up -d`
+4. Migrate the database: `pnpm turbo:migrate`
+5. Start dev services: `pnpm dev`
+
+
+## Resources
+
+Learn more about the power of Turborepo:
+- **Turbo**
+  - [Pipelines](https://turborepo.org/docs/features/pipelines)
+  - [Caching](https://turborepo.org/docs/features/caching)
+  - [Remote Caching (Beta)](https://turborepo.org/docs/features/remote-caching)
+  - [Scoped Tasks](https://turborepo.org/docs/features/scopes)
+  - [Configuration Options](https://turborepo.org/docs/reference/configuration)
+  - [CLI Usage](https://turborepo.org/docs/reference/command-line-reference)
