@@ -20,6 +20,10 @@ const Wrap = styled(NavMenuItem)`
   border-radius: 50px;
   padding: 4px;
   margin: -4px -4px 0 0;
+
+  &:hover {
+    box-shadow: 0px 2px 5px 0px slateblue;
+  }
 `;
 
 const AuthNavMenu = ({ user }: { user: User }) => {

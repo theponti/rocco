@@ -15,24 +15,20 @@ function Header({ user }: { user: User }) {
   const btnClassName = "btn border-none min-h-0 h-10 text-white ml-4";
   return (
     <header className="flex items-center justify-between py-2 px-4">
-      <div>
+      <NavMenuItem>
+        <Link to={LANDING_PATH} className={styles.appName}>
+          {APP_NAME}
+        </Link>
+      </NavMenuItem>
+      {isAuthenticated ? (
+        <AuthNavMenu user={user} />
+      ) : (
         <NavMenuItem>
-          <Link to={LANDING_PATH} className={styles.appName}>
-            {APP_NAME}
+          <Link to={LOGIN_PATH} className={btnClassName}>
+            Log In
           </Link>
         </NavMenuItem>
-      </div>
-      <div>
-        {isAuthenticated ? (
-          <AuthNavMenu user={user} />
-        ) : (
-          <NavMenuItem>
-            <Link to={LOGIN_PATH} className={btnClassName}>
-              Log In
-            </Link>
-          </NavMenuItem>
-        )}
-      </div>
+      )}
     </header>
   );
 }
