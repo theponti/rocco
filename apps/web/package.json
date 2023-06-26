@@ -1,6 +1,7 @@
 {
   "name": "rocco-web",
   "version": "0.0.0",
+  "packageManager": "pnpm@7.29.1",
   "private": true,
   "scripts": {
     "dev": "vite",
