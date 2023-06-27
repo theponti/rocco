@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "start": "pnpx http-server dist --gzip -a 0.0.0.0 -p $PORT -c 1209600",
+    "start": "pnpx http-server build --gzip -a 0.0.0.0 -p $PORT -c 1209600",
     "test": "vitest --run",
     "test:update": "vitest -u --run"
   },
