@@ -4,7 +4,7 @@ import { Pressable, Text, TextInput, StyleSheet, View } from "react-native";
 import { useAuth } from "../../../context/auth";
 import { useRouter } from "expo-router";
 
-export default function Signin() {
+export default function Authenticate() {
   const { authState, onAuthenticate } = useAuth();
   const router = useRouter();
   const [emailToken, onChangeEmailToken] = useState<string>("");
