@@ -107,11 +107,27 @@ const authPlugin: FastifyPluginAsync = async (server: FastifyInstance) => {
         hours: AUTHENTICATION_TOKEN_EXPIRATION_HOURS,
       });
 
+      let user = await prisma.user.findUnique({ where: { email } });
+
+      if (!user) {
+        user = await prisma.user.create({
+          data: {
+            email,
+          },
+        });
+      }
+
+      const apiToken = server.jwt.sign({
+        userId: user.id,
+        isAdmin: user.isAdmin,
+        roles: [],
+      });
+
       const [createdToken] = await prisma.$transaction([
-        // Persist token in DB so it's stateful
         prisma.token.create({
           data: {
             type: TokenType.API,
+            apiToken,
             expiration: tokenExpiration,
             user: {
               connect: {
@@ -142,7 +158,12 @@ const authPlugin: FastifyPluginAsync = async (server: FastifyInstance) => {
       // than the domain of the API.
       request.session.options({ sameSite: "none", secure: true });
       request.session.set("data", { isAdmin, roles: [], userId });
-      return reply.code(200).send();
+      return reply
+        .code(200)
+        .send()
+        .headers({
+          Authorization: `Bearer ${apiToken}`,
+        });
     },
   );
 
@@ -252,6 +273,13 @@ export const verifySession: preValidationHookHandler = async (
   const data = request.session.get("data");
 
   if (!data) {
+    try {
+      const token = await request.jwtVerify<{ userId: string }>();
+      request.session.set("data", token);
+    } catch (e: any) {
+      reply.log.error("Could not verify session", e);
+      return reply.code(401).send();
+    }
     reply.log.error("Could not verify session token");
     return reply.code(401).send();
   }

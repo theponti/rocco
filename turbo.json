@@ -40,6 +40,7 @@
     "COOKIE_SALT",
     "COOKIE_SECRET",
     "ENABLE_REQUEST_LOGGING",
+    "JWT_SECRET",
     "NODE_ENV",
     "PORT",
     "SEGMENT_KEY",
