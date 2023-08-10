@@ -1,4 +1,3 @@
-import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
@@ -7,7 +6,7 @@ import { useNavigation, useRouter, useSegments } from "expo-router";
 type AuthState = {
   token: string | null;
   email?: string | null;
-  authenticating: boolean | null;
+  authenticating: boolean;
 };
 
 interface AuthProps {
@@ -25,6 +24,7 @@ function useProtectedRoute(user: any) {
   const nav = useNavigation();
 
   React.useEffect(() => {
+    // If the user is undefined, authentication is in process.
     if (user === undefined) {
       return;
     }
@@ -54,11 +54,14 @@ function useProtectedRoute(user: any) {
   }, [user, rootSegment]);
 }
 
+const baseAuthState: AuthState = {
+  authenticating: true,
+  email: null,
+  token: null,
+};
+
 const AuthContext = createContext<AuthProps>({
-  authState: {
-    token: null,
-    authenticating: null,
-  },
+  authState: baseAuthState,
   onLogin: async () => {},
   onAuthenticate: async () => {},
   onLogout: async () => {},
@@ -67,13 +70,8 @@ const AuthContext = createContext<AuthProps>({
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: any) => {
-  const { getItem, setItem, removeItem } = useAsyncStorage("USER");
-  const [user, setAuth] = React.useState(undefined);
-  const [authState, setAuthState] = useState<AuthState>({
-    token: null,
-    email: null,
-    authenticating: true,
-  });
+  const [user, setUser] = React.useState<any>(undefined);
+  const [authState, setAuthState] = useState<AuthState>(baseAuthState);
 
   const onAuthenticate = async (emailToken: string) => {
     try {
@@ -83,7 +81,10 @@ export const AuthProvider = ({ children }: any) => {
         emailToken,
       });
       const token = response.headers["Authorization"].split(" ")[1];
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       await SecureStore.setItemAsync("token", token);
+      console.log({ user: response.data.user, token });
+      setUser(response.data.user);
       setAuthState({ token: token, authenticating: false });
     } catch (e: any) {
       setAuthState({ token: null, authenticating: false });
@@ -94,10 +95,13 @@ export const AuthProvider = ({ children }: any) => {
   const onLogin = async (email: string) => {
     try {
       setAuthState({ token: null, authenticating: true });
-      const response = await axios.post(`${API_URL}/login`, {
+      // This will send an email to the user with a token.
+      await axios.post(`${API_URL}/login`, { email });
+      setAuthState({
+        token: null,
+        authenticating: false,
         email,
       });
-      setAuthState({ token: null, authenticating: false, email });
     } catch (e: any) {
       setAuthState({ token: null, authenticating: false });
       throw new Error(e);
@@ -110,19 +114,30 @@ export const AuthProvider = ({ children }: any) => {
       await SecureStore.deleteItemAsync("token");
       setAuthState({ token: null, authenticating: false });
     } catch (e: any) {
-      setAuthState({ token: null, authenticating: false });
       throw new Error(e);
     }
   };
 
   React.useEffect(() => {
-    SecureStore.getItemAsync("token").then((token) => {
-      if (token) {
-        console.log("token", token);
-        setAuthState({ token, authenticating: false });
+    async function getToken() {
+      // User will only be undefined on the first render.
+      if (user === undefined) {
+        const token = await SecureStore.getItemAsync("token");
+
+        if (token) {
+          setAuthState({ token, authenticating: false });
+        } else {
+          setUser(null);
+          setAuthState({
+            token: null,
+            authenticating: false,
+          });
+        }
       }
-    });
-  }, []);
+    }
+
+    getToken();
+  });
 
   useProtectedRoute(user);
 
