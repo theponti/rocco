@@ -13,7 +13,7 @@ export default function Authenticate() {
   const submitEmail = useCallback(async () => {
     try {
       await onAuthenticate(emailToken);
-      router.replace("/authenticate");
+      router.replace("/(app)");
     } catch (e) {
       setAuthError("There was an error signing in this email.");
     }
