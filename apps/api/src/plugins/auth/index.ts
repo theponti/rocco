@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import { TokenType } from "@prisma/client";
 import { add } from "date-fns";
 import {
@@ -117,11 +118,13 @@ const authPlugin: FastifyPluginAsync = async (server: FastifyInstance) => {
         });
       }
 
-      const jwtToken = server.jwt.sign({
-        userId: user.id,
+      const roles = ["user", !!user.isAdmin && "admin"].filter(Boolean);
+      const tokenBase = {
         isAdmin: user.isAdmin,
-        roles: ["user", !!user.isAdmin && "admin"].filter(Boolean),
-      });
+        roles,
+        userId: user.id,
+      };
+      const jwtToken = server.jwt.sign(tokenBase);
 
       // Create a unique refresh token
       const refreshToken = crypto.randomUUID();
@@ -154,19 +157,24 @@ const authPlugin: FastifyPluginAsync = async (server: FastifyInstance) => {
         }),
       ]);
 
-      const { id: userId, isAdmin } = createdToken.user;
+      const { id: userId, isAdmin, name } = createdToken.user;
+      const responseUser = {
+        ...tokenBase,
+        name,
+      };
 
       track(userId, EVENTS.USER_EVENTS.LOGIN_SUCCESS, { isAdmin });
-      // The API and UI are not hosted at the same domain
-      // so we must allow the cookie to be used on domains other
-      // than the domain of the API.
+
+      // The API and UI are not hosted at the same domain.
+      // Setting 'sameSite' to none and 'secure' to true enables the application cookie
+      // to be used on domains other than the API's domain.
       request.session.options({ sameSite: "none", secure: true });
-      request.session.set("data", { isAdmin, roles: [], userId });
+      request.session.set("data", responseUser);
       return reply
         .code(200)
-        .send()
+        .send({ user: responseUser })
         .headers({
-          Authorization: `Bearer ${apiToken}`,
+          Authorization: `Bearer ${jwtToken}`,
         });
     },
   );
