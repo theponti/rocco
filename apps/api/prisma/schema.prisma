@@ -25,7 +25,7 @@ model Token {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   type         TokenType
-  apiToken     String?   @unique
+  accessToken  String?   @unique
   refreshToken String?   @unique
   emailToken   String?   @unique // Only used for short lived email tokens
   valid        Boolean   @default(true)
