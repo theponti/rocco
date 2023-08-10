@@ -13,6 +13,20 @@ export default function AppLayout() {
   const router = useRouter();
   const { authState } = useAuth();
 
+  if (authState.authenticating) {
+    return (
+      <Text
+        style={{
+          fontWeight: "normal",
+          paddingHorizontal: 8,
+          fontSize: 16,
+        }}
+      >
+        Loading...
+      </Text>
+    );
+  }
+
   return (
     <>
       <StatusBar style="auto" />
@@ -25,23 +39,21 @@ export default function AppLayout() {
           },
         })}
       >
-        {authState.token && (
-          <Stack.Screen
-            name="index"
-            options={{
-              title: "Home",
-              headerLargeTitle: true,
-              headerSearchBarOptions: {
-                onChangeText: (event) => {
-                  // Update the query params to match the search query.
-                  router.setParams({
-                    q: event.nativeEvent.text,
-                  });
-                },
+        <Stack.Screen
+          name="index"
+          options={{
+            title: "Home",
+            headerLargeTitle: true,
+            headerSearchBarOptions: {
+              onChangeText: (event) => {
+                // Update the query params to match the search query.
+                router.setParams({
+                  q: event.nativeEvent.text,
+                });
               },
-            }}
-          />
-        )}
+            },
+          }}
+        />
       </Stack>
     </>
   );
