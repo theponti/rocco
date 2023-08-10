@@ -51,4 +51,5 @@ jobs:
           COOKIE_SALT: 9yDzDu8E6JzFbbMK
           COOKIE_SECRET: f1qnL2ixpbu99pX0LWGoUBBFJZmNhlBMzWGsNF1e3bg=
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/api
+          JWT_SECRET: 9yDzDu8E6JzFbbMK
           SENDGRID_API_KEY: SG.1234567890
