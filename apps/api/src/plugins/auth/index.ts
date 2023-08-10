@@ -117,17 +117,21 @@ const authPlugin: FastifyPluginAsync = async (server: FastifyInstance) => {
         });
       }
 
-      const apiToken = server.jwt.sign({
+      const jwtToken = server.jwt.sign({
         userId: user.id,
         isAdmin: user.isAdmin,
-        roles: [],
+        roles: ["user", !!user.isAdmin && "admin"].filter(Boolean),
       });
+
+      // Create a unique refresh token
+      const refreshToken = crypto.randomUUID();
 
       const [createdToken] = await prisma.$transaction([
         prisma.token.create({
           data: {
             type: TokenType.API,
-            apiToken,
+            accessToken: jwtToken,
+            refreshToken,
             expiration: tokenExpiration,
             user: {
               connect: {
