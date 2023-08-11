@@ -18,6 +18,11 @@
       "outputs": [],
       "inputs": ["prisma/**", "src/**/*.tsx", "src/**/*.ts", "test/**/*.ts"]
     },
+    "test:e2e:ci": {
+      "dependsOn": ["^build"],
+      "outputs": [],
+      "inputs": ["prisma/**", "src/**/*.tsx", "src/**/*.ts", "test/**/*.ts"]
+    },
     "prisma:deploy": {
       "cache": false,
       "inputs": ["prisma/**"]

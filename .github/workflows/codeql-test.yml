@@ -68,7 +68,7 @@ jobs:
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
         with:
-          command: npm run test:e2e:ci
+          command: npx turbo run test:e2e:ci
           install: false
 
       - name: Upload coverage
