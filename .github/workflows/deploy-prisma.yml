@@ -7,7 +7,6 @@ on:
       - prisma/migrations/**
     branches:
       - main
-  pull_request: {}
 jobs:
   deploy-migrations:
     runs-on: ubuntu-latest

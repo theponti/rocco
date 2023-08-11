@@ -11,6 +11,7 @@ coverage
 # build
 .vercel
 .next
+.eslintcache
 build
 tsconfig.tsbuildinfo
 
