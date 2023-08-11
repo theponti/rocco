@@ -24,6 +24,8 @@
     "turbo:migrate": "turbo run prisma:generate && turbo run prisma:deploy"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.6.6",
+    "@commitlint/config-conventional": "^17.6.6",
     "eslint-config-ponti": "0.0.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.3",
