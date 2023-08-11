@@ -12,7 +12,7 @@
     "lint:strict": "eslint --max-warnings=0 src",
     "lint": "eslint --cache --ignore-path ../../.gitignore --ext .js,.jsx,.ts,.tsx src",
     "postinstall": "cypress install",
-    "preview:test": "start-server-and-test preview http://localhost:4173",
+    "preview:test": "start-server-and-test preview http://localhost:5001",
     "preview": "vite preview",
     "start": "npx http-server build --gzip -a 0.0.0.0 -p $PORT -c 1209600",
     "test:ci": "vitest run",
