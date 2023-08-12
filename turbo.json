@@ -23,6 +23,9 @@
       "outputs": [],
       "inputs": ["prisma/**", "src/**/*.tsx", "src/**/*.ts", "test/**/*.ts"]
     },
+    "typecheck": {
+      "outputs": []
+    },
     "prisma:deploy": {
       "cache": false,
       "inputs": ["prisma/**"]

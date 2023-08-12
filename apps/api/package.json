@@ -15,7 +15,7 @@
     "prisma:reset": "prisma migrate reset",
     "start": "node build/src/index",
     "test": "NODE_ENV=test jest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit --incremental false"
   },
   "dependencies": {
     "@fastify/circuit-breaker": "3.2.0",
