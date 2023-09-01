@@ -1,42 +1,21 @@
-import type { NextPage } from "next";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import LoadingScene from "ui/Loading";
+
 import DashboardNav from "src/components/DashboardNav";
+import { useGetIdeas } from "src/services/api/ideas";
+import { useAppSelector } from "src/services/hooks";
+import { getUser } from "src/services/store";
 
-import IdeaForm from "src/components/IdeaForm";
-import IdeaListItem from "src/components/IdeaListItem";
-import LoadingScene from "src/components/Loading";
-import { trpc } from "src/utils/trpc";
+import IdeaForm from "./IdeaForm";
+import IdeaListItem from "./IdeaListItem";
 
-const Dashboard: NextPage = () => {
-  const router = useRouter();
-  const { status } = useSession();
-  const {
-    data,
-    refetch,
-    status: ideasStatus,
-  } = trpc.idea.getIdeas.useQuery(undefined, {
-    enabled: false,
-  });
+const Dashboard = () => {
+  const navigate = useNavigate();
+  const user = useAppSelector(getUser);
+  const { data, refetch, status: ideasStatus } = useGetIdeas();
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/");
-    }
-
-    if (status === "authenticated") {
-      refetch();
-    }
-  }, [refetch, router, status]);
-
-  switch (status) {
-    case "loading":
-      return <LoadingScene />;
-    case "unauthenticated":
-      return <div />;
-    default:
-      break;
+  if (!user) {
+    navigate("/");
   }
 
   return (

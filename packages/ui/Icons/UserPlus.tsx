@@ -1,5 +1,3 @@
-import classNames from "classnames";
-
 type IconProps = {
   className?: string;
   stroke: string;
@@ -12,7 +10,7 @@ export default function UserPlus({ className, stroke }: IconProps) {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke={stroke}
-      className={classNames("w-6 h-6", className)}
+      className={`w-6 h-6 ${className}`}
     >
       <path
         strokeLinecap="round"

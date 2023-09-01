@@ -1,5 +1,3 @@
-import classNames from "classnames";
-
 type IconProps = {
   className?: string;
 };
@@ -11,7 +9,7 @@ function Trash({ className }: IconProps) {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className={classNames("w-6 h-6 text-red-900", className)}
+      className={`w-6 h-6 text-red-900 ${className}`}
     >
       <path
         strokeLinecap="round"

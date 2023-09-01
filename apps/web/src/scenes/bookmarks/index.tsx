@@ -1,35 +1,23 @@
-import type { NextPage } from "next";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import LoadingScene from "ui/Loading";
+
 import DashboardNav from "src/components/DashboardNav";
-import LoadingScene from "src/components/Loading";
+import { useGetBookmarks } from "src/services/api/bookmarks";
+import { useAppSelector } from "src/services/hooks";
+import { getUser } from "src/services/store";
 
-import BookmarkForm from "src/components/BookmarkForm";
-import BookmarkListItem from "src/components/BookmarkListItem";
-import { useGetBookmarks } from "src/utils/api";
+import BookmarkForm from "./components/BookmarkForm";
+import BookmarkListItem from "./components/BookmarkListItem";
 
-const Recommendations: NextPage = () => {
-  const router = useRouter();
-  const { status } = useSession();
+const Recommendations = () => {
+  const navigate = useNavigate();
+  const user = useAppSelector(getUser);
   const { data, refetch, status: bookmarksStatus } = useGetBookmarks();
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/");
-    }
-    if (status === "authenticated") {
-      refetch();
-    }
-  }, [refetch, router, status]);
-
-  switch (status) {
-    case "loading":
-      return <LoadingScene />;
-    case "unauthenticated":
-      return <div />;
-    default:
-      break;
+  if (!user) {
+    navigate("/");
+  } else {
+    refetch();
   }
 
   return (

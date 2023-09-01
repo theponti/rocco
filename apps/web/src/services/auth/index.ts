@@ -11,6 +11,7 @@ import * as authApi from "./auth.api";
 
 export type User = {
   id: string;
+  avatar: string;
   email: string;
   name: string;
   isAdmin: string;

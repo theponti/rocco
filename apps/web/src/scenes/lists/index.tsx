@@ -1,40 +1,20 @@
-import type { NextPage } from "next";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import LoadingScene from "ui/Loading";
+
 import DashboardNav from "src/components/DashboardNav";
-import ListForm from "src/components/ListForm";
-import LoadingScene from "src/components/Loading";
+import { useGetLists } from "src/services/api";
+import { useAppSelector } from "src/services/hooks";
+import { getUser } from "src/services/store";
 
-import { trpc } from "src/utils/trpc";
+import ListForm from "./components/ListForm";
 
-const Lists: NextPage = () => {
-  const router = useRouter();
-  const { data: session, status } = useSession();
-  const {
-    data,
-    refetch,
-    status: listsStatus,
-  } = trpc.lists.get.useQuery(undefined, { enabled: false });
+const Lists = () => {
+  const navigate = useNavigate();
+  const user = useAppSelector(getUser);
+  const { data, refetch, status: listsStatus } = useGetLists();
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/");
-    }
-
-    if (status === "authenticated") {
-      refetch();
-    }
-  }, [refetch, router, status]);
-
-  switch (status) {
-    case "loading":
-      return <LoadingScene />;
-    case "unauthenticated":
-      return <div />;
-    default:
-      break;
+  if (!user) {
+    navigate("/");
   }
 
   return (
@@ -47,13 +27,11 @@ const Lists: NextPage = () => {
         {data?.length === 0 && "Your lists will appear here."}
         {data && data.length > 0 && (
           <ul className="space-y-2">
-            {data.map(({ user, ...list }) => (
+            {data.map((list) => (
               <li key={list.listId} className="card shadow-md p-4 text-lg">
-                <Link href={`/list/${list.listId}`}>{list.list.name}</Link>
-                {/*
-                  Only display list owner if the list does not belong to current user
-                */}
-                {user.email !== session.user?.email && (
+                <Link to={`/list/${list.listId}`}>{list.list.name}</Link>
+                {/* Only display list owner if the list does not belong to current user */}
+                {list.user.email !== user?.email && (
                   <p className="text-xs text-gray-400">{user.email}</p>
                 )}
               </li>
