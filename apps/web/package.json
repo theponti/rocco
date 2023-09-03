@@ -16,7 +16,7 @@
     "start": "npx http-server build --gzip -a 0.0.0.0 -p $PORT -c 1209600",
     "test:ci": "vitest run",
     "test:coverage": "pnpx vite preview --outDir coverage/lcov-report",
-    "test:e2e:ci": "npm run preview:test 'npm run cypress run --record'",
+    "test:e2e:ci": "npm run preview:test 'npx cypress run --record'",
     "test:e2e:headless": "npm run preview:test 'cypress run'",
     "test:e2e": "npm run preview:test 'cypress open'",
     "test:update": "vitest run -u",
