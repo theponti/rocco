@@ -1,9 +1,7 @@
-import { Idea } from "@prisma/client";
 import { useMutation, useQuery } from "react-query";
 
-type IdeasResponse = Idea[];
 export const useGetIdeas = () => {
-  return useQuery<IdeasResponse>("ideas", async () => {
+  return useQuery("ideas", async () => {
     const res = await fetch("/api/ideas");
     return res.json();
   });

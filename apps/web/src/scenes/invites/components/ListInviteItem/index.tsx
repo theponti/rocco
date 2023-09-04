@@ -1,7 +1,8 @@
-import { List, ListInvite, User } from "@prisma/client";
 import React, { useCallback } from "react";
 
 import { useAcceptInviteMutation } from "src/services/api";
+import { User } from "src/services/auth";
+import { List, ListInvite } from "src/services/types";
 
 type ListInviteItemProps = {
   invite: ListInvite & { list: List; user: User };

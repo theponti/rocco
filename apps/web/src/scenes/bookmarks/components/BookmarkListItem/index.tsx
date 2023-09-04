@@ -1,9 +1,9 @@
-import { Recommendation } from "@prisma/client";
 import React, { useCallback, MouseEvent } from "react";
 import Button from "ui/Button";
 import Trash from "ui/Icons/Trash";
 
 import { useDeleteBookmark } from "src/services/api/bookmarks";
+import { Recommendation } from "src/services/types";
 
 import styles from "./BookmarkListItem.module.css";
 

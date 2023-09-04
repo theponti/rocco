@@ -1,6 +1,6 @@
-import { Idea } from "@prisma/client";
 import React, { useCallback } from "react";
 import { useDeleteIdea } from "src/services/api/ideas";
+import { Idea } from "src/services/types";
 
 import Button from "ui/Button";
 import Trash from "ui/Icons/Trash";

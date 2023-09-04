@@ -1,6 +1,6 @@
-import { Recommendation } from "@prisma/client";
 import { useMutation, useQuery } from "react-query";
 
+interface Recommendation {}
 export const useGetBookmarks = () => {
   return useQuery<Recommendation[]>("bookmarks", async () => {
     const res = await fetch("/api/bookmarks");

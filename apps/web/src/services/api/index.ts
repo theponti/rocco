@@ -1,6 +1,8 @@
-import { ListInvite, List, User, UserLists } from "@prisma/client";
 import axios from "axios";
 import { useMutation, useQuery } from "react-query";
+
+import { User } from "../auth";
+import { List, ListInvite, UserLists } from "../types";
 
 type InboundInvitesResponse = (ListInvite & { list: List; user: User })[];
 export const useGetInboundInvites = () => {

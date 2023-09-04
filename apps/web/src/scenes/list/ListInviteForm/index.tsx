@@ -1,10 +1,10 @@
-import { ListInvite } from "@prisma/client";
 import { SyntheticEvent, useCallback, useState } from "react";
 
 import AlertError from "ui/AlertError";
 import Button from "ui/Button";
 
 import { useCreateListInvite } from "src/services/api";
+import { ListInvite } from "src/services/types";
 
 type ListInviteFormProps = {
   listId: string;
