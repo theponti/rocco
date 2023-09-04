@@ -57,13 +57,14 @@ jobs:
           COOKIE_SECRET: f1qnL2ixpbu99pX0LWGoUBBFJZmNhlBMzWGsNF1e3bg=
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/api
           SENDGRID_API_KEY: SG.1234567890
-      - name: Cypress run
+      
+      - name: 🧪 End-to-end tests
         # Uses the official Cypress GitHub action https://github.com/cypress-io/github-action
         uses: cypress-io/github-action@v5
         with:
           # Starts web server for E2E tests - replace with your own server invocation
           # https://docs.cypress.io/guides/continuous-integration/introduction#Boot-your-server
-          start: cd apps/web && npm run preview:test
+          start: npm run dev
           wait-on: 'http://localhost:5001' # Waits for above
           # Records to Cypress Cloud 
           # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
@@ -81,7 +82,8 @@ jobs:
           NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-      - name: Upload coverage
+      
+      - name: ⬆️ Upload coverage
         uses: codecov/codecov-action@v3
         with:
           fail_ci_if_error: true
