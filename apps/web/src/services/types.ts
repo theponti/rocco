@@ -16,8 +16,11 @@ export interface List extends BaseModel {
 }
 
 export interface ListInvite extends BaseModel {
+  invitedUserEmail: string;
   listId: string;
   accepted: boolean;
+  list: List;
+  user: User;
 }
 
 export interface Recommendation extends BaseModel {
@@ -27,4 +30,8 @@ export interface Recommendation extends BaseModel {
   url: string;
 }
 
-export type UserList = BaseModel & { list: List; user: User };
+export type UserList = BaseModel & {
+  listId: string;
+  list: List;
+  user: User;
+};

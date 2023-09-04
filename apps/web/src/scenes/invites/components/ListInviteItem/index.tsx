@@ -1,11 +1,10 @@
 import React, { useCallback } from "react";
 
 import { useAcceptInviteMutation } from "src/services/api";
-import { User } from "src/services/auth";
-import { List, ListInvite } from "src/services/types";
+import { ListInvite } from "src/services/types";
 
 type ListInviteItemProps = {
-  invite: ListInvite & { list: List; user: User };
+  invite: ListInvite;
   onAcceptInvite: () => void;
 };
 function ListInviteItem({ invite, onAcceptInvite }: ListInviteItemProps) {
