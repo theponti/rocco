@@ -55,7 +55,7 @@ jobs:
           APP_URL: ${{ secrets.APP_URL }}}
           COOKIE_SALT: 9yDzDu8E6JzFbbMK
           COOKIE_SECRET: f1qnL2ixpbu99pX0LWGoUBBFJZmNhlBMzWGsNF1e3bg=
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/api
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/rocco
           SENDGRID_API_KEY: SG.1234567890
       
       - name: 🧪 End-to-end tests
@@ -65,7 +65,7 @@ jobs:
           # Starts web server for E2E tests - replace with your own server invocation
           # https://docs.cypress.io/guides/continuous-integration/introduction#Boot-your-server
           start: npm run dev
-          wait-on: 'http://localhost:5001' # Waits for above
+          wait-on: 'http://127.0.0.1:5001' # Waits for above
           # Records to Cypress Cloud 
           # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
           record: true
