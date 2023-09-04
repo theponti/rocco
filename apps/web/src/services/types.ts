@@ -1,26 +1,27 @@
-export interface Idea {
+interface BaseModel {
   id: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-export interface List {
-  id: string;
+export interface Idea extends BaseModel {
+  description: string;
+}
+
+export interface List extends BaseModel {
   name: string;
 }
 
-export interface ListInvite {
-  id: string;
+export interface ListInvite extends BaseModel {
   listId: string;
   accepted: boolean;
 }
 
-export interface Recommendation {
-  id: string;
+export interface Recommendation extends BaseModel {
   image: string;
   title: string;
   siteName: string;
   url: string;
 }
 
-export interface UserLists {
-  id: string;
-}
+export interface UserLists extends BaseModel {}
