@@ -7,7 +7,8 @@ node_modules
 
 # testing
 coverage
-cypress/videos/**
+apps/web/cypress/screenshots/**
+apps/web/cypress/videos/**
 
 # build
 .vercel

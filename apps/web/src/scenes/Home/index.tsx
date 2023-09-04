@@ -56,13 +56,13 @@ const Home = () => {
           <Emoji kind="map" size="lg" className="animate-spin-slow">
             🌎
           </Emoji>
-          <span className="ml-2">the world if finally yours</span>
+          <span className="ml-2">the world is yours</span>
         </p>
         <p className="flex items-center text-primary font-extrabold text-xl">
           <Emoji kind="map" size="lg" className="animate-spin-slow">
             📍
           </Emoji>
-          <span className="ml-2">Discover the places your friends love</span>
+          <span className="ml-2">Discover your friend&apos;s fave places</span>
         </p>
         <p className="flex items-center text-primary font-extrabold text-xl">
           <Emoji kind="map" size="lg" className="animate-spin-slow">
