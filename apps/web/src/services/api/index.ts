@@ -2,7 +2,7 @@ import axios from "axios";
 import { useMutation, useQuery } from "react-query";
 
 import { User } from "../auth";
-import { List, ListInvite, UserLists } from "../types";
+import { List, ListInvite, UserList } from "../types";
 
 type InboundInvitesResponse = (ListInvite & { list: List; user: User })[];
 export const useGetInboundInvites = () => {
@@ -51,10 +51,8 @@ export const useCreateListInvite = () => {
   });
 };
 
-type UserList = UserLists & { list: List; user: User };
-type ListsResponse = UserList[];
 export const useGetLists = () => {
-  return useQuery<ListsResponse>("lists", async () => {
+  return useQuery<UserList[]>("lists", async () => {
     const res = await fetch("/api/lists");
     return res.json();
   });

@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "react-query";
+import { Recommendation } from "../types";
 
-interface Recommendation {}
 export const useGetBookmarks = () => {
   return useQuery<Recommendation[]>("bookmarks", async () => {
     const res = await fetch("/api/bookmarks");

@@ -1,3 +1,5 @@
+import { User } from "./auth";
+
 interface BaseModel {
   id: string;
   createdAt: Date;
@@ -10,6 +12,7 @@ export interface Idea extends BaseModel {
 
 export interface List extends BaseModel {
   name: string;
+  userId: string;
 }
 
 export interface ListInvite extends BaseModel {
@@ -24,4 +27,4 @@ export interface Recommendation extends BaseModel {
   url: string;
 }
 
-export interface UserLists extends BaseModel {}
+export type UserList = BaseModel & { list: List; user: User };
