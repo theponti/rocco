@@ -10,10 +10,4 @@ export default defineConfig({
     },
   },
   projectId: process.env.CYPRESS_PROJECT_ID,
-  component: {
-    devServer: {
-      framework: "next",
-      bundler: "webpack",
-    },
-  },
 });
