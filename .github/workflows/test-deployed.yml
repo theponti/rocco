@@ -1,4 +1,4 @@
-name: 🧪 Cypress
+name: 🧪 Test - Deployed
 # https://docs.github.com/en/actions/reference/events-that-trigger-workflows
 on: [deployment_status]
 jobs:
@@ -19,7 +19,7 @@ jobs:
         run: echo Testing URL ${{ github.event.deployment_status.target_url }}
 
       - name: Print GitHub env variables 🖨
-        run: pnpx @bahmutov/print-env GITHUB
+        run: npx @bahmutov/print-env GITHUB
 
       - name: Checkout 🛎
         uses: actions/checkout@v1
