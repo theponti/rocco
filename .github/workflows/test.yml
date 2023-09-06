@@ -52,7 +52,7 @@ jobs:
       - name: 🧪 Unit tests
         run: npm run test
         env:
-          APP_URL: ${{ secrets.APP_URL }}}
+          APP_URL: ${{ secrets.APP_URL }}
           COOKIE_SALT: 9yDzDu8E6JzFbbMK
           COOKIE_SECRET: f1qnL2ixpbu99pX0LWGoUBBFJZmNhlBMzWGsNF1e3bg=
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/rocco
