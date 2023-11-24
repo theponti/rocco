@@ -30,8 +30,6 @@ const { VITE_GOOGLE_API_KEY } = import.meta.env;
 
 const LIBRARIES = ["places"];
 
-console.log({ VITE_GOOGLE_API_KEY });
-
 function App() {
   const authRef = useRef<boolean>(false);
   const isLoadingAuth = useAppSelector(getIsLoadingAuth);
@@ -60,7 +58,7 @@ function App() {
   return (
     <div id="app" className={`h-100 flex flex-col ${styles.wrap}`}>
       <Header />
-      <main className="flex sm:mt-4 md:mt-8" data-testid="app-main">
+      <main className="flex flex-1 sm:mt-4 md:mt-8" data-testid="app-main">
         <Routes>
           <Route path={AUTHENTICATE_PATH} element={<Authenticate />} />
           {isAuthenticated ? (
