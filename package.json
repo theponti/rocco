@@ -1,6 +1,6 @@
 {
   "name": "rocco",
-  "version": "0.0.0",
+  "version": "1.1.0",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -20,15 +20,18 @@
     "prepush": "npm run test",
     "prerelease": "npm run test",
     "test": "turbo run test",
+    "test:e2e:ci": "turbo run test:e2e:ci --scope rocco-web",
     "test:update": "turbo run test:update --scope rocco-web",
     "turbo:migrate": "turbo run prisma:generate && turbo run prisma:deploy"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.6.6",
+    "@commitlint/config-conventional": "^17.6.6",
     "eslint-config-ponti": "0.0.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.3",
     "prettier": "^3.0.0",
-    "turbo": "^1.10.11"
+    "turbo": "^1.10.12"
   },
   "engines": {
     "node": "18",

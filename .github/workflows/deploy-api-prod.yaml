@@ -1,8 +1,8 @@
-name: Deploy to Railway
+name: 🚀 API > Deploy > Prod
 
 on:
   workflow_run:
-    workflows: ["🧪 Test"]
+    workflows: ["🔍 Code Quality"]
     branches: [main]
     types:
       - completed
@@ -29,6 +29,6 @@ jobs:
         run: npm install -g @railway/cli
 
       - name: Deploy
-        run: railway up
+        run: railway up --service ${{ secrets.RAILWAY_SERVICE_API }}
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}

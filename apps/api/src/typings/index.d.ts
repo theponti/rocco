@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Token } from "@prisma/client";
+import { PrismaClient, Token } from "@prisma/client";
 import { Session } from "@fastify/secure-session";
 import * as FastifyJwt from "@fastify/jwt";
 

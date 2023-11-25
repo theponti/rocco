@@ -4,7 +4,7 @@ import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { ACCOUNT_PATH, LANDING_PATH } from "src/constants/routes";
+import { ACCOUNT_PATH, LANDING_PATH, LISTS_PATH } from "src/constants/routes";
 import { logout } from "src/services/auth";
 import { useAppDispatch } from "src/services/hooks";
 import Avatar from "ui/Avatar";
@@ -17,9 +17,7 @@ const Wrap = styled(NavMenuItem)`
   display: flex;
   align-items: center;
   gap: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  border-radius: 4px;
-  padding: 4px 4px 4px 10px;
+  padding: 4px;
 
   &:hover {
     background-color: 0px 2px 5px 0px rgba(0, 0, 0, 0.3);
@@ -29,6 +27,9 @@ const Wrap = styled(NavMenuItem)`
 const AuthNavMenu = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const onListsClick = useCallback(() => {
+    navigate(LISTS_PATH);
+  }, [navigate]);
   const onAccountClick = useCallback(() => {
     navigate(ACCOUNT_PATH);
   }, [navigate]);
@@ -39,20 +40,30 @@ const AuthNavMenu = () => {
   }, [dispatch, navigate]);
 
   return (
-    <Wrap>
+    <Wrap className="border-accent-focus border rounded">
       <Avatar alt="user" />
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
-          <button className="IconButton" aria-label="account menu">
+          <button
+            className="IconButton bg-transparent"
+            aria-label="account menu"
+          >
             <HamburgerMenuIcon />
           </button>
         </DropdownMenu.Trigger>
         <DropdownMenu.Portal>
           <DropdownMenu.Content
-            className="DropdownMenuContent"
+            className="DropdownMenuContent bg-gray-800 text-primary"
             align="end"
             sideOffset={5}
           >
+            <DropdownMenu.Item
+              className="DropdownMenuItem text-primary"
+              onClick={onListsClick}
+            >
+              Lists
+            </DropdownMenu.Item>
+            <DropdownMenu.Separator />
             <DropdownMenu.Item
               className="DropdownMenuItem text-primary"
               onClick={onAccountClick}
