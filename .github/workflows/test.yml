@@ -24,10 +24,6 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-      
-    strategy:
-      matrix:
-        node-version: [18]
     
     steps:
       - name: 🛑 Cancel Previous Runs
