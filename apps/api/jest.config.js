@@ -8,12 +8,12 @@ module.exports = async () => {
     testMatch: [path.resolve(__dirname, "./src/**/*.test.ts")],
     setupFiles: [path.resolve(__dirname, "./src/jest.setup.ts")],
     transform: {
-      "^.+\\.(ts|tsx)$": `ts-jest`,
-    },
-    globals: {
-      "ts-jest": {
-        tsconfig: `tsconfig.json`,
-      },
+      "^.+\\.(ts|tsx)$": [
+        `ts-jest`,
+        {
+          tsconfig: `tsconfig.json`,
+        },
+      ],
     },
   };
 };
