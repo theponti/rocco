@@ -165,6 +165,92 @@ const listsPlugin: FastifyPluginAsync = async (server) => {
       return { list };
     },
   );
+
+  // A route to create a new Place and add it to a list
+  server.post(
+    "/lists/:id/place",
+    {
+      schema: {
+        params: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+          },
+          required: ["id"],
+        },
+        body: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+            address: { type: "string" },
+            location: {
+              type: "object",
+              properties: {
+                lat: { type: "number" },
+                lng: { type: "number" },
+              },
+              required: ["lat", "lng"],
+            },
+          },
+          required: ["name", "address", "location"],
+        },
+        response: {
+          200: {
+            type: "object",
+            properties: {
+              list: {
+                type: "object",
+                properties: {
+                  id: { type: "string" },
+                  name: { type: "string" },
+                  createdAt: { type: "string" },
+                  updatedAt: { type: "string" },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    async (request) => {
+      const { prisma } = server;
+      const { id } = request.params as { id: string };
+      const { name, address, location } = request.body as {
+        name: string;
+        address: string;
+        location: { lat: number; lng: number };
+      };
+
+      const place = await prisma.place.create({
+        data: {
+          name,
+          description: "",
+          address,
+          lat: `${location.lat}`,
+          lng: `${location.lng}`,
+          createdBy: {
+            connect: {
+              id: request.session.get("data").userId,
+            },
+          },
+        },
+      });
+
+      await prisma.item.create({
+        data: {
+          type: "PLACE",
+          itemId: place.id,
+          list: {
+            connect: {
+              id,
+            },
+          },
+        },
+      });
+
+      return { place };
+    },
+  );
 };
 
 export default fastifyPlugin(listsPlugin);

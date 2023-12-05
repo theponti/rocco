@@ -55,15 +55,6 @@ function App() {
     );
   }
 
-  if (!isMapLoaded) {
-    console.log("map not loaded");
-    return (
-      <div className="flex items-center justify-center max-w-[300px] mx-auto min-h-screen">
-        <Loading size="xl" />
-      </div>
-    );
-  }
-
   return (
     <div id="app" className={`h-100 flex flex-col ${styles.wrap}`}>
       <Header />
