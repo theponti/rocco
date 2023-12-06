@@ -195,14 +195,17 @@ model ListInvite {
 }
 
 model Place {
-  id          String   @id @default(uuid())
-  name        String   @db.Text()
-  description String?  @db.Text()
-  address     String?  @db.Text()
-  lat         String?  @db.Text()
-  lng         String?  @db.Text()
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String   @id @default(uuid())
+  name         String   @db.Text()
+  description  String?  @db.Text()
+  address      String?  @db.Text()
+  lat          String?  @db.Text()
+  lng          String?  @db.Text()
+  types        String[] @db.Text()
+  // Google Maps Place ID
+  googleMapsId String?  @db.Text()
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   // Relations
   userId    String  @db.Text()

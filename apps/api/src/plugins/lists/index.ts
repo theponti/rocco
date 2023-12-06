@@ -168,41 +168,62 @@ const listsPlugin: FastifyPluginAsync = async (server) => {
 
   // A route to create a new Place and add it to a list
   server.post(
-    "/lists/:id/place",
+    "/list/place",
     {
       schema: {
-        params: {
-          type: "object",
-          properties: {
-            id: { type: "string" },
-          },
-          required: ["id"],
-        },
         body: {
           type: "object",
           properties: {
-            name: { type: "string" },
-            address: { type: "string" },
-            location: {
+            listIds: {
+              type: "array",
+              items: { type: "string" },
+            },
+            place: {
               type: "object",
               properties: {
-                lat: { type: "number" },
-                lng: { type: "number" },
+                name: { type: "string" },
+                address: { type: "string" },
+                location: {
+                  type: "object",
+                  properties: {
+                    lat: { type: "number" },
+                    lng: { type: "number" },
+                  },
+                  required: ["lat", "lng"],
+                },
               },
-              required: ["lat", "lng"],
+              required: ["name", "address", "location"],
             },
           },
-          required: ["name", "address", "location"],
+          required: ["listIds", "place"],
         },
         response: {
           200: {
             type: "object",
             properties: {
-              list: {
+              lists: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: { type: "string" },
+                    name: { type: "string" },
+                    createdAt: { type: "string" },
+                    updatedAt: { type: "string" },
+                  },
+                },
+              },
+              place: {
                 type: "object",
                 properties: {
                   id: { type: "string" },
                   name: { type: "string" },
+                  description: { type: "string" },
+                  address: { type: "string" },
+                  googleMapsId: { type: "string" },
+                  types: { type: "array", items: { type: "string" } },
+                  lat: { type: "string" },
+                  lng: { type: "string" },
                   createdAt: { type: "string" },
                   updatedAt: { type: "string" },
                 },
@@ -214,18 +235,25 @@ const listsPlugin: FastifyPluginAsync = async (server) => {
     },
     async (request) => {
       const { prisma } = server;
-      const { id } = request.params as { id: string };
-      const { name, address, location } = request.body as {
-        name: string;
-        address: string;
-        location: { lat: number; lng: number };
+      const { listIds, place } = request.body as {
+        listIds: string[];
+        place: {
+          name: string;
+          address: string;
+          place_id: string;
+          location: { lat: number; lng: number };
+          types: string[];
+        };
       };
+      const { name, address, location, place_id, types } = place;
 
-      const place = await prisma.place.create({
+      const createdPlace = await prisma.place.create({
         data: {
           name,
           description: "",
           address,
+          googleMapsId: place_id,
+          types,
           lat: `${location.lat}`,
           lng: `${location.lng}`,
           createdBy: {
@@ -236,19 +264,20 @@ const listsPlugin: FastifyPluginAsync = async (server) => {
         },
       });
 
-      await prisma.item.create({
-        data: {
+      await prisma.item.createMany({
+        data: [...listIds].map((id) => ({
           type: "PLACE",
-          itemId: place.id,
-          list: {
-            connect: {
-              id,
-            },
-          },
-        },
+          itemId: createdPlace.id,
+          listId: id,
+        })),
+        skipDuplicates: true,
       });
 
-      return { place };
+      const lists = await prisma.list.findMany({
+        where: { id: { in: listIds } },
+      });
+
+      return { place: createdPlace, lists };
     },
   );
 };

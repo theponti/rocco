@@ -10,7 +10,7 @@ export const useAddLocationToList = (options) => {
       listIds: string[];
       place: google.maps.places.PlaceResult;
     }) => {
-      return api.post(`/api/list/place`, {
+      return api.post(`/list/place`, {
         listIds,
         place: {
           name: place.name,
