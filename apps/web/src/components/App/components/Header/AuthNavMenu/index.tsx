@@ -17,7 +17,6 @@ const Wrap = styled(NavMenuItem)`
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 4px;
 
   &:hover {
     background-color: 0px 2px 5px 0px rgba(0, 0, 0, 0.3);
@@ -40,7 +39,7 @@ const AuthNavMenu = () => {
   }, [dispatch, navigate]);
 
   return (
-    <Wrap className="border-accent-focus border rounded">
+    <Wrap>
       <Avatar alt="user" />
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
@@ -53,7 +52,7 @@ const AuthNavMenu = () => {
         </DropdownMenu.Trigger>
         <DropdownMenu.Portal>
           <DropdownMenu.Content
-            className="DropdownMenuContent bg-gray-800 text-primary"
+            className="DropdownMenuContent"
             align="end"
             sideOffset={5}
           >
