@@ -66,8 +66,11 @@ export const useGetLists = ({
   );
 };
 
+type GetListResponse = UserList & {
+  items: { id: string; name: string; googleMapsId: string }[];
+};
 export const useGetList = (id: string) => {
-  return useQuery<UserList>(["list", id], async () => {
+  return useQuery<GetListResponse>(["list", id], async () => {
     const res = await api.get(`${baseURL}/lists/${id}`);
     return res.data;
   });

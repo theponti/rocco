@@ -210,8 +210,8 @@ model Place {
   // Relations
   userId    String  @db.Text()
   createdBy User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  listId    String?
-  list      List?   @relation(fields: [listId], references: [id])
   itemId    String?
   item      Item?   @relation(fields: [itemId], references: [id])
+  List      List?   @relation(fields: [listId], references: [id])
+  listId    String?
 }
