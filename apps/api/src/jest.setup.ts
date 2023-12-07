@@ -1,3 +1,5 @@
+import * as auth from "./plugins/auth";
+
 jest.mock("@prisma/client", () => ({
   PrismaClient: jest.fn().mockImplementation(() => ({
     $connect: jest.fn(),
@@ -24,3 +26,5 @@ jest.mock("@prisma/client", () => ({
 jest.mock("./analytics", () => ({
   track: jest.fn(),
 }));
+
+jest.spyOn(auth, "verifySession");

@@ -101,7 +101,6 @@ const postListsPlace = (server: FastifyInstance) => {
         },
       });
 
-      console.log("createMany", prisma.item.createMany);
       await prisma.item.createMany({
         data: [...listIds].map((id) => ({
           type: "PLACE",

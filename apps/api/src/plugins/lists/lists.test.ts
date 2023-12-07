@@ -1,17 +1,9 @@
 import { createServer } from "../../server";
 import { FastifyInstance } from "fastify";
-import * as auth from "../auth";
-
-jest.spyOn(auth, "verifySession");
+import { mockAuthSession } from "../../test.utils";
 
 describe("/lists", () => {
   let server: FastifyInstance;
-  function mockAuthSession() {
-    (auth.verifySession as jest.Mock).mockImplementation(async (req) => {
-      req.session.set("data", { userId: "testUserId" });
-      return;
-    });
-  }
 
   beforeAll(async () => {
     server = await createServer({ logger: false });
