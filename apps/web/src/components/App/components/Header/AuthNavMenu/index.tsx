@@ -42,13 +42,8 @@ const AuthNavMenu = () => {
     <Wrap>
       <Avatar alt="user" />
       <DropdownMenu.Root>
-        <DropdownMenu.Trigger asChild>
-          <button
-            className="IconButton bg-transparent"
-            aria-label="account menu"
-          >
-            <HamburgerMenuIcon />
-          </button>
+        <DropdownMenu.Trigger className="IconButton" aria-label="account menu">
+          <HamburgerMenuIcon />
         </DropdownMenu.Trigger>
         <DropdownMenu.Portal>
           <DropdownMenu.Content
