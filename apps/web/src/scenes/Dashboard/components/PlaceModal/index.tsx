@@ -40,14 +40,14 @@ function PlaceModal(
       enabled: isListSelectOpen,
     },
   });
-  // const { mutate: addToList } = useAddLocationToList({
-  //   onSuccess: () => {
-  //     onModalClose();
-  //   },
-  // });
 
   const onAddToList = () => {
     setIsListSelectOpen(true);
+  };
+
+  const onAddToListSuccess = () => {
+    setIsListSelectOpen(false);
+    onModalClose();
   };
 
   return (
@@ -85,7 +85,11 @@ function PlaceModal(
         </div>
       )}
       {isListSelectOpen && !isListsLoading && (
-        <AddPlaceToList lists={lists} place={place} />
+        <AddPlaceToList
+          lists={lists}
+          place={place}
+          onSuccess={onAddToListSuccess}
+        />
       )}
     </Modal>
   );

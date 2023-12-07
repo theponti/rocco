@@ -25,15 +25,17 @@ const Checkbox = styled.label`
 `;
 const AddPlaceToList = ({
   lists,
+  onSuccess,
   place,
 }: {
   lists: List[];
+  onSuccess: () => void;
   place: google.maps.places.PlaceResult;
 }) => {
   const [listIds, setListIds] = useState<string[]>([]);
   const { mutate: addToList } = useAddLocationToList({
     onSuccess: () => {
-      // onModalClose();
+      onSuccess?.();
     },
   });
 

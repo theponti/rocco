@@ -51,7 +51,7 @@ function Account() {
         <h1>Account</h1>
 
         <div className="card shadow-md md:max-w-sm">
-          <div className="card-body place-items-center">
+          <div className="card-body">
             {user.avatar && (
               <img
                 src={user.avatar}
@@ -61,6 +61,9 @@ function Account() {
             )}
             <p className="text-lg">{user?.name}</p>
             <p className="text-sm text-gray-400">{user?.email}</p>
+            <p>{`Member since ${memberSince.getMonth()}/${
+              memberSince.getFullYear() + years
+            }`}</p>
           </div>
         </div>
         <div className="flex flex-col mb-12"></div>
@@ -73,8 +76,6 @@ function Account() {
           Delete account
         </button>
       </div>
-      <p className="font-semibold">{user.email}</p>
-      <p>{`Member since ${memberSince.getFullYear() + years}`}</p>
     </Wrap>
   );
 }
