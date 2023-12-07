@@ -5,8 +5,16 @@ import { List } from "src/services/types";
 
 const ListItem = styled.li`
   padding: 8px;
-  border: 1px solid;
-  border-radius: 4px;
+
+  &:first-of-type {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+  }
+
+  &:last-of-type {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
 `;
 
 const Checkbox = styled.label`
@@ -47,8 +55,11 @@ const AddPlaceToList = ({
   return (
     <ul className="list-none mt-8">
       {lists.map((list) => (
-        <ListItem key={list.id}>
-          <Checkbox htmlFor={list.id}>
+        <ListItem
+          key={list.id}
+          className="border-accent border hover:cursor-pointer"
+        >
+          <Checkbox htmlFor={list.id} className="hover:cursor-pointer">
             <input
               type="checkbox"
               id={list.id}

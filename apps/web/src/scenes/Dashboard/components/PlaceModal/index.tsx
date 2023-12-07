@@ -77,11 +77,13 @@ function PlaceModal(
           </div>
         </div>
       )}
-      <div className="modal-action">
-        <button className="btn" onClick={onAddToList}>
-          Add to list
-        </button>
-      </div>
+      {!isListSelectOpen && (
+        <div className="modal-action">
+          <button className="btn" onClick={onAddToList}>
+            Add to list
+          </button>
+        </div>
+      )}
       {isListSelectOpen && !isListsLoading && (
         <AddPlaceToList lists={lists} place={place} />
       )}

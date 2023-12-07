@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { LANDING_PATH } from "src/constants/routes";
+import { LANDING } from "src/constants/routes";
 import { useAppSelector } from "src/services/hooks";
 import { getUser } from "src/services/store";
 import AlertError from "ui/AlertError";
@@ -36,7 +36,7 @@ function Account() {
 
   useEffect(() => {
     if (!user) {
-      navigate(LANDING_PATH);
+      navigate(LANDING);
     }
   }, [navigate, user]);
 

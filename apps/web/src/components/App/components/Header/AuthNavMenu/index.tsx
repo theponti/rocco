@@ -4,7 +4,7 @@ import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { ACCOUNT_PATH, LANDING_PATH, LISTS_PATH } from "src/constants/routes";
+import { ACCOUNT, LANDING, LISTS } from "src/constants/routes";
 import { logout } from "src/services/auth";
 import { useAppDispatch } from "src/services/hooks";
 import Avatar from "ui/Avatar";
@@ -27,14 +27,14 @@ const AuthNavMenu = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const onListsClick = useCallback(() => {
-    navigate(LISTS_PATH);
+    navigate(LISTS);
   }, [navigate]);
   const onAccountClick = useCallback(() => {
-    navigate(ACCOUNT_PATH);
+    navigate(ACCOUNT);
   }, [navigate]);
   const onLogoutClick = useCallback(() => {
     dispatch(logout()).then(() => {
-      navigate(LANDING_PATH);
+      navigate(LANDING);
     });
   }, [dispatch, navigate]);
 
