@@ -67,7 +67,12 @@ export const useGetLists = ({
 };
 
 type GetListResponse = UserList & {
-  items: { id: string; name: string; googleMapsId: string }[];
+  items: {
+    id: string;
+    name: string;
+    googleMapsId: string;
+    types: string[];
+  }[];
 };
 export const useGetList = (id: string) => {
   return useQuery<GetListResponse>(["list", id], async () => {
