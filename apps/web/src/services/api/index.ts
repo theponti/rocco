@@ -5,9 +5,9 @@ import { List, ListInvite, UserList } from "../types";
 import { api, baseURL } from "./base";
 
 type InboundInvitesResponse = (ListInvite & { list: List; user: User })[];
-export const useGetInboundInvites = () => {
+export const useListInvites = ({ listId }: { listId: string }) => {
   return useQuery<InboundInvitesResponse>("inboundInvites", async () => {
-    const res = await api.get(`${baseURL}/invites/inbound`);
+    const res = await api.get(`${baseURL}/lists/${listId}/invites`);
     return res.data;
   });
 };
@@ -32,7 +32,7 @@ export function useAcceptInviteMutation() {
 type ListInvitesResponse = (ListInvite & { list: List })[];
 export const useGetListInvites = (id: string) => {
   return useQuery<ListInvitesResponse>("listInvites", async () => {
-    const res = await api.get(`${baseURL}/list/${id}/invites`);
+    const res = await api.get(`${baseURL}/lists/${id}/invites`);
     return res.data;
   });
 };

@@ -18,7 +18,7 @@ import { useAppDispatch, useAppSelector } from "src/services/hooks";
 import Header from "./components/Header";
 import styles from "./App.module.scss";
 import List from "src/scenes/list";
-import ListInvites from "src/scenes/invites";
+import ListInvites from "src/scenes/list/invites";
 
 const { VITE_GOOGLE_API_KEY } = import.meta.env;
 

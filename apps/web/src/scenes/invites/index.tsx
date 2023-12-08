@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import LoadingScene from "ui/Loading";
 
 import DashboardWrap from "src/components/DashboardWrap";
-import { useGetInboundInvites } from "src/services/api";
+import { useListInvites } from "src/services/api";
 import { useAppSelector } from "src/services/hooks";
 import { getUser } from "src/services/store";
 
@@ -11,7 +11,7 @@ import ListInviteItem from "./components/ListInviteItem";
 const ListInvites = () => {
   const navigate = useNavigate();
   const user = useAppSelector(getUser);
-  const { data, refetch, status } = useGetInboundInvites();
+  const { data, refetch, status } = useListInvites();
 
   if (!user) {
     navigate("/");

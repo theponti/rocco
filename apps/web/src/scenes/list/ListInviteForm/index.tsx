@@ -48,7 +48,9 @@ export default function ListInviteForm({
       <form onSubmit={onFormSubmit}>
         <div className="form-control w-full">
           <label className="label" htmlFor="email">
-            <span className="label-text">Invite someone new</span>
+            <span className="label-text text-primary-focus font-bold">
+              Invite someone new
+            </span>
           </label>
           <input
             id="email"
