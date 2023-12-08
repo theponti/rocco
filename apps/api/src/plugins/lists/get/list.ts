@@ -23,6 +23,7 @@ const getListRoute = (server: FastifyInstance) => {
               name: { type: "string" },
               createdAt: { type: "string" },
               updatedAt: { type: "string" },
+              userId: { type: "string" },
               items: {
                 type: "array",
                 items: {
@@ -67,7 +68,7 @@ const getListRoute = (server: FastifyInstance) => {
         LEFT JOIN "Place" p ON (i.type = 'PLACE' AND i."itemId" = p.id)
         WHERE i."listId" = ${id}
       `;
-      return { ...list, items };
+      return { ...list, items, userId: list.userId };
     },
   );
 };
