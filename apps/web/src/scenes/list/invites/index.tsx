@@ -9,9 +9,9 @@ import { useGetList, useGetListInvites } from "src/services/api";
 import { useAppSelector } from "src/services/hooks";
 import { getUser } from "src/services/store";
 
-import ListInviteForm from "./ListInviteForm";
+import ListInviteForm from "../ListInviteForm";
 
-const List = () => {
+const ListInvite = () => {
   const params = useParams();
   const navigate = useNavigate();
   const user = useAppSelector(getUser);
@@ -75,4 +75,4 @@ const List = () => {
   );
 };
 
-export default List;
+export default ListInvite;

@@ -5,5 +5,6 @@ export const DASHBOARD = "/";
 export const LANDING = "/";
 export const LIST = "/list/:id";
 export const LISTS = "/lists";
+export const LIST_INVITE = "/lists/:id/invites";
 export const LOGIN = "/login";
 export const WILDCARD = "*";
