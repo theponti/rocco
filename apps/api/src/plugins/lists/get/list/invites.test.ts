@@ -27,7 +27,7 @@ describe("/lists", () => {
       mockAuthSession();
       const response = await server.inject({
         method: "GET",
-        url: "/lists",
+        url: `/lists/:listId/invites`,
       });
       expect(response.statusCode).toBe(200);
       expect(response.json()).toEqual([]);
