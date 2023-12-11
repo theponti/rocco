@@ -21,9 +21,19 @@ const getListInvitesRoute = (server: FastifyInstance) => {
             items: {
               type: "object",
               properties: {
-                id: { type: "string" },
-                email: { type: "string" },
+                accepted: { type: "boolean" },
                 listId: { type: "string" },
+                invitedUserEmail: { type: "string" },
+                invitedUserId: { type: "string" },
+                // The user who created the invite
+                user: {
+                  type: "object",
+                  properties: {
+                    id: { type: "string" },
+                    email: { type: "string" },
+                    name: { type: "string" },
+                  },
+                },
                 createdAt: { type: "string" },
                 updatedAt: { type: "string" },
               },

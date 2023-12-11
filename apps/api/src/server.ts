@@ -56,6 +56,11 @@ export async function createServer(
   server.register(bookmarksPlugin);
   server.register(ideasPlugin);
 
+  server.setErrorHandler((error, request, reply) => {
+    console.error(error);
+    reply.send({ error: "Internal server error" });
+  });
+
   return server;
 }
 
