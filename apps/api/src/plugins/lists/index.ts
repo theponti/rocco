@@ -10,7 +10,6 @@ import putListRoute from "./put";
 import deleteListRoute from "./delete";
 import getListInvitesRoute from "./get/list/invites";
 
-// Example router with queries that can only be hit if the user requesting is signed in
 const listsPlugin: FastifyPluginAsync = async (server) => {
   deleteListRoute(server);
   getListRoute(server);
