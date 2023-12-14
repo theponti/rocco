@@ -5,6 +5,7 @@ import Button from "ui/Button";
 
 import { useCreateListInvite } from "src/services/api";
 import { ListInvite } from "src/services/types";
+import { AxiosError } from "axios";
 
 type ListInviteFormProps = {
   listId: string;
@@ -43,13 +44,14 @@ export default function ListInviteForm({
 
   return (
     <div className="mb-8">
-      {error && <AlertError error={error as string} />}
-
+      <div className="my-4">
+        {error && <AlertError error={(error as AxiosError).message} />}
+      </div>
       <form onSubmit={onFormSubmit}>
         <div className="form-control w-full">
           <label className="label" htmlFor="email">
             <span className="label-text text-primary-focus font-bold">
-              Invite someone new
+              Invite someone
             </span>
           </label>
           <input
@@ -61,7 +63,11 @@ export default function ListInviteForm({
             onChange={onEmailChange}
           />
         </div>
-        {!!email.length && <Button loading={isLoading}>Submit</Button>}
+        {!!email.length && (
+          <Button className="mt-2 float-right w-2/5" loading={isLoading}>
+            Submit
+          </Button>
+        )}
       </form>
     </div>
   );
