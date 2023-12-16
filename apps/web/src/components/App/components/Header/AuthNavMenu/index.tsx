@@ -4,7 +4,7 @@ import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { ACCOUNT, LANDING, LISTS } from "src/constants/routes";
+import { ACCOUNT, INVITES, LANDING, LISTS } from "src/constants/routes";
 import { logout } from "src/services/auth";
 import { useAppDispatch } from "src/services/hooks";
 import Avatar from "ui/Avatar";
@@ -28,6 +28,9 @@ const AuthNavMenu = () => {
   const dispatch = useAppDispatch();
   const onListsClick = useCallback(() => {
     navigate(LISTS);
+  }, [navigate]);
+  const onInvitesClick = useCallback(() => {
+    navigate(INVITES);
   }, [navigate]);
   const onAccountClick = useCallback(() => {
     navigate(ACCOUNT);
@@ -56,6 +59,12 @@ const AuthNavMenu = () => {
               onClick={onListsClick}
             >
               Lists
+            </DropdownMenu.Item>
+            <DropdownMenu.Item
+              className="DropdownMenuItem text-primary"
+              onClick={onInvitesClick}
+            >
+              Invites
             </DropdownMenu.Item>
             <DropdownMenu.Separator />
             <DropdownMenu.Item

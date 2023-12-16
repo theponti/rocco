@@ -19,6 +19,13 @@ const getUserInvitesRoute = (server: FastifyInstance) => {
                 invitedUserEmail: { type: "string" },
                 invitedUserId: { type: "string" },
                 // The user who created the invite
+                list: {
+                  type: "object",
+                  properties: {
+                    id: { type: "string" },
+                    name: { type: "string" },
+                  },
+                },
                 user: {
                   type: "object",
                   properties: {
@@ -38,8 +45,29 @@ const getUserInvitesRoute = (server: FastifyInstance) => {
     async (request, reply) => {
       const { prisma } = server;
       const { userId } = request.session.get("data");
+      const currentUser = await prisma.user.findUnique({
+        where: { id: userId },
+      });
       const invites = await prisma.listInvite.findMany({
-        where: { invitedUserId: userId },
+        where: {
+          OR: [
+            { invitedUserId: userId },
+            { invitedUserEmail: currentUser?.email },
+          ],
+        },
+        include: {
+          list: {
+            select: {
+              name: true,
+            },
+          },
+          user: {
+            select: {
+              email: true,
+              name: true,
+            },
+          },
+        },
       });
 
       return reply.status(200).send(invites);

@@ -37,6 +37,13 @@ export const useGetListInvites = (id: string) => {
   });
 };
 
+export const useGetInvites = () => {
+  return useQuery<ListInvite[]>("invites", async () => {
+    const res = await api.get(`${baseURL}/invites`);
+    return res.data;
+  });
+};
+
 export const useCreateListInvite = () => {
   return useMutation({
     mutationFn: async ({ email, id }: { email: string; id: string }) => {

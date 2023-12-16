@@ -11,7 +11,7 @@ import { getUser } from "src/services/store";
 import ListInviteForm from "../ListInviteForm";
 import DashboardWrap from "src/components/DashboardWrap";
 
-const ListInvite = () => {
+const ListInvites = () => {
   const params = useParams();
   const navigate = useNavigate();
   const user = useAppSelector(getUser);
@@ -75,4 +75,4 @@ const ListInvite = () => {
   );
 };
 
-export default ListInvite;
+export default ListInvites;
