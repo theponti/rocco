@@ -1,27 +1,33 @@
 import { useNavigate } from "react-router-dom";
+import Typography from "ui/Typography";
 
 import DashboardWrap from "src/components/DashboardWrap";
 import { useGetInvites } from "src/services/api";
 import { useAppSelector } from "src/services/hooks";
 import { getUser } from "src/services/store";
+import InviteListItem from "./components/InviteListItem";
 
 const Invites = () => {
   const navigate = useNavigate();
   const user = useAppSelector(getUser);
-  const { data: invites } = useGetInvites();
+  const { data: invites, refetch } = useGetInvites();
   if (!user) {
     navigate("/");
   }
 
   return (
     <DashboardWrap>
-      <h1>Invites</h1>
+      <Typography className="mb-4" variant="h1">
+        Invites
+      </Typography>
       {invites && (
         <ul>
-          {invites.map(({ listId, list }) => (
-            <li key={listId}>
-              <span>{list.name}</span>
-            </li>
+          {invites.map((listInvite) => (
+            <InviteListItem
+              key={listInvite.listId}
+              listInvite={listInvite}
+              onAccept={refetch}
+            />
           ))}
         </ul>
       )}
