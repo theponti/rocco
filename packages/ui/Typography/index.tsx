@@ -10,7 +10,7 @@ const Typography = ({
 }: {
   children: ReactNode;
   className?: string;
-  variant: Variant;
+  variant?: Variant;
 }) => {
   const baseClasses = "text-primary";
 
