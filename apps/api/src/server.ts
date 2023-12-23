@@ -60,7 +60,7 @@ export async function createServer(
 
   server.setErrorHandler((error, request, reply) => {
     console.error(error);
-    reply.send({ error: "Internal server error" });
+    reply.status(500).send({ error: "Internal server error" });
   });
 
   return server;
