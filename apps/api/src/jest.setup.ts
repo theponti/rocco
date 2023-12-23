@@ -20,6 +20,7 @@ jest.mock("@prisma/client", () => ({
       update: jest.fn(),
     },
     listInvite: mockPrismaModel(),
+    userLists: mockPrismaModel(),
     place: {
       create: jest.fn(),
     },
