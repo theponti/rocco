@@ -1,6 +1,6 @@
 import { useCallback } from "react";
-import { useMutation } from "react-query";
-import { baseURL } from "src/services/api/base";
+
+import { useAcceptInviteMutation } from "src/services/api";
 import { ListInvite } from "src/services/types";
 
 type InviteListItemProps = {
@@ -9,21 +9,13 @@ type InviteListItemProps = {
 };
 const InviteListItem = ({ listInvite, onAccept }: InviteListItemProps) => {
   const { accepted, list } = listInvite;
-  const { mutate, isLoading } = useMutation(
-    () =>
-      fetch(`${baseURL}/invites/${listInvite.id}/accept`, {
-        method: "POST",
-      }),
-    {
-      onSuccess: () => {
-        onAccept();
-      },
-    },
-  );
+  const { mutate, isLoading } = useAcceptInviteMutation({
+    onSuccess: onAccept,
+  });
 
   const onAcceptClick = useCallback(() => {
-    mutate();
-  }, [mutate]);
+    mutate(listInvite.listId);
+  }, [listInvite.listId, mutate]);
 
   return (
     <li className="card shadow-md p-4 text-lg flex flex-row items-center justify-between border border-red-100">

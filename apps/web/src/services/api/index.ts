@@ -1,4 +1,10 @@
-import { QueryKey, UseQueryOptions, useMutation, useQuery } from "react-query";
+import {
+  QueryKey,
+  UseMutationOptions,
+  UseQueryOptions,
+  useMutation,
+  useQuery,
+} from "react-query";
 
 import { User } from "../auth";
 import { List, ListInvite, UserList } from "../types";
@@ -20,12 +26,15 @@ export const useGetOutboundInvites = () => {
   });
 };
 
-export function useAcceptInviteMutation() {
+export function useAcceptInviteMutation(
+  options: UseMutationOptions<unknown, unknown, string> = {},
+) {
   return useMutation({
     mutationFn: async (id: string) => {
       const res = await api.post(`${baseURL}/invites/${id}/accept`);
       return res.data;
     },
+    ...options,
   });
 }
 

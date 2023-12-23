@@ -2,15 +2,17 @@ import { FastifyPluginAsync } from "fastify";
 import fastifyPlugin from "fastify-plugin";
 
 // Routes
-import getListRoute from "./get/list";
+import deleteListRoute from "./delete";
 import getListsRoute from "./get";
+import getListRoute from "./get/list";
+import getListInvitesRoute from "./get/list/invites";
 import postListsPlace from "./post/place";
 import postListRoute from "./post";
+import acceptListInviteRoute from "./post/acceptInvite";
 import putListRoute from "./put";
-import deleteListRoute from "./delete";
-import getListInvitesRoute from "./get/list/invites";
 
 const listsPlugin: FastifyPluginAsync = async (server) => {
+  acceptListInviteRoute(server);
   deleteListRoute(server);
   getListRoute(server);
   getListInvitesRoute(server);
