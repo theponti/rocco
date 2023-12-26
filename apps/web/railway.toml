@@ -1,2 +1,6 @@
 [build]
 nixpacksConfigPath = "nixpacks.toml"
+
+[build.nixpacksPlan.phases.install]
+dependsOn = ["setup"]
+cmds = ["echo 'skipping install'"]
