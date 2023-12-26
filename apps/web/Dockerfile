@@ -3,17 +3,12 @@ FROM node:14 as build
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install
-
-COPY . .
-
-RUN npm run build
+COPY build /app/
 
 # Stage 2: Serve the built app using Nginx
 FROM nginx:1.21-alpine
 
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build /app /usr/share/nginx/html
 
 EXPOSE 80
 
