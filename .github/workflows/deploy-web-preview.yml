@@ -37,7 +37,7 @@ jobs:
         run: npm install -g @railway/cli
 
       - name: Deploy
-        working-directory: apps/web/build
-        run: railway up --service ${{ secrets.RAILWAY_SERVICE_WEB }}
+        working-directory: apps/web
+        run: railway up --service ${{ secrets.RAILWAY_SERVICE_WEB_BETA }}
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
