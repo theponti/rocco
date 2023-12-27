@@ -17,23 +17,10 @@ jobs:
         with:
           node-version: "18"
 
-      - name: ⬇️ Install dependencies
-        run: npm install
-
-      - name: 📥 Generate artifacts
-        run: npx turbo run prisma:generate
-
-      - name: 🏗️ Build
-        run: npm run build
-        env:
-          VITE_API_URL: ${{ secrets.VITE_API_URL }}
-          VITE_GOOGLE_API_KEY: ${{ secrets.VITE_GOOGLE_API_KEY }}
-
       - name: Install Railway
         run: npm install -g @railway/cli
 
       - name: Deploy
-        working-directory: apps/web
         run: railway up --service ${{ secrets.RAILWAY_SERVICE_WEB }}
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
