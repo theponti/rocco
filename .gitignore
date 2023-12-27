@@ -15,7 +15,6 @@ apps/web/cypress/videos/**
 .eslintcache
 .stylelintcache
 build
-build/assets
 tsconfig.tsbuildinfo
 
 # misc
@@ -39,8 +38,6 @@ yarn-error.log*
 
 # turbo
 .turbo
-.vercel
-
 
 # google
 google-service-account.json
