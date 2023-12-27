@@ -1,2 +1,2 @@
 [build]
-dockerfilePath = "apps/web/Dockerfile"
+dockerfilePath = "Dockerfile.web"
