@@ -1,14 +1,63 @@
-# Stage 1: Build the React app
-FROM node:14 as build
+FROM node:18 AS base
+
+LABEL version="0.0.1"
+LABEL name="rocco-api"
+LABEL description="rocco core api"
+LABEL maintainer="Chase Ponti <cj@ponti.io>"
+LABEL vendor="Ponti & Co, LLC"
+
+RUN apt-get update
+
+# Required for Prisma
+RUN apt-get install -y openssl
+
+# Add the Turbo CLI
+RUN npm install -g turbo
+
+# ------------------------------------------------------------------------------
+
+FROM base AS pruner
 
 WORKDIR /app
 
-COPY build /app/
+COPY . .
+
+RUN turbo prune --scope=rocco-web --docker
+
+# ------------------------------------------------------------------------------
+
+FROM base AS builder
+RUN apt-get update
+
+WORKDIR /app
+
+# Copy the lockfile, package files, and of the isolated subworkspace
+COPY --from=pruner /app/out/json/ /app/
+COPY --from=pruner /app/out/package-lock.json /app/package-lock.json
+COPY --from=pruner /app/out/full/ /app/
+
+# Install dependencies
+RUN npm install --frozen-lockfile --prefer-frozen-lockfile --ignore-scripts
+
+# Set build-time environment variables
+ARG NODE_ENV=production
+ARG VITE_API_URL
+ARG VITE_GOOGLE_API_KEY
+
+# Set runtime environment variables
+ENV NODE_ENV=${NODE_ENV}
+ENV VITE_API_URL=${VITE_API_URL}
+ENV VITE_GOOGLE_API_KEY=${VITE_GOOGLE_API_KEY}
+
+# Build the app
+RUN turbo run build --filter=rocco-web
+
+# ------------------------------------------------------------------------------
 
 # Stage 2: Serve the built app using Nginx
 FROM nginx:1.21-alpine
 
-COPY --from=build /app /usr/share/nginx/html
+COPY --from=builder /apps/web/build /usr/share/nginx/html
 
 EXPOSE 80
 
