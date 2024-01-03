@@ -84,7 +84,10 @@ const postListsPlace = (server: FastifyInstance) => {
           types: string[];
         };
       };
-      const { name, address, location, place_id, types } = place;
+      const { name, address, location, place_id } = place;
+      const filteredListTypes = place.types.filter((type) => {
+        return !/point_of_interest|establishment/.test(type);
+      });
 
       const createdPlace = await prisma.place.create({
         data: {
@@ -92,7 +95,7 @@ const postListsPlace = (server: FastifyInstance) => {
           description: "",
           address,
           googleMapsId: place_id,
-          types,
+          types: filteredListTypes,
           lat: `${location.lat}`,
           lng: `${location.lng}`,
           createdBy: {
