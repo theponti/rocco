@@ -12,11 +12,7 @@ import Login from "src/scenes/Login";
 import Lists from "src/scenes/lists";
 import NotFound from "src/scenes/NotFound";
 import { loadAuth } from "src/services/auth";
-import {
-  getIsAuthenticated,
-  getIsLoadingAuth,
-  getUser,
-} from "src/services/store";
+import { getIsAuthenticated, getIsLoadingAuth } from "src/services/store";
 import { useAppDispatch, useAppSelector } from "src/services/hooks";
 
 import Header from "./components/Header";
@@ -33,7 +29,6 @@ function App() {
   const authRef = useRef<boolean>(false);
   const isLoadingAuth = useAppSelector(getIsLoadingAuth);
   const isAuthenticated = useAppSelector(getIsAuthenticated);
-  const user = useAppSelector(getUser);
   const dispatch = useAppDispatch();
   const { isLoaded: isMapLoaded } = useLoadScript({
     googleMapsApiKey: VITE_GOOGLE_API_KEY,
@@ -59,7 +54,6 @@ function App() {
     <div id="app" className={`h-100 flex flex-col ${styles.wrap}`}>
       <Header />
       <main className="flex flex-1 sm:mt-4 md:mt-8" data-testid="app-main">
-        User {JSON.stringify(user)}
         <Routes>
           <Route path={ROUTES.AUTHENTICATE} element={<Authenticate />} />
           {isAuthenticated ? (
