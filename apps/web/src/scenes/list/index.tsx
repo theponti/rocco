@@ -41,15 +41,16 @@ const List = () => {
             )}
           </div>
           {data.items.map((place) => (
-            <div key={place.id} className="flex flex-col mb-10">
-              <span className="mb-1 text-lg text-primary font-medium">
-                {place.name}
-              </span>
+            <div
+              key={place.id}
+              className="card p-2 py-3 rounded-md flex flex-col bg-primary text-primary-content mb-10"
+            >
+              <span className="mb-1 text-lg font-medium">{place.name}</span>
               <div className="flex gap-2">
                 {place.types.map((type) => (
                   <span
                     key={type}
-                    className="bg-primary rounded px-2 py-1 text-primary-content text-sm"
+                    className="bg-black rounded px-2 py-1 text-white text-sm"
                   >
                     {type}
                   </span>
