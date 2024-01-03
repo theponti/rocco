@@ -7,7 +7,7 @@ import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { cleanup } from "@testing-library/react";
 
-import { baseURL } from "./src/services/api/base";
+import { baseURL } from "../services/api/base";
 import { PropsWithChildren } from "react";
 
 const listId = "list-id";
