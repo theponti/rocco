@@ -1,23 +1,84 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { TrashIcon } from "@radix-ui/react-icons";
 
 import AlertError from "ui/AlertError";
 import UserPlus from "ui/Icons/UserPlus";
 import LoadingScene from "ui/Loading";
 
 import DashboardWrap from "src/components/DashboardWrap";
-import { useGetList } from "src/services/api";
+import api, { ListPlace, useGetList } from "src/services/api";
 import { useAppSelector } from "src/services/hooks";
 import { getUser } from "src/services/store";
+import { useMutation } from "react-query";
+import { baseURL } from "src/services/api/base";
+
+const ListItem = ({
+  listId,
+  onDelete,
+  place,
+}: {
+  listId: string;
+  onDelete: () => void;
+  place: ListPlace;
+}) => {
+  const { mutateAsync } = useMutation({
+    mutationKey: ["deleteListItem", listId, place.id],
+    mutationFn: () =>
+      api.delete(`${baseURL}/lists/${listId}/place/${place.id}`),
+    onSuccess: () => {
+      onDelete();
+    },
+  });
+
+  const onDeleteClick = async () => {
+    await mutateAsync();
+  };
+
+  const onDeleteKeyDown = async (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      await mutateAsync();
+    }
+  };
+
+  return (
+    <div className="card p-2 py-3 rounded-md flex flex-row bg-neutral text-primary mb-10">
+      <div className="flex flex-col flex-1">
+        <span className="mb-2 text-lg font-semibold uppercase">
+          {place.name}
+        </span>
+        <div className="flex gap-2">
+          {place.types.map((type) => (
+            <span
+              key={type}
+              className="bg-black rounded px-2 py-1 text-white text-xs capitalize"
+            >
+              {type.replace(/_/gi, " ")}
+            </span>
+          ))}
+        </div>
+      </div>
+      <button
+        data-testid="delete-place-button"
+        className="flex items-center px-4 hover:cursor-pointer hover:bg-neutral-content hover:bg-opacity-10"
+        onClick={onDeleteClick}
+        onKeyDown={onDeleteKeyDown}
+      >
+        <TrashIcon width={24} height={24} />
+      </button>
+    </div>
+  );
+};
 
 const List = () => {
   const navigate = useNavigate();
-  const params = useParams();
+  const params = useParams<{ id: string }>();
   const user = useAppSelector(getUser);
-  const listId = params.id as string;
-  const { data, status: listStatus } = useGetList(listId);
+  const listId = params.id;
+  const { data, refetch, status: listStatus } = useGetList(listId);
 
   if (!user) {
     navigate("/");
+    return null;
   }
 
   if (listStatus === "loading") {
@@ -45,24 +106,12 @@ const List = () => {
             )}
           </div>
           {data.items.map((place) => (
-            <div
+            <ListItem
               key={place.id}
-              className="card p-2 py-3 rounded-md flex flex-col bg-neutral text-primary mb-10"
-            >
-              <span className="mb-2 text-lg font-semibold uppercase">
-                {place.name}
-              </span>
-              <div className="flex gap-2">
-                {place.types.map((type) => (
-                  <span
-                    key={type}
-                    className="bg-black rounded px-2 py-1 text-white text-xs capitalize"
-                  >
-                    {type.replace(/_/gi, " ")}
-                  </span>
-                ))}
-              </div>
-            </div>
+              listId={data.id}
+              place={place}
+              onDelete={refetch}
+            />
           ))}
         </div>
       )}

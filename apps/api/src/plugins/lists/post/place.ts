@@ -133,6 +133,46 @@ const postListsPlace = (server: FastifyInstance) => {
       return { place: createdPlace, lists };
     },
   );
+
+  server.delete(
+    "/lists/:listId/place/:placeId",
+    {
+      preValidation: verifySession,
+      schema: {
+        params: {
+          type: "object",
+          properties: {
+            listId: { type: "string" },
+            placeId: { type: "string" },
+          },
+          required: ["listId", "placeId"],
+        },
+      },
+    },
+    async (request) => {
+      const { listId, placeId } = request.params as {
+        listId: string;
+        placeId: string;
+      };
+      const { prisma } = server;
+      const { userId } = request.session.get("data");
+
+      await prisma.item.deleteMany({
+        where: {
+          listId,
+          itemId: placeId,
+        },
+      });
+
+      server.log.info("place removed from list", {
+        userId,
+        placeId,
+        listId,
+      });
+
+      return { success: true };
+    },
+  );
 };
 
 export default postListsPlace;
