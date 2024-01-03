@@ -5,6 +5,8 @@ on:
     branches:
       - main
     paths: ["apps/web/**", "apps/packages/**", ".github/workflows/deploy-web-prod.yml"]
+    branches-ignore:
+      - "!main"
   workflow_run:
     workflows: ["🔍 Code Quality"]
     types:
