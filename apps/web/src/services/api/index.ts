@@ -84,6 +84,7 @@ export const useGetLists = ({
 
 export type ListPlace = {
   id: string;
+  itemId: string;
   name: string;
   googleMapsId: string;
   types: string[];

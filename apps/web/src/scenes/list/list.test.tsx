@@ -12,6 +12,8 @@ import {
 
 import { renderWithProviders } from "src/test/utils";
 import List from ".";
+import api from "src/services/api";
+import { baseURL } from "src/services/api/base";
 
 describe("List", () => {
   beforeEach(() => {
@@ -39,7 +41,9 @@ describe("List", () => {
         fireEvent.keyDown(deleteButton, { key: "Enter", code: "Enter" });
       });
 
-      // expect(screen.getByText("test place")).not.toBeInTheDocument();
+      expect(api.delete).toHaveBeenCalledWith(
+        `${baseURL}/lists/list-id/place/place-id`,
+      );
     });
 
     test("should make DELETE API request on button click", async () => {
@@ -50,7 +54,9 @@ describe("List", () => {
         fireEvent.click(deleteButton);
       });
 
-      // expect(screen.getByText("test place")).not.toBeInTheDocument();
+      expect(api.delete).toHaveBeenCalledWith(
+        `${baseURL}/lists/list-id/place/place-id`,
+      );
     });
   });
 });

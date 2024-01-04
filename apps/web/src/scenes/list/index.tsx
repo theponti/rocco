@@ -24,7 +24,7 @@ const ListItem = ({
   const { mutateAsync } = useMutation({
     mutationKey: ["deleteListItem", listId, place.id],
     mutationFn: () =>
-      api.delete(`${baseURL}/lists/${listId}/place/${place.id}`),
+      api.delete(`${baseURL}/lists/${listId}/place/${place.itemId}`),
     onSuccess: () => {
       onDelete();
     },

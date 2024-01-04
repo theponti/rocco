@@ -7,7 +7,7 @@ import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { cleanup } from "@testing-library/react";
 
-import { baseURL } from "../services/api/base";
+import { api, baseURL } from "../services/api/base";
 import { PropsWithChildren } from "react";
 
 const listId = "list-id";
@@ -29,6 +29,7 @@ const restHandlers = [
       items: [
         {
           id: placeId,
+          itemId: placeId,
           name: "test place",
           types: ["test_type"],
         },
@@ -43,7 +44,13 @@ const restHandlers = [
 const server = setupServer(...restHandlers);
 
 // Start server before all tests
-beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
+beforeAll(() => {
+  server.listen({ onUnhandledRequest: "error" });
+  vi.spyOn(api, "get");
+  vi.spyOn(api, "delete");
+  vi.spyOn(api, "post");
+  vi.spyOn(api, "put");
+});
 
 //  Close server after all tests
 afterAll(() => server.close());
