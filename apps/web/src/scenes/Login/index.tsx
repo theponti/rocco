@@ -1,5 +1,5 @@
 import { Field, Formik } from "formik";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import * as Yup from "yup";
@@ -13,6 +13,7 @@ import api from "src/services/api";
 import { setCurrentEmail } from "src/services/auth";
 import { useAppDispatch, useAppSelector } from "src/services/hooks";
 import { getUser } from "src/services/store";
+import { useMutation } from "react-query";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email(),
@@ -21,7 +22,6 @@ const LoginSchema = Yup.object().shape({
 function Login() {
   const dispatch = useAppDispatch();
   const user = useAppSelector(getUser);
-  const [error, setError] = useState(false);
   const navigate = useNavigate();
   const initialValues = useMemo(
     () => ({
@@ -30,18 +30,21 @@ function Login() {
     [],
   );
 
-  const onSubmit = useCallback(
-    async ({ email }) => {
-      try {
-        // We don't use credentials for login because the user is not logged in
-        await api.post("/login", { email }, { withCredentials: false });
-        dispatch(setCurrentEmail(email));
-        navigate("/authenticate");
-      } catch (err) {
-        setError(true);
-      }
+  const { mutateAsync, isLoading, isError } = useMutation({
+    mutationFn: async ({ email }: { email: string }) => {
+      await api.post("/login", { email }, { withCredentials: false });
+      dispatch(setCurrentEmail(email));
     },
-    [dispatch, navigate],
+    onSuccess: () => {
+      navigate("/authenticate");
+    },
+  });
+
+  const onSubmit = useCallback(
+    (values) => {
+      mutateAsync(values);
+    },
+    [mutateAsync],
   );
 
   useEffect(() => {
@@ -52,7 +55,7 @@ function Login() {
 
   return (
     <AuthWrap>
-      {error && (
+      {isError && (
         <FeedbackBlock>There was a problem! Try again, homie.</FeedbackBlock>
       )}
       <h2 className="text-primary-focus text-2xl font-semibold mb-6">Log in</h2>
@@ -75,7 +78,7 @@ function Login() {
               placeholder="Email"
             />
           </div>
-          <FormButton>Get code</FormButton>
+          <FormButton isLoading={isLoading}>Get code</FormButton>
         </Form>
       </Formik>
     </AuthWrap>

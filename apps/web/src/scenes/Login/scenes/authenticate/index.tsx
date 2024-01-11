@@ -74,7 +74,7 @@ function Authenticate() {
 
   return (
     <AuthWrap>
-      <h2 className="text-2xl font-semibold mb-6">Authenticate</h2>
+      <h2 className="text-2xl text-primary font-semibold mb-6">Authenticate</h2>
       {error && <FeedbackBlock>{error}</FeedbackBlock>}
       <Formik
         validationSchema={AuthenticateSchema}
@@ -84,7 +84,9 @@ function Authenticate() {
         <Form>
           <div className="form-control w-full">
             <label className="label" htmlFor="emailToken">
-              <span className="label-text">Enter code sent to your email.</span>
+              <span className="label-text text-primary">
+                Enter code sent to your email.
+              </span>
             </label>
             <Field
               type="string"
