@@ -30,7 +30,11 @@ const ListItem = ({
     },
   });
 
-  const onDeleteClick = async () => {
+  const onDeleteClick = async (e: React.MouseEvent) => {
+    if (e.button !== 0) {
+      return;
+    }
+
     await mutateAsync();
   };
 
