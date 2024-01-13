@@ -50,9 +50,11 @@ function PlaceModal(
     onModalClose();
   };
 
+  if (!place) return null;
+
   return (
     <Modal isOpen={isOpen} onModalClose={onModalClose} ref={ref}>
-      {place && (
+      {!isListSelectOpen && (
         <div className="mt-3">
           <PlacePhotos alt={place.name} photos={place.photos} />
           <div className="mt-4">
@@ -76,13 +78,11 @@ function PlaceModal(
             )}
             {place.website && <PlaceWebsite website={place.website} />}
           </div>
-        </div>
-      )}
-      {!isListSelectOpen && (
-        <div className="modal-action">
-          <button className="btn" onClick={onAddToList}>
-            Add to list
-          </button>
+          <div className="modal-action">
+            <button className="btn" onClick={onAddToList}>
+              Add to list
+            </button>
+          </div>
         </div>
       )}
       {isListSelectOpen && !isListsLoading && (
