@@ -1,19 +1,18 @@
 import { Field, Formik } from "formik";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useMutation } from "react-query";
 import * as Yup from "yup";
 
 import AuthWrap from "src/components/AuthenticationWrap";
 import FeedbackBlock from "src/components/FeedbackBlock";
 import Form from "src/components/Form";
-import { FormButton } from "src/components/Form/components";
 import { LANDING } from "src/constants/routes";
 import api from "src/services/api";
 import { setCurrentEmail } from "src/services/auth";
 import { useAppDispatch, useAppSelector } from "src/services/hooks";
 import { getUser } from "src/services/store";
-import { useMutation } from "react-query";
+import Button from "ui/Button";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email(),
@@ -56,7 +55,9 @@ function Login() {
   return (
     <AuthWrap>
       {isError && (
-        <FeedbackBlock>There was a problem! Try again, homie.</FeedbackBlock>
+        <FeedbackBlock>
+          There was a problem submitting your email. Try again later.
+        </FeedbackBlock>
       )}
       <h2 className="text-primary-focus text-2xl font-semibold mb-6">Log in</h2>
       <Formik
@@ -78,7 +79,7 @@ function Login() {
               placeholder="Email"
             />
           </div>
-          <FormButton isLoading={isLoading}>Get code</FormButton>
+          <Button isLoading={isLoading}>Get code</Button>
         </Form>
       </Formik>
     </AuthWrap>
