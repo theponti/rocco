@@ -1,4 +1,4 @@
-name: 🚀 Web > Deploy > Preview
+name: deploy-web-preview
 
 on:
   push:
@@ -11,17 +11,11 @@ on:
       - completed
 
 jobs:
-  Deploy-Preview:
+  deploy-web-preview:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v3
-
-      - name: Check if workflow_run was successful
-        run: |
-          if [ "${{ github.event.workflow_run.conclusion }}" != "success" ]; then
-            echo "Previous workflow failed. Exiting."
-            exit 78  # Exit code 78 to indicate that the workflow should be skipped
-          fi
 
       - name: 🏗 Set up Node.js
         uses: actions/setup-node@v3
