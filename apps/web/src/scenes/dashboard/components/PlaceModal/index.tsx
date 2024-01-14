@@ -7,7 +7,6 @@ import AddPlaceToList from "./AddPlaceToList";
 import PlaceStatus from "./PlaceStatus";
 import PlacePhotos from "./PlacePhotos";
 import PlaceAddress from "./PlaceAddress";
-import { useGetLists } from "src/services/api";
 import PlacePriceLevel from "./PlacePriceLevel";
 import PlaceWebsite from "./PlaceWebsite";
 
@@ -35,11 +34,6 @@ function PlaceModal(
 ) {
   const type = place && place.types[0] && place.types[0].split("_")[0];
   const [isListSelectOpen, setIsListSelectOpen] = useState(false);
-  const { isLoading: isListsLoading, data: lists } = useGetLists({
-    options: {
-      enabled: isListSelectOpen,
-    },
-  });
 
   const onAddToList = () => {
     setIsListSelectOpen(true);
@@ -85,9 +79,8 @@ function PlaceModal(
           </div>
         </div>
       )}
-      {isListSelectOpen && !isListsLoading && (
+      {isListSelectOpen && (
         <AddPlaceToList
-          lists={lists}
           cancel={() => setIsListSelectOpen(false)}
           place={place}
           onSuccess={onAddToListSuccess}
