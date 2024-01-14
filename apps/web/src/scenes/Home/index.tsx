@@ -1,12 +1,11 @@
 import styled from "@emotion/styled";
-
+import { Link } from "react-router-dom";
 import Emoji from "ui/Emoji";
 
-import svg from "./world.svg";
-import { mediaQueries } from "src/constants/styles";
-import Button from "ui/Button";
-import { Link } from "react-router-dom";
 import { LOGIN } from "src/constants/routes";
+import { mediaQueries } from "src/constants/styles";
+
+import svg from "./world.svg";
 
 const Wrap = styled.div`
   display: flex;
