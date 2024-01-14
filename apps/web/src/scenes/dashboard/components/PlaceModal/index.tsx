@@ -88,6 +88,7 @@ function PlaceModal(
       {isListSelectOpen && !isListsLoading && (
         <AddPlaceToList
           lists={lists}
+          cancel={() => setIsListSelectOpen(false)}
           place={place}
           onSuccess={onAddToListSuccess}
         />
