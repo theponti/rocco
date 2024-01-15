@@ -58,29 +58,32 @@ const AddPlaceToList = ({
   // List of lists displaying their name and a round checkbox that when clicked adds the list to the listIds array
   return (
     <div>
-      <h2 className="text-xl font-bold">Add to lists</h2>
-      <p>Select the lists you want to add this place to.</p>
-      <hr className="my-6" />
+      <div className="mb-6">
+        <h2 className="text-xl font-bold">Add to lists</h2>
+        <p>Select the lists you want to add this place to.</p>
+      </div>
       {isLoading ? (
         <div className="flex items-center justify-center h-16">
           <div className="loading loading-infinity w-14" />
         </div>
       ) : (
-        <ul className="list-none">
-          {lists.map((list) => (
-            <ListItem key={list.id} className="border hover:cursor-pointer">
-              <Checkbox htmlFor={list.id} className="hover:cursor-pointer">
-                <input
-                  type="checkbox"
-                  id={list.id}
-                  value={list.id}
-                  onChange={onListSelectChange}
-                />
-                {list.name}
-              </Checkbox>
-            </ListItem>
-          ))}
-          <div className="flex items-center justify-between mt-4">
+        <>
+          <ul className="list-none">
+            {lists.map((list) => (
+              <ListItem key={list.id} className="border hover:cursor-pointer">
+                <Checkbox htmlFor={list.id} className="hover:cursor-pointer">
+                  <input
+                    type="checkbox"
+                    id={list.id}
+                    value={list.id}
+                    onChange={onListSelectChange}
+                  />
+                  {list.name}
+                </Checkbox>
+              </ListItem>
+            ))}
+          </ul>
+          <div className="flex items-center justify-between mt-6">
             <Button className="btn-outline" onClick={cancel}>
               Back
             </Button>
@@ -93,7 +96,7 @@ const AddPlaceToList = ({
               Add to lists
             </Button>
           </div>
-        </ul>
+        </>
       )}
     </div>
   );
