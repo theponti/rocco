@@ -11,6 +11,7 @@ import { useAppSelector } from "src/services/hooks";
 import { getUser } from "src/services/store";
 import { useMutation } from "react-query";
 import { baseURL } from "src/services/api/base";
+import { PropsWithChildren } from "react";
 
 const ListItem = ({
   listId,
@@ -44,6 +45,19 @@ const ListItem = ({
     }
   };
 
+  const PlaceType = ({ children }: PropsWithChildren<object>) => (
+    <span className="bg-secondary rounded px-2 py-1 text-white text-xs capitalize">
+      {children}
+    </span>
+  );
+
+  const excludedTypes = ["establishment", "food", "point_of_interest"];
+  const filterExcludedTypes = (type: string) => !excludedTypes.includes(type);
+
+  const isPointOfInterest =
+    place.types.length === 2 &&
+    place.types.includes("establishment") &&
+    place.types.includes("point_of_interest");
   return (
     <div className="card p-2 py-3 rounded-md flex flex-row text-primary mb-10 border-2 glass">
       <div className="flex flex-col flex-1">
@@ -51,31 +65,18 @@ const ListItem = ({
           {place.name}
         </span>
         <div className="flex gap-2">
-          {place.types
-            .filter((type) => {
-              console.log(place.name, place.types);
-              if (
-                place.types.every((type) =>
-                  ["establishment", "point_of_interest"].includes(type),
-                ) &&
-                type === "point_of_interest"
-              ) {
-                return true;
-              }
-              return (
-                ["establishment", "food", "point_of_interest"].includes(
-                  type,
-                ) === false
-              );
-            })
-            .map((type) => (
+          {isPointOfInterest ? (
+            <PlaceType>Point of Interest</PlaceType>
+          ) : (
+            place.types.filter(filterExcludedTypes).map((type) => (
               <span
                 key={type}
                 className="bg-secondary rounded px-2 py-1 text-white text-xs capitalize"
               >
                 {type.replace(/_/gi, " ")}
               </span>
-            ))}
+            ))
+          )}
         </div>
       </div>
       <button
