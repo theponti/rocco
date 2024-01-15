@@ -10,6 +10,7 @@ import PlacePhotos from "./PlacePhotos";
 import PlaceAddress from "./PlaceAddress";
 import PlacePriceLevel from "./PlacePriceLevel";
 import PlaceWebsite from "./PlaceWebsite";
+import PlaceTypes from "../../../../components/places/PlaceTypes";
 
 const PlaceRating = ({ place }: { place: google.maps.places.PlaceResult }) => {
   return (
@@ -33,7 +34,6 @@ function PlaceModal(
   { place, isOpen, onModalClose }: PlaceModalProps,
   ref: RefObject<HTMLDialogElement | null>,
 ) {
-  const type = place && place.types[0] && place.types[0].split("_")[0];
   const [isListSelectOpen, setIsListSelectOpen] = useState(false);
 
   const onAddToList = () => {
@@ -54,9 +54,7 @@ function PlaceModal(
           <PlacePhotos alt={place.name} photos={place.photos} />
           <div className="mt-4">
             <p className="font-bold text-xl">{place.name}</p>
-            <p className="text-gray-400 italic">
-              {type.charAt(0).toUpperCase() + type.slice(1)}
-            </p>
+            <PlaceTypes types={place.types} />
           </div>
           <PlaceAddress place={place} />
           <div className="hidden">

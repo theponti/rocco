@@ -1,5 +1,6 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
 import { TrashIcon } from "@radix-ui/react-icons";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useMutation } from "react-query";
 
 import AlertError from "ui/AlertError";
 import UserPlus from "ui/Icons/UserPlus";
@@ -9,9 +10,9 @@ import DashboardWrap from "src/components/DashboardWrap";
 import api, { ListPlace, useGetList } from "src/services/api";
 import { useAppSelector } from "src/services/hooks";
 import { getUser } from "src/services/store";
-import { useMutation } from "react-query";
 import { baseURL } from "src/services/api/base";
-import { PropsWithChildren } from "react";
+
+import PlaceTypes from "../../components/places/PlaceTypes";
 
 const ListItem = ({
   listId,
@@ -45,39 +46,13 @@ const ListItem = ({
     }
   };
 
-  const PlaceType = ({ children }: PropsWithChildren<object>) => (
-    <span className="bg-secondary rounded px-2 py-1 text-white text-xs capitalize">
-      {children}
-    </span>
-  );
-
-  const excludedTypes = ["establishment", "food", "point_of_interest"];
-  const filterExcludedTypes = (type: string) => !excludedTypes.includes(type);
-
-  const isPointOfInterest =
-    place.types.length === 2 &&
-    place.types.includes("establishment") &&
-    place.types.includes("point_of_interest");
   return (
     <div className="card p-2 py-3 rounded-md flex flex-row text-primary mb-10 border-2 glass">
       <div className="flex flex-col flex-1">
         <span className="mb-2 text-lg font-semibold uppercase">
           {place.name}
         </span>
-        <div className="flex gap-2">
-          {isPointOfInterest ? (
-            <PlaceType>Point of Interest</PlaceType>
-          ) : (
-            place.types.filter(filterExcludedTypes).map((type) => (
-              <span
-                key={type}
-                className="bg-secondary rounded px-2 py-1 text-white text-xs capitalize"
-              >
-                {type.replace(/_/gi, " ")}
-              </span>
-            ))
-          )}
-        </div>
+        <PlaceTypes types={place.types} />
       </div>
       <button
         data-testid="delete-place-button"
