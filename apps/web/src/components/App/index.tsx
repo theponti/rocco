@@ -25,8 +25,6 @@ const { VITE_GOOGLE_API_KEY } = import.meta.env;
 
 const LIBRARIES = ["places"];
 
-console.log({ VITE_GOOGLE_API_KEY });
-
 function App() {
   const authRef = useRef<boolean>(false);
   const isLoadingAuth = useAppSelector(getIsLoadingAuth);
