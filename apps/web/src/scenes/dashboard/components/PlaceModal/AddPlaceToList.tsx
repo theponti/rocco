@@ -86,6 +86,7 @@ const AddPlaceToList = ({
             </Button>
             <Button
               className="float-right"
+              disabled={listIds.length === 0}
               isLoading={isAddingToList}
               onClick={onAddToList}
             >
