@@ -1,17 +1,16 @@
 import { RefObject, forwardRef, useState } from "react";
 
 import Modal from "src/components/Modal";
-import Button from "ui/Button";
 import Typography from "ui/Typography";
 
-import PlaceTypes from "src/components/places/PlaceTypes";
-import PlaceStatus from "src/components/PlaceModal/PlaceStatus";
-import PlaceAddress from "src/components/PlaceModal/PlaceAddress";
-import PlacePriceLevel from "src/components/PlaceModal/PlacePriceLevel";
-import PlaceWebsite from "src/components/PlaceModal/PlaceWebsite";
-
-import PlacePhotos from "src/components/places/PlacePhotos";
 import AddPlaceToList from "./AddPlaceToList";
+import PlaceStatus from "./PlaceStatus";
+import PlacePhotos from "./PlacePhotos";
+import PlaceAddress from "./PlaceAddress";
+import PlacePriceLevel from "./PlacePriceLevel";
+import PlaceWebsite from "./PlaceWebsite";
+import { closePlaceModal } from "src/services/store";
+import { useAppDispatch } from "src/services/hooks";
 
 const PlaceRating = ({ place }: { place: google.maps.places.PlaceResult }) => {
   return (
@@ -35,27 +34,36 @@ function PlaceModal(
   { place, isOpen, onModalClose }: PlaceModalProps,
   ref: RefObject<HTMLDialogElement | null>,
 ) {
+  const dispatch = useAppDispatch();
+  const type = place && place.types[0] && place.types[0].split("_")[0];
   const [isListSelectOpen, setIsListSelectOpen] = useState(false);
 
   const onAddToList = () => {
     setIsListSelectOpen(true);
   };
 
+  const closeModal = () => {
+    dispatch(closePlaceModal());
+    onModalClose?.();
+  };
+
   const onAddToListSuccess = () => {
     setIsListSelectOpen(false);
-    onModalClose();
+    closeModal();
   };
 
   if (!place) return null;
 
   return (
-    <Modal isOpen={isOpen} onModalClose={onModalClose} ref={ref}>
+    <Modal isOpen={isOpen} onModalClose={closeModal} ref={ref}>
       {!isListSelectOpen && (
-        <>
+        <div className="mt-3">
           <PlacePhotos alt={place.name} photos={place.photos} />
           <div className="mt-4">
             <p className="font-bold text-xl">{place.name}</p>
-            <PlaceTypes types={place.types} />
+            <p className="text-gray-400 italic">
+              {type.charAt(0).toUpperCase() + type.slice(1)}
+            </p>
           </div>
           <PlaceAddress place={place} />
           <div className="hidden">
@@ -73,9 +81,11 @@ function PlaceModal(
             {place.website && <PlaceWebsite website={place.website} />}
           </div>
           <div className="modal-action">
-            <Button onClick={onAddToList}>Add to list</Button>
+            <button className="btn" onClick={onAddToList}>
+              Add to list
+            </button>
           </div>
-        </>
+        </div>
       )}
       {isListSelectOpen && (
         <AddPlaceToList
