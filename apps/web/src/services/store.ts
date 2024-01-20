@@ -6,6 +6,7 @@ import {
 } from "@reduxjs/toolkit";
 import auth from "./auth";
 import { useAppDispatch, useAppSelector } from "./hooks";
+import toastSlice from "./toast/toast.slice";
 
 const initialState: {
   isOpen: boolean;
@@ -40,6 +41,7 @@ export const { openPlaceModal, closePlaceModal } = placeModalSlice.actions;
 export const rootReducer = {
   auth,
   placeModal: placeModalSlice.reducer,
+  toast: toastSlice.reducer,
 };
 
 export const store = configureStore({

@@ -1,5 +1,8 @@
+import { useApiIsLoaded } from "@vis.gl/react-google-maps";
+import { useRef } from "react";
 import { Route, Routes } from "react-router-dom";
 
+import * as ROUTES from "src/constants/routes";
 import Account from "src/scenes/account";
 import Dashboard from "src/scenes/dashboard";
 import Invites from "src/scenes/invites";
@@ -7,12 +10,10 @@ import List from "src/scenes/list";
 import ListInvites from "src/scenes/list/invites";
 import Lists from "src/scenes/lists";
 import NotFound from "src/scenes/not-found";
-
-import * as ROUTES from "src/constants/routes";
-import { useApiIsLoaded } from "@vis.gl/react-google-maps";
-import PlaceModal from "../PlaceModal";
 import { useAppSelector } from "src/services/hooks";
-import { useRef } from "react";
+
+import PlaceModal from "../PlaceModal";
+import Toast from "../Toast";
 
 const AuthenticatedScenes = () => {
   const isMapLoaded = useApiIsLoaded();
@@ -32,6 +33,7 @@ const AuthenticatedScenes = () => {
         <Route path={ROUTES.LIST_INVITE} element={<ListInvites />} />
         <Route path={ROUTES.WILDCARD} element={<NotFound />} />
       </Routes>
+      <Toast />
       <PlaceModal
         isOpen={placeModalState.isOpen}
         place={placeModalState.place}
