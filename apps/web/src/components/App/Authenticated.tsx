@@ -21,7 +21,7 @@ const AuthenticatedScenes = () => {
   const modalRef = useRef<HTMLDialogElement | null>(null);
 
   return (
-    <div className="flex flex-col flex-1 px-4 sm:max-w-3xl mx-auto">
+    <div className="flex flex-col flex-1 sm:max-w-3xl mx-auto">
       <Routes>
         <Route
           path={ROUTES.DASHBOARD}
