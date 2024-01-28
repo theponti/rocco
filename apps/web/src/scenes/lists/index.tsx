@@ -50,7 +50,7 @@ const Lists = () => {
       {!isListFormOpen ? (
         <div className="flex justify-end w-full mb-2">
           <Button onClick={onAddListClick} disabled={isListFormOpen}>
-            Add List
+            Create new list
           </Button>
         </div>
       ) : null}

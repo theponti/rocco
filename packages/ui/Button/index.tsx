@@ -11,9 +11,9 @@ export const Button = ({ className, children, isLoading, ...props }: Props) => {
   const disabledClassName = disabled ? "opacity-50 cursor-not-allowed" : "";
   return (
     <button
-      className={`btn btn-primary border-none ${
+      className={`btn btn-primary border-none text-white font-semibold text-md ${
         className ?? ""
-      } ${disabledClassName}`}
+      } ${disabledClassName} `}
       {...props}
     >
       {isLoading ? (
