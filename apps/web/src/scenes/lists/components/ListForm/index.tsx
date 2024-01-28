@@ -1,7 +1,7 @@
 import { SyntheticEvent, useCallback, useState } from "react";
 import { useMutation } from "react-query";
-
 import AlertError from "ui/AlertError";
+import Input from "ui/Input";
 
 import { api, URLS } from "src/services/api/base";
 
@@ -36,19 +36,13 @@ export default function ListForm({ onCreate }: ListFormProps) {
       {error && <AlertError error={error as string} />}
 
       <form onSubmit={mutate}>
-        <div className="form-control w-full mb-2">
-          <label className="label hidden" htmlFor="name">
-            <span className="label-text">Name of list</span>
-          </label>
-          <input
-            id="name"
-            type="text"
-            placeholder="What should we call this list?"
-            className="input w-full text-lg p-2 border-stone-300 rounded placeholder:text-zinc-400"
-            value={name}
-            onChange={onNameChange}
-          />
-        </div>
+        <Input
+          name="listName"
+          type="text"
+          label="List name"
+          onChange={onNameChange}
+          value={name}
+        />
         {name.length > MIN_LENGTH ? (
           <button
             className={`btn btn-primary w-full mb-4 rounded box-border ${
