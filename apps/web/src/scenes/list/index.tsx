@@ -1,18 +1,16 @@
 import { TrashIcon } from "@radix-ui/react-icons";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMutation } from "react-query";
-
 import AlertError from "ui/AlertError";
 import UserPlus from "ui/Icons/UserPlus";
 import LoadingScene from "ui/Loading";
 
-import DashboardWrap from "src/components/DashboardWrap";
 import PlaceTypes from "src/components/places/PlaceTypes";
 import api, { ListPlace, useGetList } from "src/services/api";
-import { useAppDispatch } from "src/services/hooks";
-import { useAuth, openPlaceModal } from "src/services/store";
 import { baseURL } from "src/services/api/base";
 import { usePlacesService } from "src/services/google-maps";
+import { useAppDispatch } from "src/services/hooks";
+import { useAuth, openPlaceModal } from "src/services/store";
 
 const ListItem = ({
   listId,
@@ -98,7 +96,7 @@ const List = () => {
   }
 
   return (
-    <DashboardWrap>
+    <>
       {!data && <AlertError error="We could not find this list." />}
       {data && (
         <div className="flex flex-col px-0.5">
@@ -127,7 +125,7 @@ const List = () => {
           ))}
         </div>
       )}
-    </DashboardWrap>
+    </>
   );
 };
 

@@ -1,7 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import LoadingScene from "ui/Loading";
 
-import DashboardWrap from "src/components/DashboardWrap";
 import FeedbackBlock from "src/components/FeedbackBlock";
 import { useGetLists } from "src/services/api";
 import { useAuth } from "src/services/store";
@@ -45,7 +44,7 @@ const Lists = () => {
   }
 
   return (
-    <DashboardWrap className="flex gap-4">
+    <>
       <h1 className="text-3xl font-bold">Lists</h1>
       {!isListFormOpen ? (
         <div className="flex justify-end w-full mb-2">
@@ -82,7 +81,7 @@ const Lists = () => {
           </ul>
         )}
       </div>
-    </DashboardWrap>
+    </>
   );
 };
 
