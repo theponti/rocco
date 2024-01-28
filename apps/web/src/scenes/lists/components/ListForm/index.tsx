@@ -4,6 +4,7 @@ import AlertError from "ui/AlertError";
 import Input from "ui/Input";
 
 import { api, URLS } from "src/services/api/base";
+import Button from "ui/Button";
 
 const MIN_LENGTH = 3;
 
@@ -44,13 +45,9 @@ export default function ListForm({ onCreate }: ListFormProps) {
           value={name}
         />
         {name.length > MIN_LENGTH ? (
-          <button
-            className={`btn btn-primary w-full mb-4 rounded box-border ${
-              isLoading ? "loading" : ""
-            }`}
-          >
+          <Button className="float-right px-12" isLoading={isLoading}>
             Submit
-          </button>
+          </Button>
         ) : null}
       </form>
     </>

@@ -7,6 +7,8 @@ import { useGetLists } from "src/services/api";
 import { useAuth } from "src/services/store";
 
 import ListForm from "./components/ListForm";
+import { useCallback, useState } from "react";
+import Button from "ui/Button";
 
 const NoResults = () => {
   return (
@@ -22,7 +24,17 @@ const NoResults = () => {
 const Lists = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [isListFormOpen, setIsListFormOpen] = useState(false);
   const { data, error, refetch, status: listsStatus } = useGetLists();
+
+  const onAddListClick = useCallback(() => {
+    setIsListFormOpen(true);
+  }, [setIsListFormOpen]);
+
+  const onListCreate = useCallback(() => {
+    setIsListFormOpen(false);
+    refetch();
+  }, [setIsListFormOpen, refetch]);
 
   if (!user) {
     navigate("/");
@@ -31,7 +43,19 @@ const Lists = () => {
   return (
     <DashboardWrap className="flex gap-4">
       <h1 className="text-3xl font-bold">Lists</h1>
-      <ListForm onCreate={refetch} />
+      <div className="flex justify-end w-full mb-2">
+        {!isListFormOpen ? (
+          <Button onClick={onAddListClick} disabled={isListFormOpen}>
+            Add List
+          </Button>
+        ) : null}
+      </div>
+      {isListFormOpen ? (
+        <>
+          <div className="mb-4" />
+          <ListForm onCreate={onListCreate} />
+        </>
+      ) : null}
       <div>
         {listsStatus === "loading" && <LoadingScene />}
         {error && <FeedbackBlock>{error.message}</FeedbackBlock>}
