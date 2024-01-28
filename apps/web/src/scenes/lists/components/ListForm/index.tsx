@@ -23,11 +23,14 @@ export default function ListForm({ onCreate, onCancel }: ListFormProps) {
     },
   });
 
-  const onCancelClick = useCallback((e: SyntheticEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setName("");
-    onCancel();
-  }, []);
+  const onCancelClick = useCallback(
+    (e: SyntheticEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      setName("");
+      onCancel();
+    },
+    [onCancel],
+  );
 
   const onSubmit = useCallback(
     (e: SyntheticEvent<HTMLFormElement>) => {
