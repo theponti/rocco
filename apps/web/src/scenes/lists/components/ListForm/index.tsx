@@ -5,26 +5,38 @@ import Input from "ui/Input";
 
 import { api, URLS } from "src/services/api/base";
 import Button from "ui/Button";
+import { AxiosError } from "axios";
 
 const MIN_LENGTH = 3;
 
 type ListFormProps = {
+  onCancel: () => void;
   onCreate: () => void;
 };
-export default function ListForm({ onCreate }: ListFormProps) {
+export default function ListForm({ onCreate, onCancel }: ListFormProps) {
   const [name, setName] = useState("");
   const { error, isLoading, mutate } = useMutation({
-    mutationFn: async (e: SyntheticEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      return api.post(URLS.lists, {
-        name,
-      });
-    },
+    mutationFn: async () => api.post(URLS.lists, { name }),
     onSuccess: () => {
       setName("");
       onCreate();
     },
   });
+
+  const onCancelClick = useCallback((e: SyntheticEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setName("");
+    onCancel();
+  }, []);
+
+  const onSubmit = useCallback(
+    (e: SyntheticEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      return mutate();
+    },
+    [mutate],
+  );
+
   const onNameChange = useCallback(
     (e: SyntheticEvent<HTMLInputElement>) => {
       setName(e.currentTarget.value);
@@ -34,9 +46,9 @@ export default function ListForm({ onCreate }: ListFormProps) {
 
   return (
     <>
-      {error && <AlertError error={error as string} />}
+      {error && <AlertError error={(error as AxiosError).message} />}
 
-      <form onSubmit={mutate}>
+      <form onSubmit={onSubmit}>
         <Input
           name="listName"
           type="text"
@@ -44,11 +56,21 @@ export default function ListForm({ onCreate }: ListFormProps) {
           onChange={onNameChange}
           value={name}
         />
-        {name.length > MIN_LENGTH ? (
-          <Button className="float-right px-12" isLoading={isLoading}>
+        <div className="btn-group-horizontal float-right">
+          <Button
+            className="btn-outline px-12 bordered"
+            onClick={onCancelClick}
+          >
+            Cancel
+          </Button>
+          <Button
+            className="px-12"
+            disabled={name.length < MIN_LENGTH}
+            isLoading={isLoading}
+          >
             Submit
           </Button>
-        ) : null}
+        </div>
       </form>
     </>
   );

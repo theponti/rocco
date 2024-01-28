@@ -36,6 +36,10 @@ const Lists = () => {
     refetch();
   }, [setIsListFormOpen, refetch]);
 
+  const onListFormCancel = useCallback(() => {
+    setIsListFormOpen(false);
+  }, [setIsListFormOpen]);
+
   if (!user) {
     navigate("/");
   }
@@ -43,18 +47,15 @@ const Lists = () => {
   return (
     <DashboardWrap className="flex gap-4">
       <h1 className="text-3xl font-bold">Lists</h1>
-      <div className="flex justify-end w-full mb-2">
-        {!isListFormOpen ? (
+      {!isListFormOpen ? (
+        <div className="flex justify-end w-full mb-2">
           <Button onClick={onAddListClick} disabled={isListFormOpen}>
             Add List
           </Button>
-        ) : null}
-      </div>
+        </div>
+      ) : null}
       {isListFormOpen ? (
-        <>
-          <div className="mb-4" />
-          <ListForm onCreate={onListCreate} />
-        </>
+        <ListForm onCancel={onListFormCancel} onCreate={onListCreate} />
       ) : null}
       <div>
         {listsStatus === "loading" && <LoadingScene />}
