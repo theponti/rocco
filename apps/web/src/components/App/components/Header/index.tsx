@@ -7,17 +7,18 @@ import { getIsAuthenticated } from "src/services/store";
 
 import AuthNavMenu from "./AuthNavMenu";
 import NavMenuItem from "./NavMenuItem";
+import Emoji from "ui/Emoji";
 
 function Header() {
   const isAuthenticated = useAppSelector(getIsAuthenticated);
 
   return (
-    <header className="flex items-center justify-between py-4 max-md:px-2">
+    <header className="navbar flex flex-row justify-between items-center border-b py-4">
       <NavMenuItem>
-        <Link
-          to={LANDING}
-          className="text-primary font-extrabold lowercase text-4xl"
-        >
+        <Link to={LANDING} className="font-extrabold lowercase text-4xl">
+          <Emoji kind="map" size="md" className="animate-spin-slow mr-2">
+            🌎
+          </Emoji>
           {APP_NAME}
         </Link>
       </NavMenuItem>

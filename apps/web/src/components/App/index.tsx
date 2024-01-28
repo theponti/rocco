@@ -39,7 +39,7 @@ function App() {
   return (
     <div id="app" className={`h-100 flex flex-col ${styles.wrap}`}>
       <Header />
-      <main className="flex flex-1 sm:mt-4 md:mt-8" data-testid="app-main">
+      <main className="flex flex-1 mt-8 md:mt-8" data-testid="app-main">
         {isAuthenticated ? (
           <AuthenticatedScenes />
         ) : (
