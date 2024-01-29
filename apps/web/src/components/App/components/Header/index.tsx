@@ -1,3 +1,4 @@
+import { GlobeIcon } from "@radix-ui/react-icons";
 import { Link } from "react-router-dom";
 
 import { APP_NAME } from "src/constants";
@@ -7,7 +8,6 @@ import { getIsAuthenticated } from "src/services/store";
 
 import AuthNavMenu from "./AuthNavMenu";
 import NavMenuItem from "./NavMenuItem";
-import Emoji from "ui/Emoji";
 
 function Header() {
   const isAuthenticated = useAppSelector(getIsAuthenticated);
@@ -15,10 +15,11 @@ function Header() {
   return (
     <header className="navbar flex flex-row justify-between items-center border-b py-4">
       <NavMenuItem>
-        <Link to={LANDING} className="font-extrabold lowercase text-4xl">
-          <Emoji kind="map" size="md" className="animate-spin-slow mr-2">
-            🌎
-          </Emoji>
+        <Link
+          to={LANDING}
+          className="flex gap-2 items-center font-extrabold lowercase text-4xl"
+        >
+          <GlobeIcon className="animate-spin-slow mt-1 h-7 w-7 text-primary" />
           {APP_NAME}
         </Link>
       </NavMenuItem>

@@ -161,7 +161,11 @@ function PlacesAutocomplete({
             className="input input-bordered w-full"
             onChange={onInputChange}
           />
-          <MagnifyingGlassIcon height={24} width={24} />
+          <MagnifyingGlassIcon
+            height={24}
+            width={24}
+            className="text-primary"
+          />
         </InputWrap>
         {
           <Options className="bg-white">
