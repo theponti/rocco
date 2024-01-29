@@ -28,7 +28,7 @@ const Option = styled(Combobox.Option)`
   &:hover,
   &[aria-selected="true"],
   &[data-headlessui-state="active"] {
-    background-color: slateblue;
+    background-color: #037afb;
     color: white;
     font-weight: 600;
   }
