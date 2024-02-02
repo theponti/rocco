@@ -1,5 +1,5 @@
 import { useApiIsLoaded } from "@vis.gl/react-google-maps";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Route, Routes } from "react-router-dom";
 
 import * as ROUTES from "src/constants/routes";
@@ -14,11 +14,55 @@ import { useAppSelector } from "src/services/hooks";
 
 import PlaceModal from "../PlaceModal";
 import Toast from "../Toast";
+import { setCurrentLocation } from "src/services/auth";
+
+// function handleLocationError(
+//   browserHasGeolocation: boolean,
+//   infoWindow: google.maps.InfoWindow,
+//   pos: google.maps.LatLng,
+//   map: google.maps.Map,
+// ) {
+//   infoWindow.setPosition(pos);
+//   infoWindow.setContent(
+//     browserHasGeolocation
+//       ? "Error: The Geolocation service failed."
+//       : "Error: Your browser doesn't support geolocation."
+//   );
+//   infoWindow.open(map);
+// }
 
 const AuthenticatedScenes = () => {
   const isMapLoaded = useApiIsLoaded();
   const placeModalState = useAppSelector((state) => state.placeModal);
   const modalRef = useRef<HTMLDialogElement | null>(null);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position: GeolocationPosition) => {
+          const pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+
+          setCurrentLocation({
+            latitude: pos.lat,
+            longitude: pos.lng,
+          });
+          // infoWindow.setPosition(pos);
+          // infoWindow.setContent("Location found.");
+          // infoWindow.open(map);
+          // map.setCenter(pos);
+        },
+        () => {
+          // handleLocationError(true, infoWindow, map.getCenter()!);
+        },
+      );
+    } else {
+      // Browser doesn't support Geolocation
+      // handleLocationError(false, infoWindow, map.getCenter()!);
+    }
+  }, []);
 
   return (
     <div className="flex flex-col flex-1 sm:max-w-3xl mx-auto">
