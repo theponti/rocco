@@ -24,18 +24,17 @@ describe("verifySession", () => {
     jest.clearAllMocks();
   });
 
-  test.skip("should return 401 if no session exists and JWT token cannot be verified", async () => {
+  test("should return 401 if no session exists and JWT token cannot be verified", async () => {
     request.session = {
       get: jest.fn().mockReturnValue(undefined),
     } as any;
     request.jwtVerify = jest.fn().mockRejectedValue(new Error("Invalid token"));
 
-    verifySession.bind(server)(request, reply, jest.fn());
+    await verifySession.bind(server)(request, reply, jest.fn());
 
     expect(request.session.get).toHaveBeenCalledWith("data");
     expect(request.jwtVerify).toHaveBeenCalled();
-
-    await expect(reply.log.error).toHaveBeenCalledWith(
+    expect(reply.log.error).toHaveBeenCalledWith(
       "Could not verify session token",
       expect.any(Error),
     );

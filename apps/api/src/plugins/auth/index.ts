@@ -257,7 +257,6 @@ export const verifySession: preValidationHookHandler = async (
       token = await request.jwtVerify<{ userId: string }>();
     } catch (e: any) {
       reply.log.error("Could not verify session token", e);
-      console.log("reply", reply);
       return reply.code(401).send();
     }
 
