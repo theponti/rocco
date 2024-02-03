@@ -1,10 +1,10 @@
-import { Map as GoogleMap, Marker } from "@vis.gl/react-google-maps";
+import { Map as GoogleMap, Marker, MapProps } from "@vis.gl/react-google-maps";
 import { useCallback } from "react";
 
 import styles from "./Map.module.css";
 import { MapMouseEvent } from "@vis.gl/react-google-maps/dist/components/map/use-map-events";
 
-type MapProps = {
+type RoccoMapProps = MapProps & {
   setSelected: (place: google.maps.places.PlaceResult) => void;
   selected: google.maps.places.PlaceResult | null;
   zoom: number;
@@ -19,7 +19,7 @@ const Map = ({
   onMarkerClick,
   selected,
   setSelected,
-}: MapProps) => {
+}: RoccoMapProps) => {
   const onClick = useCallback(
     (event: MapMouseEvent) => {
       const { placeId } = event.detail;

@@ -10,11 +10,11 @@ import List from "src/scenes/list";
 import ListInvites from "src/scenes/list/invites";
 import Lists from "src/scenes/lists";
 import NotFound from "src/scenes/not-found";
-import { useAppSelector } from "src/services/hooks";
+import { setCurrentLocation } from "src/services/auth";
+import { useAppDispatch, useAppSelector } from "src/services/hooks";
 
 import PlaceModal from "../PlaceModal";
 import Toast from "../Toast";
-import { setCurrentLocation } from "src/services/auth";
 
 // function handleLocationError(
 //   browserHasGeolocation: boolean,
@@ -33,6 +33,7 @@ import { setCurrentLocation } from "src/services/auth";
 
 const AuthenticatedScenes = () => {
   const isMapLoaded = useApiIsLoaded();
+  const dispatch = useAppDispatch();
   const placeModalState = useAppSelector((state) => state.placeModal);
   const modalRef = useRef<HTMLDialogElement | null>(null);
 
@@ -44,11 +45,7 @@ const AuthenticatedScenes = () => {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           };
-
-          setCurrentLocation({
-            latitude: pos.lat,
-            longitude: pos.lng,
-          });
+          dispatch(setCurrentLocation(pos));
           // infoWindow.setPosition(pos);
           // infoWindow.setContent("Location found.");
           // infoWindow.open(map);
@@ -62,7 +59,7 @@ const AuthenticatedScenes = () => {
       // Browser doesn't support Geolocation
       // handleLocationError(false, infoWindow, map.getCenter()!);
     }
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="flex flex-col flex-1 sm:max-w-3xl mx-auto">

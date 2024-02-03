@@ -10,8 +10,8 @@ import api from "src/services/api";
 import * as authApi from "./auth.api";
 
 export type CurrentLocation = {
-  latitude: number;
-  longitude: number;
+  lat: number;
+  lng: number;
 };
 
 export type User = {
