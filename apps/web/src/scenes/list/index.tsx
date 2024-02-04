@@ -77,7 +77,9 @@ const ListItem = ({
   return (
     <div className="card glass px-2 py-3 rounded-md flex mb-4">
       <div className="flex flex-row">
-        <img src={imageUrl} alt={place.name} className="w-16 h-16" />
+        <Link to="#" className="w-16 h-16" onClick={onPlaceNameClick}>
+          <img src={imageUrl} alt={place.name} className="w-16 h-16" />
+        </Link>
         <div className="flex flex-col flex-1 h-full justify-between pl-2">
           <Link
             to="#"
