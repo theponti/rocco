@@ -1,9 +1,11 @@
+import { validateYupSchema } from "formik";
 import styled from "@emotion/styled";
 import { AxiosError } from "axios";
 import { SyntheticEvent, useCallback, useState } from "react";
 import AlertError from "ui/AlertError";
 import Input from "ui/Input";
 import Button from "ui/Button";
+import * as Yup from "yup";
 
 import { useCreateListInvite } from "src/services/api";
 import { ListInvite } from "src/services/types";
@@ -15,6 +17,10 @@ const Form = styled.form`
   gap: 1rem;
 `;
 
+const InviteSchema = Yup.object().shape({
+  email: Yup.string().email(),
+});
+
 type ListInviteFormProps = {
   listId: string;
   onCreate: (invite: ListInvite) => void;
@@ -23,6 +29,7 @@ export default function ListInviteForm({
   listId,
   onCreate,
 }: ListInviteFormProps) {
+  const [formError, setFormError] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const {
     error,
@@ -38,7 +45,13 @@ export default function ListInviteForm({
   const onFormSubmit = useCallback(
     async (e: SyntheticEvent<HTMLFormElement>) => {
       e.preventDefault();
-      createListInvite({ email, id: listId });
+      validateYupSchema({ email }, InviteSchema)
+        .catch((err) => {
+          setFormError(err.errors[0]);
+        })
+        .then(() => {
+          createListInvite({ email, id: listId });
+        });
     },
     [createListInvite, email, listId],
   );
@@ -53,6 +66,7 @@ export default function ListInviteForm({
   return (
     <div className="mb-4">
       <div className="my-4">
+        {formError && <AlertError error={formError} />}
         {error && <AlertError error={(error as AxiosError).message} />}
       </div>
       <Form onSubmit={onFormSubmit}>
