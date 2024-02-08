@@ -45,7 +45,7 @@ export const useGetListInvites = (id: string) => {
   });
 };
 
-export const useCreateListInvite = () => {
+export const useCreateListInvite = ({ onSuccess }) => {
   return useMutation({
     mutationFn: async ({ email, id }: { email: string; id: string }) => {
       const res = await api.post(`${baseURL}/lists/${id}/invites`, {
@@ -53,6 +53,7 @@ export const useCreateListInvite = () => {
       });
       return res.data;
     },
+    onSuccess,
   });
 };
 
