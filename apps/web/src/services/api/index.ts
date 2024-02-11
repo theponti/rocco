@@ -10,6 +10,8 @@ import { User } from "../auth";
 import { List, ListInvite, UserList } from "../types";
 import { api, baseURL } from "./base";
 import { AxiosError } from "axios";
+import { usePlacesService } from "../google-maps";
+import { getDefaultImageUrl } from "./places";
 
 export const useGetInvites = () => {
   return useQuery<ListInvite[]>("invites", async () => {
@@ -90,6 +92,7 @@ export type ListPlace = {
   name: string;
   googleMapsId: string;
   types: string[];
+  description: string;
 };
 
 type GetListResponse = UserList & {
@@ -97,11 +100,43 @@ type GetListResponse = UserList & {
   items: ListPlace[];
 };
 export const useGetList = (id: string) => {
+  const placesService = usePlacesService();
+
   return useQuery<GetListResponse>(
     ["list", id],
     async () => {
-      const res = await api.get(`${baseURL}/lists/${id}`);
-      return res.data;
+      const res = await api.get<GetListResponse>(`${baseURL}/lists/${id}`);
+      const list = res.data;
+      const items = await Promise.all(
+        res.data.items.map(async (item) => {
+          let imageUrl = item.imageUrl;
+
+          if (!imageUrl) {
+            imageUrl = await new Promise<string>((resolve) => {
+              placesService.getDetails(
+                { placeId: item.googleMapsId },
+                (place) => {
+                  if (place) {
+                    const image = getDefaultImageUrl(place);
+                    resolve(image);
+                  }
+                },
+              );
+            });
+          }
+
+          console.log("NO IMAGE URL", item);
+          return {
+            ...item,
+            imageUrl,
+          };
+        }),
+      );
+
+      return {
+        ...list,
+        items,
+      };
     },
     {
       retry: false,
