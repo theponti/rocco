@@ -1,19 +1,20 @@
 import { v1 } from "@googlemaps/places";
-import path from "path";
 
-const { GOOGLE_KEY_FILE_PATH, GOOGLE_PROJECT_ID } = process.env;
+const { GOOGLE_SERVICE_ACCOUNT } = process.env;
 
-if (!GOOGLE_KEY_FILE_PATH || !GOOGLE_PROJECT_ID) {
-  console.error("GOOGLE_KEY_FILE_PATH and GOOGLE_PROJECT_ID are required", {
-    GOOGLE_KEY_FILE_PATH,
-    GOOGLE_PROJECT_ID,
+if (!GOOGLE_SERVICE_ACCOUNT) {
+  console.error("Missing Google Service Account", {
+    GOOGLE_SERVICE_ACCOUNT,
   });
   throw new Error("GOOGLE_KEY_FILE_PATH and GOOGLE_PROJECT_ID are required");
 }
 
-const serviceAccount = require(
-  path.resolve(__dirname, "../..", GOOGLE_KEY_FILE_PATH),
-);
+const credential = JSON.parse(
+  Buffer.from(GOOGLE_SERVICE_ACCOUNT, "base64").toString(),
+) as {
+  client_email: string;
+  private_key: string;
+};
 
 // Create google auth client with API Key
 // const authClient = new google.
@@ -24,8 +25,8 @@ const { PlacesClient } = v1;
 // Instantiates a client
 const placesClient = new PlacesClient({
   credentials: {
-    client_email: serviceAccount.client_email,
-    private_key: serviceAccount.private_key,
+    client_email: credential.client_email,
+    private_key: credential.private_key,
   },
 });
 
