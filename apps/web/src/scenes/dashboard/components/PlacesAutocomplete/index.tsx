@@ -83,9 +83,11 @@ function PlacesAutocomplete({
     google.maps.places.PlaceResult[]
   >([]);
   const { isLoading, refetch } = useQuery<google.maps.places.PlaceResult[]>({
-    queryKey: ["placeDetails", value],
-    queryFn: () =>
-      new Promise((resolve) => {
+    queryKey: ["placeDetails", center, value],
+    queryFn: () => {
+      if (value.length < 3) return Promise.resolve([]);
+
+      return new Promise((resolve) => {
         placesService.textSearch(
           {
             query: value,
@@ -97,18 +99,8 @@ function PlacesAutocomplete({
             resolve(response);
           },
         );
-        // placesService.findPlaceFromQuery(
-        //   {
-        //     query: value,
-        //     fields: ["formatted_address", "geometry", "name", "place_id"],
-        //     locationBias: { radius: 100_000, center },
-        //   },
-        //   (response) => {
-        //     if (!response) resolve([]);
-        //     resolve(response);
-        //   },
-        // );
-      }),
+      });
+    },
     onSuccess: (data) => {
       setSuggestions(data);
     },
@@ -128,7 +120,6 @@ function PlacesAutocomplete({
         return;
       }
 
-      console.log("e.target.value", e.target.value);
       setValue(e.target.value);
 
       refetch();

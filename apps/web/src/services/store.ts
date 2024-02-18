@@ -10,10 +10,12 @@ import toastSlice from "./toast/toast.slice";
 
 const initialState: {
   isOpen: boolean;
+  listId?: string;
   onClose: () => void;
   place: google.maps.places.PlaceResult;
 } = {
   isOpen: false,
+  listId: null,
   place: null,
   onClose: null,
 };
@@ -25,6 +27,7 @@ const placeModalSlice = createSlice({
     openPlaceModal(state, action) {
       state.isOpen = true;
       state.place = action.payload.place;
+      state.listId = action.payload.listId;
       state.onClose = action.payload.onClose;
     },
     closePlaceModal(state) {
@@ -36,7 +39,7 @@ const placeModalSlice = createSlice({
   },
 });
 
-export const { openPlaceModal, closePlaceModal } = placeModalSlice.actions;
+export const { closePlaceModal } = placeModalSlice.actions;
 
 export const rootReducer = {
   auth,
@@ -51,6 +54,28 @@ export const store = configureStore({
 export const getIsLoadingAuth = (state: RootState) => state.auth.isLoadingAuth;
 export const getLoginEmail = (state: RootState) => state.auth.loginEmail;
 export const getIsAuthenticated = (state: RootState) => !!state.auth.user;
+
+export const usePlaceModal = () => {
+  const dispatch = useAppDispatch();
+
+  const openPlaceModal = ({
+    listId,
+    place,
+    onClose,
+  }: {
+    listId?: string;
+    place: google.maps.places.PlaceResult;
+    onClose?: () => void;
+  }) => {
+    return dispatch(
+      placeModalSlice.actions.openPlaceModal({ listId, place, onClose }),
+    );
+  };
+
+  return {
+    openPlaceModal,
+  };
+};
 
 export const useAuth = () => {
   const user = useAppSelector((state: RootState) => state.auth.user);

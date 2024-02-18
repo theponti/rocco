@@ -16,21 +16,6 @@ import { useAppDispatch, useAppSelector } from "src/services/hooks";
 import PlaceModal from "../PlaceModal";
 import Toast from "../Toast";
 
-// function handleLocationError(
-//   browserHasGeolocation: boolean,
-//   infoWindow: google.maps.InfoWindow,
-//   pos: google.maps.LatLng,
-//   map: google.maps.Map,
-// ) {
-//   infoWindow.setPosition(pos);
-//   infoWindow.setContent(
-//     browserHasGeolocation
-//       ? "Error: The Geolocation service failed."
-//       : "Error: Your browser doesn't support geolocation."
-//   );
-//   infoWindow.open(map);
-// }
-
 const AuthenticatedScenes = () => {
   const isMapLoaded = useApiIsLoaded();
   const dispatch = useAppDispatch();
@@ -46,17 +31,10 @@ const AuthenticatedScenes = () => {
             lng: position.coords.longitude,
           };
           dispatch(setCurrentLocation(pos));
-          // infoWindow.setPosition(pos);
-          // infoWindow.setContent("Location found.");
-          // infoWindow.open(map);
-          // map.setCenter(pos);
-        },
-        () => {
-          // handleLocationError(true, infoWindow, map.getCenter()!);
         },
       );
     } else {
-      // Browser doesn't support Geolocation
+      // !TODO Browser doesn't support Geolocation
       // handleLocationError(false, infoWindow, map.getCenter()!);
     }
   }, [dispatch]);

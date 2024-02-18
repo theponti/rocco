@@ -4,8 +4,8 @@ import React, { useCallback, useEffect, useState } from "react";
 import Loading from "ui/Loading";
 
 import { mediaQueries } from "src/constants/styles";
-import { useAppDispatch, useAppSelector } from "src/services/hooks";
-import { openPlaceModal } from "src/services/store";
+import { useAppSelector } from "src/services/hooks";
+import { usePlaceModal } from "src/services/store";
 import { usePlacesService } from "src/services/google-maps";
 
 import Map from "./components/Map";
@@ -36,12 +36,12 @@ const ZOOM_LEVELS = {
 const DEFAULT_CENTER = { lat: 37.7749, lng: -122.4194 }; // Default center (San Francisco)
 
 function Dashboard({ isMapLoaded }: { isMapLoaded: boolean }) {
+  const { openPlaceModal } = usePlaceModal();
   const [zoom, setZoom] = useState(ZOOM_LEVELS.DEFAULT);
   const currentLocation = useAppSelector((state) => state.auth.currentLocation);
   const [selected, setSelected] =
     useState<google.maps.places.PlaceResult | null>(null);
   const [center, setCenter] = useState(currentLocation || DEFAULT_CENTER);
-  const dispatch = useAppDispatch();
   const placesService = usePlacesService();
 
   const onMapClick = useCallback(
@@ -64,17 +64,15 @@ function Dashboard({ isMapLoaded }: { isMapLoaded: boolean }) {
       setSelected(place);
       setCenter(latLng);
       setZoom(ZOOM_LEVELS.MARKER);
-      dispatch(
-        openPlaceModal({
-          onClose: () => {
-            setSelected(null);
-            setZoom(ZOOM_LEVELS.SELECTED);
-          },
-          place,
-        }),
-      );
+      openPlaceModal({
+        onClose: () => {
+          setSelected(null);
+          setZoom(ZOOM_LEVELS.SELECTED);
+        },
+        place,
+      });
     },
-    [dispatch, placesService],
+    [placesService],
   );
 
   const onSelectedChanged = useCallback(
@@ -93,16 +91,14 @@ function Dashboard({ isMapLoaded }: { isMapLoaded: boolean }) {
   const onMarkerClick = useCallback(() => {
     // The map should zoom slightly when the marker is clicked
     setZoom(ZOOM_LEVELS.MARKER);
-    dispatch(
-      openPlaceModal({
-        onClose: () => {
-          setSelected(null);
-          setZoom(ZOOM_LEVELS.SELECTED);
-        },
-        place: selected,
-      }),
-    );
-  }, [dispatch, selected]);
+    openPlaceModal({
+      onClose: () => {
+        setSelected(null);
+        setZoom(ZOOM_LEVELS.SELECTED);
+      },
+      place: selected,
+    });
+  }, [selected]);
 
   useEffect(() => {
     if (currentLocation) {
