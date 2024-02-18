@@ -123,7 +123,7 @@ function Dashboard({ isMapLoaded }: { isMapLoaded: boolean }) {
         />
       </PlacesAutocompleteWrap>
       <Map
-        isLoadingCurrentLocation={true}
+        isLoadingCurrentLocation={!currentLocation}
         zoom={zoom}
         center={center}
         onMapClick={onMapClick}

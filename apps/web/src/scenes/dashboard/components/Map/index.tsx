@@ -1,4 +1,4 @@
-import { Map as GoogleMap, Marker, MapProps } from "@vis.gl/react-google-maps";
+import { Map as GoogleMap, MapProps } from "@vis.gl/react-google-maps";
 import { useCallback } from "react";
 
 import { MapMouseEvent } from "@vis.gl/react-google-maps/dist/components/map/use-map-events";
@@ -27,7 +27,6 @@ const Map = ({
   center,
   isLoadingCurrentLocation,
   onMapClick,
-  onMarkerClick,
   selected,
   setSelected,
 }: RoccoMapProps) => {
@@ -58,12 +57,10 @@ const Map = ({
       ) : null}
       <GoogleMap
         zoom={zoom}
-        center={center}
+        center={selected ? selected.geometry.location : center}
         onClick={onClick}
         className="flex size-full"
-      >
-        {selected && <Marker position={center} onClick={onMarkerClick} />}
-      </GoogleMap>
+      />
     </div>
   );
 };

@@ -85,7 +85,7 @@ function PlacesAutocomplete({
   const { isLoading, refetch } = useQuery<google.maps.places.PlaceResult[]>({
     queryKey: ["placeDetails", center, value],
     queryFn: () => {
-      if (value.length < 3) return Promise.resolve([]);
+      if (value.length < 3 && center) return Promise.resolve([]);
 
       return new Promise((resolve) => {
         placesService.textSearch(
@@ -165,6 +165,7 @@ function PlacesAutocomplete({
         <InputWrap>
           <Combobox.Input
             className="input input-bordered w-full"
+            value={value}
             onChange={onInputChange}
           />
           <MagnifyingGlassIcon
