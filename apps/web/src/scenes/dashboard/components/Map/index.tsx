@@ -3,6 +3,7 @@ import { useCallback } from "react";
 
 import { MapMouseEvent } from "@vis.gl/react-google-maps/dist/components/map/use-map-events";
 import styled from "@emotion/styled";
+import { Place } from "src/services/types";
 
 const Loading = styled.div`
   left: 0;
@@ -15,8 +16,8 @@ const Loading = styled.div`
 
 type RoccoMapProps = MapProps & {
   isLoadingCurrentLocation: boolean;
-  setSelected: (place: google.maps.places.PlaceResult) => void;
-  selected: google.maps.places.PlaceResult | null;
+  setSelected: (place: Place) => void;
+  selected: Place | null;
   zoom: number;
   center: google.maps.LatLngLiteral;
   onMapClick: (event: MapMouseEvent) => void;
@@ -57,7 +58,14 @@ const Map = ({
       ) : null}
       <GoogleMap
         zoom={zoom}
-        center={selected ? selected.geometry.location : center}
+        center={
+          selected
+            ? {
+                lat: selected.latitude,
+                lng: selected.longitude,
+              }
+            : center
+        }
         onClick={onClick}
         className="flex size-full"
       />

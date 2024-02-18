@@ -6,6 +6,7 @@ import { useQuery } from "react-query";
 import Loading from "ui/Loading";
 
 import { usePlacesService } from "src/services/places";
+import { Place } from "src/services/types";
 
 const Wrapper = styled.div`
   max-height: 48px; // This is the maximum height of the input field.
@@ -84,31 +85,21 @@ function PlacesAutocomplete({
   setSelected,
 }: {
   center: google.maps.LatLngLiteral;
-  setSelected: (place: google.maps.places.PlaceResult) => void;
+  setSelected: (place: Place) => void;
 }) {
-  const placesService = usePlacesService();
+  const { getPlaceDetails, textSearch } = usePlacesService();
   const [value, setValue] = useState("");
   const [error, setError] = useState(null);
-  const [suggestions, setSuggestions] = useState<
-    google.maps.places.PlaceResult[]
-  >([]);
-  const { isLoading, refetch } = useQuery<google.maps.places.PlaceResult[]>({
+  const [suggestions, setSuggestions] = useState<Place[]>([]);
+  const { isLoading, refetch } = useQuery<Place[]>({
     queryKey: ["placeDetails", center, value],
     queryFn: () => {
       if (value.length < 3 || !center) return Promise.resolve([]);
 
-      return new Promise((resolve) => {
-        placesService.textSearch(
-          {
-            query: value,
-            location: center,
-            radius: 100,
-          },
-          (response) => {
-            if (!response) resolve([]);
-            resolve(response);
-          },
-        );
+      return textSearch({
+        query: value,
+        location: center,
+        radius: 100,
       });
     },
     onSuccess: (data) => {
@@ -123,7 +114,7 @@ function PlacesAutocomplete({
 
   const onInputChange = useCallback(
     (e) => {
-      if (!placesService) return;
+      if (!textSearch) return;
 
       if (!e.target.value) {
         setSuggestions([]);
@@ -134,7 +125,7 @@ function PlacesAutocomplete({
 
       refetch();
     },
-    [placesService, refetch, setValue],
+    [textSearch, refetch, setValue],
   );
 
   // This debounce prevents excess API requests.
@@ -146,34 +137,23 @@ function PlacesAutocomplete({
       clearTimeout(timeoutId.current);
       timeoutId.current = setTimeout(async () => {
         try {
-          const details =
-            await new Promise<google.maps.places.PlaceResult | null>(
-              (resolve) => {
-                placesService.getDetails(
-                  {
-                    placeId: suggestion.place_id,
-                  },
-                  (place) => {
-                    if (!place) resolve(null);
-                    resolve(place);
-                  },
-                );
-              },
-            );
+          const place = await getPlaceDetails({
+            placeId: suggestion.place_id,
+          });
 
-          if (!details || typeof details === "string") {
+          if (!place || typeof place === "string") {
             throw new Error("This location could not be found.");
           }
 
-          if (typeof details !== "string") {
-            setSelected(details);
+          if (typeof place !== "string") {
+            setSelected(place);
           }
         } catch (err) {
           setError(err);
         }
       }, DEBOUNCE_TIME_MS);
     },
-    [placesService, setSelected],
+    [getPlaceDetails, setSelected],
   );
 
   return (
@@ -206,7 +186,7 @@ function PlacesAutocomplete({
               >
                 <span className="font-medium">{suggestion.name}</span>,{" "}
                 <span className="text-slate-400 font-light">
-                  {suggestion.formatted_address}
+                  {suggestion.address}
                 </span>
               </Option>
             ))

@@ -4,6 +4,7 @@ import Button from "ui/Button";
 import Modal from "src/components/Modal";
 import { usePlaceModal } from "src/services/places";
 import { useToast } from "src/services/toast/toast.slice";
+import { Place } from "src/services/types";
 
 import AddPlaceToList from "./components/AddPlaceToList";
 import PlacePhotos from "./components/PlacePhotos";
@@ -13,7 +14,7 @@ import PlaceWebsite from "./components/PlaceWebsite";
 type PlaceModalProps = {
   isOpen: boolean;
   onModalClose: () => void;
-  place: google.maps.places.PlaceResult;
+  place: Place;
 };
 function PlaceModal(
   { place, isOpen, onModalClose }: PlaceModalProps,
@@ -57,7 +58,11 @@ function PlaceModal(
                 {type.charAt(0).toUpperCase() + type.slice(1)}
               </p>
             </div>
-            <PlaceAddress place={place} />
+            <PlaceAddress
+              address={place.address}
+              name={place.name}
+              place_id={place.place_id}
+            />
             {place.website && (
               <div className="flex justify-end mt-2">
                 <PlaceWebsite website={place.website} />

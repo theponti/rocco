@@ -6,6 +6,7 @@ import Loading from "ui/Loading";
 import { mediaQueries } from "src/constants/styles";
 import { useAppSelector } from "src/services/hooks";
 import { usePlaceModal, usePlacesService } from "src/services/places";
+import { Place } from "src/services/types";
 
 import Map from "./components/Map";
 import PlacesAutocomplete from "./components/PlacesAutocomplete";
@@ -28,7 +29,7 @@ const PlacesAutocompleteWrap = styled.div``;
 
 const ZOOM_LEVELS = {
   DEFAULT: 10,
-  SELECTED: 17,
+  SELECTED: 19,
   MARKER: 18,
 };
 
@@ -38,22 +39,14 @@ function Dashboard({ isMapLoaded }: { isMapLoaded: boolean }) {
   const { openPlaceModal } = usePlaceModal();
   const [zoom, setZoom] = useState(ZOOM_LEVELS.DEFAULT);
   const currentLocation = useAppSelector((state) => state.auth.currentLocation);
-  const [selected, setSelected] =
-    useState<google.maps.places.PlaceResult | null>(null);
+  const [selected, setSelected] = useState<Place | null>(null);
   const [center, setCenter] = useState(currentLocation || DEFAULT_CENTER);
-  const placesService = usePlacesService();
+  const { getPlaceDetails } = usePlacesService();
 
   const onMapClick = useCallback(
     async (args: MapMouseEvent) => {
       const { placeId, latLng } = args.detail;
-      const place = await new Promise((res) => {
-        placesService.getDetails({ placeId }, (place, status) => {
-          if (status !== google.maps.places.PlacesServiceStatus.OK) {
-            res(null);
-          }
-          res(place);
-        });
-      });
+      const place = await getPlaceDetails({ placeId });
 
       if (!place || typeof place === "string") {
         return;
@@ -71,21 +64,17 @@ function Dashboard({ isMapLoaded }: { isMapLoaded: boolean }) {
         place,
       });
     },
-    [openPlaceModal, placesService],
+    [getPlaceDetails, openPlaceModal],
   );
 
-  const onSelectedChanged = useCallback(
-    (place: google.maps.places.PlaceResult) => {
-      const {
-        geometry: { location },
-      } = place;
-      const latLng = { lat: location.lat(), lng: location.lng() };
-      setSelected(place);
-      setCenter(latLng);
-      setZoom(ZOOM_LEVELS.SELECTED);
-    },
-    [],
-  );
+  const onSelectedChanged = useCallback((place: Place) => {
+    setSelected(place);
+    setCenter({
+      lat: place.latitude,
+      lng: place.longitude,
+    });
+    setZoom(ZOOM_LEVELS.SELECTED);
+  }, []);
 
   const onMarkerClick = useCallback(() => {
     // The map should zoom slightly when the marker is clicked
