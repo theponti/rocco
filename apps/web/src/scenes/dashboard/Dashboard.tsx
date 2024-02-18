@@ -72,7 +72,7 @@ function Dashboard({ isMapLoaded }: { isMapLoaded: boolean }) {
         place,
       });
     },
-    [placesService],
+    [openPlaceModal, placesService],
   );
 
   const onSelectedChanged = useCallback(
@@ -98,7 +98,7 @@ function Dashboard({ isMapLoaded }: { isMapLoaded: boolean }) {
       },
       place: selected,
     });
-  }, [selected]);
+  }, [openPlaceModal, selected]);
 
   useEffect(() => {
     if (currentLocation) {
@@ -123,7 +123,7 @@ function Dashboard({ isMapLoaded }: { isMapLoaded: boolean }) {
         />
       </PlacesAutocompleteWrap>
       <Map
-        isLoadingCurrentLocation={!currentLocation}
+        isLoadingCurrentLocation={true}
         zoom={zoom}
         center={center}
         onMapClick={onMapClick}
