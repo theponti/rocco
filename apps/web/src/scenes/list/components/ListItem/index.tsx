@@ -5,8 +5,7 @@ import { Link } from "react-router-dom";
 import PlaceTypes from "src/components/places/PlaceTypes";
 import api, { ListPlace } from "src/services/api";
 import { baseURL } from "src/services/api/base";
-import { usePlacesService } from "src/services/google-maps";
-import { usePlaceModal } from "src/services/store";
+import { usePlaceModal, usePlacesService } from "src/services/places";
 
 const ListItem = ({
   listId,

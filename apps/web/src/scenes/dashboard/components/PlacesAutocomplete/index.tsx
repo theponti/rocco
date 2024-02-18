@@ -3,9 +3,9 @@ import { Combobox } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import React, { useCallback, useState } from "react";
 import { useQuery } from "react-query";
-
 import Loading from "ui/Loading";
-import { usePlacesService } from "src/services/google-maps";
+
+import { usePlacesService } from "src/services/places";
 
 const Wrapper = styled.div`
   max-height: 48px; // This is the maximum height of the input field.

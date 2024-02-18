@@ -1,14 +1,16 @@
 import { Share } from "lucide-react";
+import { useCallback } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import AlertError from "ui/AlertError";
 import LoadingScene from "ui/Loading";
 
 import { useGetList } from "src/services/api";
 import { useAppSelector } from "src/services/hooks";
-import { useAuth, usePlaceModal } from "src/services/store";
+import { useAuth } from "src/services/store";
+import { usePlaceModal } from "src/services/places";
+
 import ListItem from "./components/ListItem";
 import PlacesAutocomplete from "../dashboard/components/PlacesAutocomplete";
-import { useCallback } from "react";
 
 const List = () => {
   const { openPlaceModal } = usePlaceModal();

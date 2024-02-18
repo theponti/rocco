@@ -5,8 +5,7 @@ import Loading from "ui/Loading";
 
 import { mediaQueries } from "src/constants/styles";
 import { useAppSelector } from "src/services/hooks";
-import { usePlaceModal } from "src/services/store";
-import { usePlacesService } from "src/services/google-maps";
+import { usePlaceModal, usePlacesService } from "src/services/places";
 
 import Map from "./components/Map";
 import PlacesAutocomplete from "./components/PlacesAutocomplete";

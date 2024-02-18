@@ -3,8 +3,7 @@ import Button from "ui/Button";
 import Typography from "ui/Typography";
 
 import Modal from "src/components/Modal";
-import { closePlaceModal } from "src/services/store";
-import { useAppDispatch } from "src/services/hooks";
+import { usePlaceModal } from "src/services/places";
 import { useToast } from "src/services/toast/toast.slice";
 
 import AddPlaceToList from "./components/AddPlaceToList";
@@ -36,7 +35,7 @@ function PlaceModal(
   { place, isOpen, onModalClose }: PlaceModalProps,
   ref: RefObject<HTMLDialogElement | null>,
 ) {
-  const dispatch = useAppDispatch();
+  const { closePlaceModal } = usePlaceModal();
   const { openToast } = useToast();
   const type = place && place.types[0] && place.types[0].split("_")[0];
   const [isListSelectOpen, setIsListSelectOpen] = useState(false);
@@ -46,7 +45,7 @@ function PlaceModal(
   };
 
   const closeModal = () => {
-    dispatch(closePlaceModal());
+    closePlaceModal();
     setIsListSelectOpen(false);
     onModalClose?.();
   };
