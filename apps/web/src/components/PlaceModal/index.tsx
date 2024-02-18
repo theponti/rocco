@@ -1,30 +1,14 @@
 import { RefObject, forwardRef, useState } from "react";
 import Button from "ui/Button";
-import Typography from "ui/Typography";
 
 import Modal from "src/components/Modal";
 import { usePlaceModal } from "src/services/places";
 import { useToast } from "src/services/toast/toast.slice";
 
 import AddPlaceToList from "./components/AddPlaceToList";
-import PlaceStatus from "./components/PlaceStatus";
 import PlacePhotos from "./components/PlacePhotos";
 import PlaceAddress from "./components/PlaceAddress";
-import PlacePriceLevel from "./components/PlacePriceLevel";
 import PlaceWebsite from "./components/PlaceWebsite";
-
-const PlaceRating = ({ place }: { place: google.maps.places.PlaceResult }) => {
-  return (
-    <p className="py-[4px]">
-      <Typography variant="bold">Rating:</Typography>{" "}
-      {[...Array(Math.floor(place.rating))].map((_, i) => (
-        <span key={i} className="text-yellow-500">
-          ★
-        </span>
-      ))}
-    </p>
-  );
-};
 
 type PlaceModalProps = {
   isOpen: boolean;
@@ -78,19 +62,6 @@ function PlaceModal(
               <div className="flex justify-end mt-2">
                 <PlaceWebsite website={place.website} />
               </div>
-            )}
-          </div>
-          <div className="hidden">
-            <PlaceStatus className="py-[4px]" place={place} />
-            {place.rating && place.rating > 0 && <PlaceRating place={place} />}
-            {place.price_level && (
-              <PlacePriceLevel priceLevel={place.price_level} />
-            )}
-            {place.international_phone_number && (
-              <p className="py-[4px]">
-                <Typography variant="bold">Phone Number:</Typography>{" "}
-                {place.international_phone_number}
-              </p>
             )}
           </div>
           <div className="modal-action">

@@ -85,7 +85,7 @@ function PlacesAutocomplete({
   const { isLoading, refetch } = useQuery<google.maps.places.PlaceResult[]>({
     queryKey: ["placeDetails", center, value],
     queryFn: () => {
-      if (value.length < 3 && center) return Promise.resolve([]);
+      if (value.length < 3 || !center) return Promise.resolve([]);
 
       return new Promise((resolve) => {
         placesService.textSearch(
@@ -129,13 +129,23 @@ function PlacesAutocomplete({
 
   const handleSelect = useCallback(
     async (suggestion) => {
-      setValue(suggestion.description);
       try {
         const details =
           await new Promise<google.maps.places.PlaceResult | null>(
             (resolve) => {
               placesService.getDetails(
-                { placeId: suggestion.place_id },
+                {
+                  placeId: suggestion.place_id,
+                  fields: [
+                    "name",
+                    "formatted_address",
+                    "place_id",
+                    "photos",
+                    "location",
+                    "types",
+                    "rating",
+                  ],
+                },
                 (place) => {
                   if (!place) resolve(null);
                   resolve(place);
@@ -174,28 +184,26 @@ function PlacesAutocomplete({
             className="text-primary"
           />
         </InputWrap>
-        {
-          <Options className="bg-white overflow-y-scroll">
-            {isLoading ? (
-              <LoadingWrap>
-                <Loading />
-              </LoadingWrap>
-            ) : (
-              suggestions.map((suggestion) => (
-                <Option
-                  key={suggestion.place_id}
-                  value={suggestion}
-                  className="truncate text-primary"
-                >
-                  <span className="font-medium">{suggestion.name}</span>,{" "}
-                  <span className="text-slate-400 font-light">
-                    {suggestion.formatted_address}
-                  </span>
-                </Option>
-              ))
-            )}
-          </Options>
-        }
+        <Options className="bg-white overflow-y-scroll">
+          {isLoading ? (
+            <LoadingWrap>
+              <Loading />
+            </LoadingWrap>
+          ) : (
+            suggestions.map((suggestion) => (
+              <Option
+                key={suggestion.place_id}
+                value={suggestion}
+                className="truncate text-primary"
+              >
+                <span className="font-medium">{suggestion.name}</span>,{" "}
+                <span className="text-slate-400 font-light">
+                  {suggestion.formatted_address}
+                </span>
+              </Option>
+            ))
+          )}
+        </Options>
       </Combobox>
     </Wrapper>
   );
