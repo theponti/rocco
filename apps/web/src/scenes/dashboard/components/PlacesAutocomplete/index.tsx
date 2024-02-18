@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { Combobox } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { useQuery } from "react-query";
 import Loading from "ui/Loading";
 
@@ -69,6 +69,16 @@ const LoadingWrap = styled.div`
   border-radius: 4px;
 `;
 
+// const useDebounce = (fn, delay) => {
+//   const timeoutRef = useRef(null);
+//   return (...args) => {
+//     clearTimeout(timeoutRef.current);
+//     timeoutRef.current = setTimeout(() => {
+//       fn(...args);
+//     }, delay);
+//   };
+// }
+
 function PlacesAutocomplete({
   center,
   setSelected,
@@ -127,45 +137,43 @@ function PlacesAutocomplete({
     [placesService, refetch, setValue],
   );
 
+  // This debounce prevents excess API requests.
+  const timeoutId = useRef(null);
+  const DEBOUNCE_TIME_MS = 1000;
+
   const handleSelect = useCallback(
     async (suggestion) => {
-      try {
-        const details =
-          await new Promise<google.maps.places.PlaceResult | null>(
-            (resolve) => {
-              placesService.getDetails(
-                {
-                  placeId: suggestion.place_id,
-                  fields: [
-                    "name",
-                    "formatted_address",
-                    "place_id",
-                    "photos",
-                    "location",
-                    "types",
-                    "rating",
-                  ],
-                },
-                (place) => {
-                  if (!place) resolve(null);
-                  resolve(place);
-                },
-              );
-            },
-          );
+      clearTimeout(timeoutId.current);
+      timeoutId.current = setTimeout(async () => {
+        try {
+          const details =
+            await new Promise<google.maps.places.PlaceResult | null>(
+              (resolve) => {
+                placesService.getDetails(
+                  {
+                    placeId: suggestion.place_id,
+                  },
+                  (place) => {
+                    if (!place) resolve(null);
+                    resolve(place);
+                  },
+                );
+              },
+            );
 
-        if (!details || typeof details === "string") {
-          throw new Error("This location could not be found.");
-        }
+          if (!details || typeof details === "string") {
+            throw new Error("This location could not be found.");
+          }
 
-        if (typeof details !== "string") {
-          setSelected(details);
+          if (typeof details !== "string") {
+            setSelected(details);
+          }
+        } catch (err) {
+          setError(err);
         }
-      } catch (err) {
-        setError(err);
-      }
+      }, DEBOUNCE_TIME_MS);
     },
-    [placesService, setSelected, setValue],
+    [placesService, setSelected],
   );
 
   return (
