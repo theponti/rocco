@@ -41,12 +41,14 @@ const ListItem = ({
     }
   };
 
-  const onPlaceNameClick = (e) => {
+  const onPlaceNameClick = async (e) => {
     e.preventDefault();
     if (!placesService) return;
-    placesService.getDetails({ placeId: place.googleMapsId }, (res) => {
-      if (!res) return;
-      openPlaceModal({ place: res });
+
+    openPlaceModal({
+      place: await placesService.getPlaceDetails({
+        placeId: place.googleMapsId,
+      }),
     });
   };
 

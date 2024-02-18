@@ -11,6 +11,7 @@ import { usePlaceModal } from "src/services/places";
 
 import ListItem from "./components/ListItem";
 import PlacesAutocomplete from "../dashboard/components/PlacesAutocomplete";
+import { Place } from "src/services/types";
 
 const List = () => {
   const { openPlaceModal } = usePlaceModal();
@@ -22,7 +23,7 @@ const List = () => {
   const { data, refetch, status: listStatus } = useGetList(listId);
 
   const onSelectedChanged = useCallback(
-    (place: google.maps.places.PlaceResult) => {
+    (place: Place) => {
       openPlaceModal({ place, onClose: refetch });
     },
     [openPlaceModal, refetch],
