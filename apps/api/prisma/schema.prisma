@@ -207,6 +207,9 @@ model Place {
   types       String[] @db.Text()
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  phoneNumber String?  @db.Text()
+  websiteUri  String?  @db.Text()
+  rating      Float?
 
   // Google Maps Place ID
   googleMapsId String? @db.Text()
