@@ -46,6 +46,9 @@ const PlacesPlugin: FastifyPluginAsync = async (server: FastifyInstance) => {
           where: { googleMapsId: id },
         });
 
+        /**
+         * If this place has not been saved before, fetch it from Google.
+         */
         if (!place) {
           const googlePlace = await getPlaceDetails({
             placeId: id,
@@ -66,6 +69,11 @@ const PlacesPlugin: FastifyPluginAsync = async (server: FastifyInstance) => {
             ],
           });
 
+          /**
+           * If the place does not exist in Google, return a 404.
+           * Otherwise, create a new place in the database.
+           * If the place has photos, fetch the first one and save it as the place's image.
+           */
           if (!googlePlace) {
             return reply.code(404).send();
           }
@@ -78,11 +86,11 @@ const PlacesPlugin: FastifyPluginAsync = async (server: FastifyInstance) => {
             return "Unknown";
           };
 
-          const photos = googlePlace.photos
-            ? await Promise.all(
-                googlePlace.photos.map((photo) => getPlaceMedia(photo)),
-              )
-            : [];
+          let imageUrl: string | null = null;
+          if (googlePlace.photos) {
+            const placeMedia = await getPlaceMedia(googlePlace.photos[0]);
+            imageUrl = placeMedia.imageUrl;
+          }
 
           const newPlace = await server.prisma.place.create({
             data: {
@@ -91,7 +99,7 @@ const PlacesPlugin: FastifyPluginAsync = async (server: FastifyInstance) => {
               lat: `${googlePlace.location?.latitude}`,
               lng: `${googlePlace.location?.longitude}`,
               googleMapsId: googlePlace.id,
-              imageUrl: photos[0].imageUrl,
+              imageUrl,
               phoneNumber: googlePlace.internationalPhoneNumber,
               types: googlePlace.types || [],
               websiteUri: googlePlace.websiteUri,
