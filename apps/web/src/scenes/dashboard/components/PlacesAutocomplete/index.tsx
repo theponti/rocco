@@ -7,6 +7,7 @@ import Loading from "ui/Loading";
 
 import { usePlacesService } from "src/services/places";
 import { Place } from "src/services/types";
+import { AxiosError } from "axios";
 
 const Wrapper = styled.div`
   max-height: 48px; // This is the maximum height of the input field.
@@ -87,9 +88,9 @@ function PlacesAutocomplete({
   center: google.maps.LatLngLiteral;
   setSelected: (place: Place) => void;
 }) {
-  const { getPlaceDetails, textSearch } = usePlacesService();
+  const { getPlace, textSearch } = usePlacesService();
   const [value, setValue] = useState("");
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<AxiosError>();
   const [suggestions, setSuggestions] = useState<Place[]>([]);
   const { isLoading, refetch } = useQuery<Place[]>({
     queryKey: ["placeDetails", center, value],
@@ -108,7 +109,7 @@ function PlacesAutocomplete({
     enabled: !!value,
     retry: false,
     onError: (err) => {
-      setError(err);
+      setError(err as AxiosError);
     },
   });
 
@@ -137,7 +138,7 @@ function PlacesAutocomplete({
       clearTimeout(timeoutId.current);
       timeoutId.current = setTimeout(async () => {
         try {
-          const place = await getPlaceDetails({
+          const place = await getPlace({
             placeId: suggestion.place_id,
           });
 
@@ -153,12 +154,12 @@ function PlacesAutocomplete({
         }
       }, DEBOUNCE_TIME_MS);
     },
-    [getPlaceDetails, setSelected],
+    [getPlace, setSelected],
   );
 
   return (
     <Wrapper>
-      {error && <div>{error}</div>}
+      {error && <div>{error.message}</div>}
       <Combobox value={value} onChange={handleSelect}>
         <InputWrap>
           <Combobox.Input
