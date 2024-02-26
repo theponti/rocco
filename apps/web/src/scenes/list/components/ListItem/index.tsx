@@ -13,8 +13,8 @@ const ListItem = ({ place }: { place: ListPlace }) => {
     if (!placesService) return;
 
     openPlaceModal({
-      place: await placesService.getPlaceDetails({
-        placeId: place.googleMapsId,
+      place: await placesService.getPlace({
+        googleMapsId: place.googleMapsId,
       }),
     });
   };

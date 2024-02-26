@@ -7,14 +7,33 @@ export const { places } = google.places("v1");
 
 export async function getPlaceDetails({
   placeId,
+  fields = [
+    "adrFormatAddress",
+    "displayName",
+    "location",
+    "id",
+    "internationalPhoneNumber",
+    "types",
+    "websiteUri",
+    "photos",
+  ],
 }: {
   placeId: string;
-  fields: string[];
+  fields?: string[];
 }) {
   const response = await places.get({
     name: `places/${placeId}`,
-    fields: "formatted_address,photos",
+    fields: fields.join(","),
   });
+
+  if (fields.includes("photos") && response.data.photos) {
+    return {
+      ...response.data,
+      photos: await getPhotosMedia({
+        photos: response.data.photos,
+      }),
+    };
+  }
 
   return response.data;
 }
@@ -52,11 +71,19 @@ export const getPlacePhotos = async ({
   }
 
   return Promise.all(
-    photos.slice(0, limit).map((photo) => getPlaceMedia(photo)),
+    photos.slice(0, limit).map((photo) => getPhotoMedia(photo)),
   );
 };
 
-export async function getPlaceMedia(
+export async function getPhotosMedia({
+  photos,
+}: {
+  photos: places_v1.Schema$GoogleMapsPlacesV1Photo[];
+}) {
+  return Promise.all(photos.map((photo) => getPhotoMedia(photo)));
+}
+
+export async function getPhotoMedia(
   photo: places_v1.Schema$GoogleMapsPlacesV1Photo,
 ) {
   const media = await places.photos.getMedia({
@@ -112,3 +139,62 @@ export const downloadPlacePhotos = async ({
     }
   }
 };
+
+export const searchPlaces = async ({
+  query,
+  center,
+  radius,
+  fields = [
+    "places.displayName",
+    "places.location",
+    "places.primaryType",
+    "places.shortFormattedAddress",
+    "places.id",
+  ],
+}: {
+  fields?: PlaceFields;
+  query: string;
+  center: { latitude: number; longitude: number };
+  radius: number;
+}) => {
+  const response = await places.searchText({
+    requestBody: {
+      textQuery: query,
+      locationBias: {
+        circle: {
+          radius,
+          center,
+        },
+      },
+      maxResultCount: 10,
+    },
+    fields: fields.join(","),
+  });
+
+  return response.data.places || [];
+};
+
+type PlaceField =
+  | "places.displayName"
+  | "places.location"
+  | "places.primaryType"
+  | "places.shortFormattedAddress"
+  | "places.id"
+  | "places.googleMapsUri"
+  | "places.name"
+  | "places.formattedAddress"
+  | "places.accessibilityOptions"
+  | "places.addressComponents"
+  | "places.adrFormatAddress"
+  | "places.businessStatus"
+  | "places.formattedAddress"
+  | "places.iconBackgroundColor"
+  | "places.iconMaskBaseUri"
+  | "places.plusCode"
+  | "places.primaryTypeDisplayName"
+  | "places.subDestinations"
+  | "places.types"
+  | "places.utcOffsetMinutes"
+  | "places.viewport";
+
+type PlaceFields = PlaceField[];

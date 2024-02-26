@@ -63,8 +63,8 @@ export const usePlaceModal = () => {
 };
 
 export function usePlacesService() {
-  const getPlace = async ({ placeId }: { placeId: string }) => {
-    const response = await api.get(`/places/${placeId}`);
+  const getPlace = async ({ googleMapsId }: { googleMapsId: string }) => {
+    const response = await api.get<Place>(`/places/${googleMapsId}`);
     return response.data;
   };
 
