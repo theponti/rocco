@@ -65,7 +65,14 @@ export const usePlaceModal = () => {
 export function usePlacesService() {
   const getPlace = async ({ googleMapsId }: { googleMapsId: string }) => {
     const response = await api.get<Place>(`/places/${googleMapsId}`);
-    return response.data;
+    const place = response.data;
+
+    place.lat =
+      typeof place.lat === "number" ? place.lat : parseFloat(place.lat);
+    place.lng =
+      typeof place.lng === "number" ? place.lng : parseFloat(place.lng);
+
+    return place;
   };
 
   const textSearch = async (
