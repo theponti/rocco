@@ -291,6 +291,13 @@ const PlacesPlugin: FastifyPluginAsync = async (server: FastifyInstance) => {
           }
         } catch (err) {
           request.log.error(`Could not fetch place from Google`);
+          const googleError = (err as { response: { status: number } })
+            ?.response;
+
+          if (googleError?.status >= 400 && googleError?.status < 500) {
+            return reply.code(404).send();
+          }
+
           return reply.code(500).send();
         }
 
