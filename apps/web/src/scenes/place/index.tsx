@@ -1,12 +1,12 @@
 import React, { Suspense } from "react";
 
-const LazyDashboard = React.lazy(
-  () => import(/* webpackChunkName: "dashboard" */ "./Dashboard"),
+const LazyPlace = React.lazy(
+  () => import(/* webpackChunkName: "place" */ "./Place"),
 );
 
 const Dashboard = (props) => (
   <Suspense>
-    <LazyDashboard {...props} />
+    <LazyPlace {...props} />
   </Suspense>
 );
 
