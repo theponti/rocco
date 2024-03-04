@@ -1,6 +1,8 @@
+import { User } from "@prisma/client";
 import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
-import { verifySession } from "./index";
 import { createServer } from "../../server";
+
+import { verifySession } from "./index";
 
 describe("verifySession", () => {
   let request: FastifyRequest;
@@ -80,7 +82,9 @@ describe("verifySession", () => {
       get: jest.fn().mockReturnValue({ userId: "123" }),
       set: jest.fn(),
     } as any;
-    jest.spyOn(server.prisma.user, "findUnique").mockResolvedValue(user);
+    jest
+      .spyOn(server.prisma.user, "findUnique")
+      .mockResolvedValue(user as User);
 
     await verifySession.bind(server)(request, reply, jest.fn());
 
@@ -102,7 +106,9 @@ describe("verifySession", () => {
         .mockReturnValue({ userId: "123", email: "test@example.com" }),
       set: jest.fn(),
     } as any;
-    jest.spyOn(server.prisma.user, "findUnique").mockResolvedValue(user);
+    jest
+      .spyOn(server.prisma.user, "findUnique")
+      .mockResolvedValue(user as User);
 
     await verifySession.bind(server)(request, reply, jest.fn());
 
