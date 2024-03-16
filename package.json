@@ -36,8 +36,8 @@
     "turbo": "^1.12.2"
   },
   "engines": {
-    "node": "18",
-    "npm": ">=8",
+    "node": "20",
+    "npm": ">=10",
     "yarn": "please-use-npm",
     "pnpm": "please-use-npm"
   },
