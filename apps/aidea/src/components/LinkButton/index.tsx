@@ -1,11 +1,13 @@
 import Link from "next/link";
-import { ReactNode } from "react";
+import React, { PropsWithChildren } from "react";
 
 type LinkButtonProps = {
-  children: ReactNode;
   href: string;
 };
-export default function LinkButton({ children, href }: LinkButtonProps) {
+export default function LinkButton({
+  children,
+  href,
+}: PropsWithChildren<LinkButtonProps>) {
   return (
     <Link href={href}>
       <span className="border-primary border-[1px] px-2 py-3 rounded-md hover:cursor-pointer">

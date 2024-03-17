@@ -8,11 +8,9 @@ import { useCallback } from "react";
 import Avatar from "src/components/Avatar";
 import { ACCOUNT_PATH } from "src/constants/routes";
 
-import NavMenuItem from "./components/NavMenuItem";
-
 import styles from "./AuthNavMenu.module.css";
 
-const Wrap = styled(NavMenuItem)`
+const Wrap = styled.div`
   display: flex;
   border: 1px solid slateblue;
   border-radius: 50px;
