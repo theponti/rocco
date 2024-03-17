@@ -1,10 +1,8 @@
-import styles from "./NavMenuItem.module.css";
-import React from "react";
+import React, { PropsWithChildren } from "react";
 
-function NavMenuItem({
-  children,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
+import styles from "./NavMenuItem.module.css";
+
+function NavMenuItem({ children, ...props }: PropsWithChildren) {
   return (
     <div className={styles.menuItem} {...props}>
       {children}

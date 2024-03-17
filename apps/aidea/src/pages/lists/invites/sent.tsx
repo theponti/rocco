@@ -8,6 +8,15 @@ import LinkButton from "src/components/LinkButton";
 import LoadingScene from "src/components/Loading";
 import { trpc } from "src/utils/trpc";
 
+type Invite = {
+  listId: string;
+  invitedUserEmail: string;
+  accepted: boolean;
+  list: {
+    name: string;
+  };
+};
+
 const ListInvites: NextPage = () => {
   const router = useRouter();
   const { status } = useSession();
@@ -41,7 +50,7 @@ const ListInvites: NextPage = () => {
         {data?.length === 0 && "Your invites will appear here."}
         {data && data.length > 0 && (
           <ul className="space-y-2">
-            {data.map((invite) => (
+            {data.map((invite: Invite) => (
               <li key={invite.listId} className="card shadow-md p-4">
                 <p>
                   <span className="font-semibold mr-2">List:</span>

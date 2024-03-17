@@ -30,4 +30,4 @@ function DashboardNav() {
   );
 }
 
-export default React.memo(DashboardNav);
+export default DashboardNav;
