@@ -318,8 +318,7 @@ const PlacesPlugin: FastifyPluginAsync = async (server: FastifyInstance) => {
           photos: googlePlace.photos || [],
         });
       } catch (err) {
-        console.log(err);
-        request.log.error(`Could not fetch place`);
+        request.log.error(err, "Could not fetch place");
         return reply.code(500).send();
       }
     },
