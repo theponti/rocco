@@ -13,9 +13,6 @@ import { MOCK_PLACE, PLACE_HANDLERS } from "./mocks/place";
 export const TEST_LIST_ID = "list-id";
 
 vi.mock("src/services/places", () => ({
-  usePlacesService: () => ({
-    getDetails: vi.fn(),
-  }),
   usePlaceModal: vi.fn(() => ({
     closePlaceModal: vi.fn(),
     openPlaceModal: vi.fn(),
