@@ -27,7 +27,12 @@ const AuthenticatedScenes = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position: GeolocationPosition) => {
-          dispatch(setCurrentLocation(position.coords));
+          dispatch(
+            setCurrentLocation({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            }),
+          );
         },
       );
     } else {
