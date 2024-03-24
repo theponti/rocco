@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import AlertError from "ui/AlertError";
+import FeedbackBlock from "ui/FeedbackBlock";
 
 import { LANDING } from "src/constants/routes";
 import { useAuth } from "src/services/store";
@@ -69,7 +69,7 @@ function Account() {
 
         <div className="divider" />
 
-        {error && <AlertError error={error.message} />}
+        {error && <FeedbackBlock type="error">{error.message}</FeedbackBlock>}
 
         <button className="btn btn-ghost text-error" onClick={onDelectAccount}>
           Delete account
