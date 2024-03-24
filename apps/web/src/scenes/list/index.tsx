@@ -21,8 +21,7 @@ const List = () => {
   const params = useParams<{ id: string }>();
   const { user } = useAuth();
   const listId = params.id;
-  const { data, status: listStatus } = useGetList(listId);
-  const error = true;
+  const { data, error, status: listStatus } = useGetList(listId);
 
   const onSelectedChanged = useCallback(
     (place: SearchPlace) =>
