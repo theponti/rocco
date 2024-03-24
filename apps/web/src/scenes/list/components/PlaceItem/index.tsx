@@ -31,7 +31,7 @@ const ListItem = ({ place }: { place: ListPlace }) => {
         <p className="flex-1 mb-1 font-semibold justify-start underline-offset-4 focus-visible:underline focus-visible:outline-none">
           {place.name}
         </p>
-        <PlaceTypes types={place.types} />
+        <PlaceTypes limit={1} types={place.types} />
       </div>
     </button>
   );
