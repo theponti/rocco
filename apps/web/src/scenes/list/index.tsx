@@ -1,33 +1,31 @@
 import { Share } from "lucide-react";
 import { useCallback } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, generatePath, useNavigate, useParams } from "react-router-dom";
 import AlertError from "ui/AlertError";
 import LoadingScene from "ui/Loading";
 
 import { useGetList } from "src/services/api";
 import { useAppSelector } from "src/services/hooks";
-import { usePlaceModal } from "src/services/places";
 import { useAuth } from "src/services/store";
-import { Place } from "src/services/types";
+import { SearchPlace } from "src/services/types";
 
 import PlacesAutocomplete from "../dashboard/components/PlacesAutocomplete";
 
 import PlaceItem from "./components/PlaceItem";
+import { PLACE } from "src/constants/routes";
 
 const List = () => {
-  const { openPlaceModal } = usePlaceModal();
   const navigate = useNavigate();
   const currentLocation = useAppSelector((state) => state.auth.currentLocation);
   const params = useParams<{ id: string }>();
   const { user } = useAuth();
   const listId = params.id;
-  const { data, refetch, status: listStatus } = useGetList(listId);
+  const { data, status: listStatus } = useGetList(listId);
 
   const onSelectedChanged = useCallback(
-    (place: Place) => {
-      openPlaceModal({ place, onClose: refetch });
-    },
-    [openPlaceModal, refetch],
+    (place: SearchPlace) =>
+      navigate(generatePath(PLACE, { id: place.googleMapsId })),
+    [navigate],
   );
 
   if (!user) {

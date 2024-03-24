@@ -1,17 +1,16 @@
 import styled from "@emotion/styled";
 import { Combobox } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { AxiosError } from "axios";
 import React, { useCallback, useRef, useState } from "react";
 import { useQuery } from "react-query";
 import Loading from "ui/Loading";
 
-import { usePlacesService } from "src/services/places";
-import { Place, PlaceLocation } from "src/services/types";
-import { AxiosError } from "axios";
+import FeedbackBlock from "src/components/FeedbackBlock";
 import api from "src/services/api";
+import { Place, PlaceLocation } from "src/services/types";
 
 const Wrapper = styled.div`
-  max-height: 48px; // This is the maximum height of the input field.
   position: relative;
 `;
 
@@ -79,10 +78,8 @@ function PlacesAutocomplete({
   center: PlaceLocation;
   setSelected: (place: Place) => void;
 }) {
-  const { getPlace } = usePlacesService();
-  const [value, setValue] = useState("");
-  const [error, setError] = useState<AxiosError>();
-  const { data, isLoading, refetch } = useQuery<Place[]>({
+  const [value, setValue] = useState<Place["googleMapsId"]>("");
+  const { data, error, isLoading, refetch } = useQuery<Place[], AxiosError>({
     queryKey: ["placeDetails", center, value],
     queryFn: async () => {
       if (value.length < 3 || !center) return Promise.resolve([]);
@@ -102,51 +99,32 @@ function PlacesAutocomplete({
     retry: false,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-    onError: (err) => {
-      setError(err as AxiosError);
-    },
   });
-
-  const onInputChange = useCallback(
-    (e) => {
-      setValue(e.target.value);
-
-      refetch();
-    },
-    [refetch, setValue],
-  );
 
   // This debounce prevents excess API requests.
   const timeoutId = useRef(null);
   const DEBOUNCE_TIME_MS = 1000;
+  const onInputChange = useCallback(
+    (e) => {
+      setValue(e.target.value);
+
+      clearTimeout(timeoutId.current);
+      timeoutId.current = setTimeout(async () => {
+        refetch();
+      }, DEBOUNCE_TIME_MS);
+    },
+    [refetch, setValue],
+  );
 
   const handleSelect = useCallback(
     async (googleMapsId: Place["googleMapsId"]) => {
-      clearTimeout(timeoutId.current);
-      timeoutId.current = setTimeout(async () => {
-        try {
-          const place = await getPlace({
-            googleMapsId,
-          });
-
-          if (!place || typeof place === "string") {
-            throw new Error("This location could not be found.");
-          }
-
-          if (typeof place !== "string") {
-            setSelected(place);
-          }
-        } catch (err) {
-          setError(err);
-        }
-      }, DEBOUNCE_TIME_MS);
+      setSelected(data.find((p) => p.googleMapsId === googleMapsId));
     },
-    [getPlace, setSelected],
+    [data, setSelected],
   );
 
   return (
     <Wrapper>
-      {error && <div>{error.message}</div>}
       <Combobox value={value} onChange={handleSelect}>
         <InputWrap>
           <Combobox.Input
@@ -183,6 +161,7 @@ function PlacesAutocomplete({
           </Options>
         )}
       </Combobox>
+      {error && <FeedbackBlock>{error.message}</FeedbackBlock>}
     </Wrapper>
   );
 }
