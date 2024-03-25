@@ -1,6 +1,6 @@
 {
   "extends": "tsconfig/react.json",
-  "include": ["src", "../../packages/ui/FeedbackBlock"],
+  "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }],
   "compilerOptions": {
     "baseUrl": ".",
