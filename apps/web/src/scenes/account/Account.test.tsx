@@ -18,7 +18,7 @@ describe("Account", () => {
     });
   });
 
-  test.only("renders when loading = true", () => {
+  test("renders when loading = true", () => {
     renderWithProviders(<Account />);
     expect(screen.getByText("Test user")).toBeInTheDocument();
   });
