@@ -47,7 +47,6 @@ function Account() {
     }
   }, [navigate, user]);
 
-  console.log({ user });
   if (!user) {
     return null;
   }
