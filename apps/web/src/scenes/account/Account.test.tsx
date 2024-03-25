@@ -1,23 +1,25 @@
+import { screen } from "@testing-library/react";
 import React from "react";
-import renderer from "react-test-renderer";
-import { test, expect, vi } from "vitest";
-import Account from ".";
+import { test, expect, describe } from "vitest";
+import { renderWithProviders } from "src/test/utils";
+import { useAuth } from "src/services/store";
 
-vi.mock("@auth0/auth0-react", () => ({
-  useAuth0: vi.fn(() => ({
-    loading: false,
-    user: {
-      name: "Test user",
-      email: "test@user.com",
-      picture: "https://avatar.com",
-    },
-  })),
-  withAuthenticationRequired: vi.fn(),
-}));
+import Account from "./Account";
 
-test("Account", () => {
-  test("renders when loading = true", () => {
-    const div = renderer.create(<Account />);
-    expect(div.toJSON()).toMatchSnapshot();
+describe("Account", () => {
+  beforeEach(() => {
+    (useAuth as jest.Mock).mockReturnValue({
+      user: {
+        name: "Test user",
+        email: "test-user@email.com",
+        avatar: "https://avatar.com",
+        createdAt: "2021-01-01T00:00:00.000Z",
+      },
+    });
+  });
+
+  test.only("renders when loading = true", () => {
+    renderWithProviders(<Account />);
+    expect(screen.getByText("Test user")).toBeInTheDocument();
   });
 });
