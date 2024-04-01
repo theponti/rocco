@@ -16,6 +16,7 @@
     "docker:web:run": "docker run -it -p 3000:80 rocco-web",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint && turbo run typecheck",
+    "postinstall": "npm run prisma:generate",
     "precommit": "npm run format && npm run lint",
     "prepare": "husky install",
     "prepush": "npm run test",

@@ -1,4 +1,4 @@
-import type { Item, List, User } from "@hominem/db";
+import type { Item, List, User, UserLists } from "@hominem/db";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -17,8 +17,9 @@ const Lists: NextPage = () => {
 	const {
 		data,
 		refetch,
+		isLoading,
 		status: listsStatus,
-	} = trpc.lists.get.useQuery<(Item & { list: List; user: User })[]>(
+	} = trpc.lists.get.useQuery<(UserLists & { list: List; user: User })[]>(
 		undefined,
 		{ enabled: false },
 	);
@@ -48,7 +49,7 @@ const Lists: NextPage = () => {
 			<h1>Lists</h1>
 			<ListForm onCreate={refetch} />
 			<div>
-				{listsStatus === "loading" && <LoadingScene />}
+				{isLoading && <LoadingScene />}
 				{data?.length === 0 && "Your lists will appear here."}
 				{data && data.length > 0 && (
 					<ul className="space-y-2">
