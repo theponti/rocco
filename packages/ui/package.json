@@ -6,7 +6,7 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "lint": "eslint ./*.ts*"
+    "lint": "biome lint ./*.ts*"
   },
   "dependencies": {
     "@emotion/styled": "^11.8.1",

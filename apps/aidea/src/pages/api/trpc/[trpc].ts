@@ -6,13 +6,13 @@ import { createContext } from "../../../server/common/context";
 
 // export API handler
 export default createNextApiHandler({
-  router: appRouter,
-  createContext,
-  onError:
-    env.NODE_ENV === "development"
-      ? ({ path, error }) => {
-          // eslint-disable-next-line
-          console.error(`❌ tRPC failed on ${path}: ${error}`);
-        }
-      : undefined,
+	router: appRouter,
+	createContext,
+	onError:
+		env.NODE_ENV === "development"
+			? ({ path, error }) => {
+					// eslint-disable-next-line
+					console.error(`❌ tRPC failed on ${path}: ${error}`);
+				}
+			: undefined,
 });

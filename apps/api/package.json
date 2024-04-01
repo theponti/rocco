@@ -7,7 +7,7 @@
     "build": "npm run clean && tsc",
     "clean": "rm -rf build",
     "dev": "npm run build && nodemon --config nodemon.json",
-    "lint": "eslint --ext .js,.jsx,.ts,.tsx src",
+    "lint": "biome lint ./src",
     "start": "node build/src/index",
     "test": "NODE_ENV=test jest",
     "typecheck": "tsc --noEmit --incremental false"

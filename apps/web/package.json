@@ -8,10 +8,9 @@
     "cy:headless": "cypress run",
     "cy": "cypress open",
     "dev": "(npx spotlight-sidecar) & vite",
-    "lint:fix": "eslint --cache --fix --ignore-path ../../.gitignore --ext .js,.jsx,.ts,.tsx src",
+    "lint:fix": "biome format --write ./src",
     "lint:stylelint": "stylelint --config ../../.stylelintrc.json --cache --fix 'src/**/*.{css,scss,less,styl}'",
-    "lint:eslint": "eslint --max-warnings=0 --cache --ignore-path ../../.gitignore --ext .js,.jsx,.ts,.tsx src",
-    "lint": "npm run lint:eslint && npm run lint:stylelint",
+    "lint": "biome lint ./src && npm run lint:stylelint",
     "postinstall": "cypress install",
     "preview:test": "start-server-and-test preview http://localhost:53422",
     "preview": "vite preview",
@@ -80,7 +79,6 @@
     "eslint-plugin-unused-imports": "^3.0.0",
     "husky": "^8.0.1",
     "jsdom": "^22.1.0",
-    "lint-staged": "13.2.3",
     "msw": "^2.2.13",
     "postcss": "8.4.31",
     "postcss-import": "^15.1.0",
@@ -98,13 +96,6 @@
     "vite": "^5.2.7",
     "vite-tsconfig-paths": "^4.2.3",
     "vitest": "^1.4.0"
-  },
-  "lint-staged": {
-    "*.css": "stylelint --config ../../.stylelintrc.json --cache --fix",
-    "*.{ts,tsx}": [
-      "npm run lint:fix",
-      "vitest related --run --coverage=false"
-    ]
   },
   "nyc": {
     "report-dir": "coverage/cypress",
