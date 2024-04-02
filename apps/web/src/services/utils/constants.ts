@@ -8,7 +8,6 @@ export const CATEGORIES = [
 	{ name: "utilities", percentage: 0.05 },
 ];
 
-// eslint-disable-next-line
 export default {
 	CATEGORIES,
 };

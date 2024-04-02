@@ -29,7 +29,6 @@ function BookmarkListItem({ bookmark, onDelete }: BookmarkListItemProps) {
 		<li className={styles["list-item"]}>
 			<figure className="h-[150px] md:h-[100%] md:w-[200px] flex justify-center overflow-hidden rounded-t-md md:rounded-t-none md:rounded-l">
 				{/* To support all possible og images, we aren't using Next Image */}
-				{/* eslint-disable-next-line */}
 				<img alt={title} src={image} className="object-cover min-w-full" />
 			</figure>
 			<div className="flex-1 flex flex-col px-4 pt-4 pb-2 bg-white rounded-b-md md:rounded-b-none md:rounded-r-md">

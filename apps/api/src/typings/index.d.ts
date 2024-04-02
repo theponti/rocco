@@ -1,5 +1,4 @@
 import * as FastifyJwt from "@fastify/jwt";
-/* eslint-disable */
 import type { Session } from "@fastify/secure-session";
 import type { MailService } from "@sendgrid/mail";
 
