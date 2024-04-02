@@ -13,7 +13,7 @@ describe("not-found", () => {
 
 		expect(
 			screen.getByText("This invite could not be found."),
-		).toMatchSnapshot();
+		).toBeInTheDocument();
 	});
 
 	it("should render not found for list route", () => {
@@ -27,6 +27,6 @@ describe("not-found", () => {
 
 		renderWithProviders(<NotFound />);
 
-		expect(screen.getByText("This list could not be found.")).toMatchSnapshot();
+		expect(screen.getByText("This list could not be found.")).toBeInTheDocument();
 	});
 });

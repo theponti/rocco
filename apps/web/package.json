@@ -15,14 +15,13 @@
     "preview:test": "start-server-and-test preview http://localhost:53422",
     "preview": "vite preview",
     "start": "npx http-server build --gzip -a 0.0.0.0 -p $PORT -c 1209600",
-    "test:ci": "vitest run",
-    "test:coverage": "npx vite preview --outDir coverage/lcov-report",
+    "test": "vitest --run",
+    "test:coverage": "vitest --run --coverage",
+    "test:coverage:view": "npx vite preview --outDir coverage/lcov-report",
+    "test:e2e": "npm run preview:test 'cypress open'",
     "test:e2e:ci": "npm run preview:test 'npx cypress run --record'",
     "test:e2e:headless": "npm run preview:test 'cypress run'",
-    "test:e2e": "npm run preview:test 'cypress open'",
-    "test:update": "vitest run -u",
     "test:watch": "vitest",
-    "test": "vitest --run",
     "typecheck": "tsc --noEmit --incremental false"
   },
   "dependencies": {
