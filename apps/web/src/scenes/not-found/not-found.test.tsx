@@ -8,7 +8,12 @@ import NotFound from ".";
 
 describe("not-found", () => {
 	it("should render not found for invites route", () => {
-		(useLocation as Mock).mockReturnValue({ pathname: "/invites/:id" });
+		(useMatch as Mock).mockImplementation((path) => {
+			if (path === "/invites/:id") {
+				return true;
+			}
+			return false;
+		});
 		renderWithProviders(<NotFound />);
 
 		expect(
@@ -17,7 +22,6 @@ describe("not-found", () => {
 	});
 
 	it("should render not found for list route", () => {
-		(useLocation as Mock).mockReturnValue({ pathname: "/" });
 		(useMatch as Mock).mockImplementation((path) => {
 			if (path === "/list/:id") {
 				return true;
@@ -27,6 +31,8 @@ describe("not-found", () => {
 
 		renderWithProviders(<NotFound />);
 
-		expect(screen.getByText("This list could not be found.")).toBeInTheDocument();
+		expect(
+			screen.getByText("This list could not be found."),
+		).toBeInTheDocument();
 	});
 });
