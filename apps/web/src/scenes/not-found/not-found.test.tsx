@@ -6,14 +6,23 @@ import { renderWithProviders } from "src/test/utils";
 
 import NotFound from ".";
 
+function mockUseMatch(paths: { [key: string]: boolean }) {
+	(useMatch as Mock).mockImplementation((path) => {
+		return paths[path] ?? false;
+	});
+}
 describe("not-found", () => {
 	it("should render not found for invites route", () => {
-		(useMatch as Mock).mockImplementation((path) => {
-			if (path === "/invites/:id") {
-				return true;
-			}
-			return false;
-		});
+		mockUseMatch({ "/invites": true });
+		renderWithProviders(<NotFound />);
+
+		expect(
+			screen.getByText("Sign up to start making lists with friends!"),
+		).toBeInTheDocument();
+	});
+
+	it("should render NotFound for invite route", () => {
+		mockUseMatch({ "/invites/:id": true });
 		renderWithProviders(<NotFound />);
 
 		expect(
@@ -22,13 +31,7 @@ describe("not-found", () => {
 	});
 
 	it("should render not found for list route", () => {
-		(useMatch as Mock).mockImplementation((path) => {
-			if (path === "/list/:id") {
-				return true;
-			}
-			return false;
-		});
-
+		mockUseMatch({ "/list/:id": true });
 		renderWithProviders(<NotFound />);
 
 		expect(
