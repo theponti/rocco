@@ -1,14 +1,22 @@
 import { act, fireEvent, screen, waitFor } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { useNavigate, useParams } from "react-router-dom";
-import { type Mock, beforeEach, describe, expect, test, vi } from "vitest";
+import {
+	type Mock,
+	beforeAll,
+	beforeEach,
+	describe,
+	expect,
+	test,
+	vi,
+} from "vitest";
 
 import api from "src/services/api";
 import { baseURL } from "src/services/api/base";
-import { useAuth } from "src/services/store";
+import * as hooks from "src/services/hooks";
 import { MOCK_PLACE, PLACE_ID } from "src/test/mocks/place";
 import { TEST_LIST_ID, testServer } from "src/test/test.setup";
-import { renderWithProviders } from "src/test/utils";
+import { getMockStore, renderWithProviders, useAuthMock } from "src/test/utils";
 
 import List from ".";
 
@@ -30,12 +38,16 @@ describe("List", () => {
 					});
 				}),
 			);
-			(useAuth as Mock).mockReturnValue({ user: null });
+			vi.spyOn(hooks, "useAuth").mockReturnValue(useAuthMock({ isAuth: true }));
 		});
 
 		test("should navigate to home page", async () => {
 			const navigate = vi.fn();
 			(useNavigate as Mock).mockReturnValue(navigate);
+			vi.spyOn(hooks, "useAuth").mockReturnValue(
+				useAuthMock({ isAuth: false }),
+			);
+
 			renderWithProviders(<List />, { isAuth: true });
 
 			await waitFor(() => {
@@ -57,7 +69,7 @@ describe("List", () => {
 					});
 				}),
 			);
-			(useAuth as Mock).mockReturnValue({ user: { id: userId } });
+			vi.spyOn(hooks, "useAuth").mockReturnValue(useAuthMock({ isAuth: true }));
 		});
 
 		test("should hide add-to-list by default", async () => {

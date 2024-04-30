@@ -1,8 +1,7 @@
 import { type List, type User, prisma } from "@hominem/db";
 import type { FastifyInstance } from "fastify";
-import { z } from "zod";
 
-import { verifySession } from "../auth";
+import { verifySession } from "../auth/utils";
 
 type UserList = {
 	list: List & { createdBy: User };
@@ -22,29 +21,20 @@ async function getUserLists(userId: string) {
 	});
 }
 
+type GetListsResponse = (List & { createdBy: { email: string } })[];
 const getListsRoute = (server: FastifyInstance) => {
 	server.get(
 		"/lists",
 		{
 			preValidation: verifySession,
-			schema: {
-				response: {
-					200: z.array(
-						z.object({
-							id: z.string(),
-							name: z.string(),
-							createdAt: z.string(),
-							updatedAt: z.string(),
-						}),
-					),
-				},
-			},
 		},
-		async (request) => {
+		async (request): Promise<GetListsResponse> => {
 			const { userId } = request.session.get("data");
 			const lists = await prisma.list.findMany({
 				include: {
-					createdBy: true,
+					createdBy: {
+						select: { email: true },
+					},
 				},
 				where: { userId },
 				orderBy: { createdAt: "desc" },

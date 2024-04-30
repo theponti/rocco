@@ -1,11 +1,11 @@
 import styled from "@emotion/styled";
-import FeedbackBlock from "@hominem/components/FeedbackBlock";
+import Alert from "@hominem/components/Alert";
+import Button from "@hominem/components/Button";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import Button from "@hominem/components/Button";
 import { LANDING } from "src/constants/routes";
-import { useAuth } from "src/services/store";
+import { useAuth } from "src/services/hooks";
 
 const Wrap = styled.div`
   display: flex;
@@ -74,7 +74,7 @@ function Account() {
 
 				<div className="divider" />
 
-				{error && <FeedbackBlock type="error">{error.message}</FeedbackBlock>}
+				{error && <Alert type="error">{error.message}</Alert>}
 
 				<Button className="btn-ghost text-error" onClick={onDelectAccount}>
 					Delete account

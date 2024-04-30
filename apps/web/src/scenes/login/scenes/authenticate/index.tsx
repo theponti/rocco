@@ -1,5 +1,5 @@
+import Alert from "@hominem/components/Alert";
 import Button from "@hominem/components/Button";
-import FeedbackBlock from "@hominem/components/FeedbackBlock";
 import { Field, Formik } from "formik";
 import React, { useEffect, useMemo } from "react";
 import { useMutation } from "react-query";
@@ -11,8 +11,8 @@ import Form from "src/components/Form";
 import { DASHBOARD } from "src/constants/routes";
 import { loadAuth, setCurrentEmail } from "src/services/auth";
 import { authenticate } from "src/services/auth/auth.api";
-import { useAppDispatch, useAppSelector } from "src/services/hooks";
-import { getLoginEmail } from "src/services/store";
+import { getLoginEmail } from "src/services/hooks";
+import { useAppDispatch, useAppSelector } from "src/services/store";
 
 const AuthenticateSchema = Yup.object().shape({
 	emailToken: Yup.string().length(8),
@@ -65,13 +65,13 @@ function Authenticate() {
 		<AuthWrap>
 			<h2 className="text-2xl font-semibold mb-6">Authenticate</h2>
 			{isError && error.response?.status === 401 && (
-				<FeedbackBlock type="error">
+				<Alert type="error">
 					Invalid code.
 					<Link to="login"> Request a new one.</Link>
-				</FeedbackBlock>
+				</Alert>
 			)}
 			{isError && error.response?.status !== 401 && (
-				<FeedbackBlock type="error">{error.response.message}</FeedbackBlock>
+				<Alert type="error">{error.response.message}</Alert>
 			)}
 			<Formik
 				validationSchema={AuthenticateSchema}

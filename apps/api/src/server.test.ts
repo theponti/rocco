@@ -1,20 +1,20 @@
 import type { FastifyInstance } from "fastify";
-
-import { createServer } from "@app/server";
+import { afterAll, beforeAll, describe, expect, test } from "vitest";
+import { createServer } from "./server";
 
 describe("server", () => {
-	let server: FastifyInstance;
+	let testServer: FastifyInstance;
 
 	beforeAll(async () => {
-		server = await createServer({ logger: false });
+		testServer = await createServer({ logger: false });
 	});
 
 	afterAll(async () => {
-		await server.close();
+		await testServer.close();
 	});
 
-	test.only("status endpoint returns 200", async () => {
-		const response = await server.inject({
+	test("status endpoint returns 200", async () => {
+		const response = await testServer.inject({
 			method: "GET",
 			url: "/status",
 		});

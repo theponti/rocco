@@ -1,5 +1,16 @@
 import { prisma } from "@hominem/db";
 import type { FastifyInstance } from "fastify";
+import type { Mock } from "vitest";
+import {
+	afterAll,
+	afterEach,
+	beforeAll,
+	beforeEach,
+	describe,
+	expect,
+	test,
+	vi,
+} from "vitest";
 
 import { createServer } from "@app/server";
 import { mockAuthSession } from "@test/utils";
@@ -11,60 +22,68 @@ describe("GET /invites", () => {
 		server = await createServer();
 	});
 
+	afterAll(async () => {
+		await server.close();
+	});
+
 	afterEach(() => {
-		jest.clearAllMocks();
+		vi.clearAllMocks();
 	});
 
-	it("should return users' incoming invites", async () => {
-		mockAuthSession();
-		(prisma.listInvite.findMany as jest.Mock).mockResolvedValueOnce([]);
-		(prisma.user.findUnique as jest.Mock).mockResolvedValueOnce({
-			email: "testUser@email.com",
-		});
-		const response = await server.inject({
-			method: "GET",
-			url: "/invites",
+	describe("authenticated", () => {
+		beforeEach(() => {
+			mockAuthSession();
 		});
 
-		expect(prisma.listInvite.findMany).toHaveBeenCalledWith({
-			where: {
-				OR: [
-					{ invitedUserId: "testUserId" },
-					{ invitedUserEmail: "testUser@email.com" },
-				],
-			},
-			include: {
-				list: {
-					select: {
-						id: true,
-						name: true,
+		test("should return users' incoming invites", async () => {
+			(prisma.listInvite.findMany as Mock).mockResolvedValueOnce([]);
+			(prisma.user.findUnique as Mock).mockResolvedValueOnce({
+				email: "testUser@email.com",
+			});
+			const response = await server.inject({
+				method: "GET",
+				url: "/invites",
+			});
+
+			expect(prisma.listInvite.findMany).toHaveBeenCalledWith({
+				where: {
+					OR: [
+						{ invitedUserId: "testUserId" },
+						{ invitedUserEmail: "testUser@email.com" },
+					],
+				},
+				include: {
+					list: {
+						select: {
+							id: true,
+							name: true,
+						},
+					},
+					user: {
+						select: {
+							email: true,
+							name: true,
+						},
 					},
 				},
-				user: {
-					select: {
-						email: true,
-						name: true,
-					},
-				},
-			},
-			orderBy: { listId: "asc" },
-		});
-		expect(response.statusCode).toEqual(200);
-		expect(response.json()).toEqual([]);
-	});
-
-	it("should return users' outgoing invites", async () => {
-		mockAuthSession();
-		(prisma.listInvite.findMany as jest.Mock).mockResolvedValueOnce([]);
-		const response = await server.inject({
-			method: "GET",
-			url: "/invites/outgoing",
+				orderBy: { listId: "asc" },
+			});
+			expect(response.statusCode).toEqual(200);
+			expect(response.json()).toEqual([]);
 		});
 
-		expect(prisma.listInvite.findMany).toHaveBeenCalledWith({
-			where: { userId: "testUserId" },
+		test("should return users' outgoing invites", async () => {
+			(prisma.listInvite.findMany as Mock).mockResolvedValueOnce([]);
+			const response = await server.inject({
+				method: "GET",
+				url: "/invites/outgoing",
+			});
+
+			expect(prisma.listInvite.findMany).toHaveBeenCalledWith({
+				where: { userId: "testUserId" },
+			});
+			expect(response.statusCode).toEqual(200);
+			expect(response.json()).toEqual([]);
 		});
-		expect(response.statusCode).toEqual(200);
-		expect(response.json()).toEqual([]);
 	});
 });

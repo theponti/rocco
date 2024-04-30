@@ -1,5 +1,5 @@
+import Alert from "@hominem/components/Alert";
 import Button from "@hominem/components/Button";
-import FeedbackBlock from "@hominem/components/FeedbackBlock";
 import { Field, Formik } from "formik";
 import { Globe } from "lucide-react";
 import { useCallback, useEffect, useMemo } from "react";
@@ -12,8 +12,8 @@ import Form from "src/components/Form";
 import { LANDING } from "src/constants/routes";
 import api from "src/services/api";
 import { setCurrentEmail } from "src/services/auth";
-import { useAppDispatch } from "src/services/hooks";
-import { useAuth } from "src/services/store";
+import { useAuth } from "src/services/hooks";
+import { useAppDispatch } from "src/services/store";
 
 const LoginSchema = Yup.object().shape({
 	email: Yup.string().email(),
@@ -54,7 +54,7 @@ function Login() {
 	});
 
 	return (
-		<AuthWrap>
+		<AuthWrap data-testid="login-page">
 			<div className="flex justify-center text-primary font-extrabold mb-4 mt-24">
 				<Globe size={150} className="animate-pulse" />
 			</div>
@@ -78,12 +78,12 @@ function Login() {
 					</div>
 					<Button isLoading={isLoading}>Get code</Button>
 					{isError && (
-						<FeedbackBlock type="error">
+						<Alert type="error">
 							<p className="mb-1">
 								We ran into an issue finding or creating your account.
 							</p>
 							<p>Please, try again later</p>
-						</FeedbackBlock>
+						</Alert>
 					)}
 				</Form>
 			</Formik>

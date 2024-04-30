@@ -1,5 +1,15 @@
 import { prisma } from "@hominem/db";
 import type { FastifyInstance } from "fastify";
+import type { Mock } from "vitest";
+import {
+	afterAll,
+	afterEach,
+	beforeAll,
+	describe,
+	expect,
+	test,
+	vi,
+} from "vitest";
 
 import { createServer } from "@app/server";
 import { mockAuthSession } from "@test/utils";
@@ -12,8 +22,8 @@ describe("GET /lists/:id", () => {
 	});
 
 	afterEach(async () => {
-		jest.resetAllMocks();
-		jest.clearAllMocks();
+		vi.resetAllMocks();
+		vi.clearAllMocks();
 	});
 
 	afterAll(async () => {
@@ -43,8 +53,8 @@ describe("GET /lists/:id", () => {
 			updatedAt: new Date().toISOString(),
 		};
 		mockAuthSession();
-		(prisma.list.findMany as jest.Mock).mockResolvedValueOnce([list]);
-		(prisma.userLists.findMany as jest.Mock).mockResolvedValueOnce([userList]);
+		(prisma.list.findMany as Mock).mockResolvedValueOnce([list]);
+		(prisma.userLists.findMany as Mock).mockResolvedValueOnce([userList]);
 		const response = await server.inject({
 			method: "GET",
 			url: "/lists",

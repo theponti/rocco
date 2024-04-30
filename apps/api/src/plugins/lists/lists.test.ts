@@ -1,5 +1,15 @@
 import { prisma } from "@hominem/db";
 import type { FastifyInstance } from "fastify";
+import type { Mock } from "vitest";
+import {
+	afterAll,
+	afterEach,
+	beforeAll,
+	describe,
+	expect,
+	test,
+	vi,
+} from "vitest";
 
 import { createServer } from "@app/server";
 import { mockAuthSession } from "@test/utils";
@@ -9,13 +19,13 @@ describe("/lists", () => {
 
 	beforeAll(async () => {
 		server = await createServer({ logger: false });
-		jest.spyOn(prisma.list, "findMany").mockResolvedValue([]);
-		jest.spyOn(prisma.userLists, "findMany").mockResolvedValue([]);
+		vi.spyOn(prisma.list, "findMany").mockResolvedValue([]);
+		vi.spyOn(prisma.userLists, "findMany").mockResolvedValue([]);
 	});
 
 	afterEach(async () => {
-		jest.resetAllMocks();
-		jest.clearAllMocks();
+		vi.resetAllMocks();
+		vi.clearAllMocks();
 	});
 
 	afterAll(async () => {
@@ -37,7 +47,7 @@ describe("/lists", () => {
 	describe("POST /lists", () => {
 		test("returns 200", async () => {
 			mockAuthSession();
-			(prisma.list.create as jest.Mock).mockResolvedValue({
+			(prisma.list.create as Mock).mockResolvedValue({
 				id: "testListId",
 				name: "My List",
 				createdAt: new Date(),
@@ -63,7 +73,7 @@ describe("/lists", () => {
 	});
 
 	describe("POST /lists/place", () => {
-		it("should create a place and associate it with lists", async () => {
+		test("should create a place and associate it with lists", async () => {
 			mockAuthSession();
 			const payload = {
 				listIds: ["listId1", "listId2"],
@@ -85,13 +95,13 @@ describe("/lists", () => {
 				createdAt: createdAt.toISOString(),
 				updatedAt: updatedAt.toISOString(),
 			};
-			(prisma.place.create as jest.Mock).mockResolvedValue({
+			(prisma.place.create as Mock).mockResolvedValue({
 				...payload.place,
 				...dates,
 				id: "testPlaceId",
 				description: "",
 			});
-			(prisma.list.findMany as jest.Mock).mockResolvedValue([
+			(prisma.list.findMany as Mock).mockResolvedValue([
 				{
 					id: "listId1",
 					name: "List 1",
@@ -103,7 +113,7 @@ describe("/lists", () => {
 					...dates,
 				},
 			]);
-			(prisma.item.createMany as jest.Mock).mockResolvedValue({
+			(prisma.item.createMany as Mock).mockResolvedValue({
 				id: "testItemId",
 				name: "Test Item",
 				description: "",

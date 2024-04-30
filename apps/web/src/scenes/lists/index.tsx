@@ -1,11 +1,12 @@
+import Alert from "@hominem/components/Alert";
 import Button from "@hominem/components/Button";
-import FeedbackBlock from "@hominem/components/FeedbackBlock";
 import LoadingScene from "@hominem/components/Loading";
+import { PlusCircle } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useGetLists } from "src/services/api";
-import { useAuth } from "src/services/store";
+import { useAuth } from "src/services/hooks";
 
 import ListForm from "./components/ListForm";
 
@@ -45,14 +46,18 @@ const Lists = () => {
 
 	return (
 		<>
-			<h1 className="text-3xl font-bold">Lists</h1>
-			{!isListFormOpen ? (
-				<div className="flex justify-end w-full mb-2">
-					<Button onClick={onAddListClick} disabled={isListFormOpen}>
-						Create new list
+			<div className="flex items-center justify-between pb-4">
+				<h1 className="text-3xl font-bold">Lists</h1>
+				{!isListFormOpen ? (
+					<Button
+						className="bg-transparent"
+						onClick={onAddListClick}
+						disabled={isListFormOpen}
+					>
+						<PlusCircle size={24} className="text-primary" />
 					</Button>
-				</div>
-			) : null}
+				) : null}
+			</div>
 			{isListFormOpen ? (
 				<div className="mb-4">
 					<ListForm onCancel={onListFormCancel} onCreate={onListCreate} />
@@ -60,7 +65,7 @@ const Lists = () => {
 			) : null}
 			<div>
 				{listsStatus === "loading" && <LoadingScene />}
-				{error && <FeedbackBlock type="error">{error.message}</FeedbackBlock>}
+				{error && <Alert type="error">{error.message}</Alert>}
 				{data?.length === 0 ? <NoResults /> : null}
 				{data && data.length > 0 && (
 					<ul className="space-y-2">

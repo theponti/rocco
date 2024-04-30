@@ -1,12 +1,24 @@
 import { prisma } from "@hominem/db";
 import type { FastifyInstance } from "fastify";
+import type { Mock } from "vitest";
+import {
+	afterAll,
+	afterEach,
+	beforeAll,
+	beforeEach,
+	describe,
+	expect,
+	test,
+	vi,
+} from "vitest";
 
 import { createServer } from "@app/server";
-import { googlePlaces } from "@test/jest.setup";
 import { MOCKS } from "@test/mocks";
 import { mockAuthSession } from "@test/utils";
 
 import * as googlePlacesPlugin from "../google/places";
+
+const googlePlaces = googlePlacesPlugin.places;
 
 const { PLACE, GOOGLE_PLACE_GET, GOOGLE_PHOTO_MEDIA } = MOCKS;
 
@@ -14,12 +26,12 @@ describe("/places/:id", () => {
 	let server: FastifyInstance;
 
 	beforeAll(async () => {
-		jest.spyOn(googlePlacesPlugin, "getPlaceDetails");
+		vi.spyOn(googlePlacesPlugin, "getPlaceDetails");
 		server = await createServer({ logger: false });
 	});
 
 	afterEach(() => {
-		jest.clearAllMocks();
+		vi.clearAllMocks();
 	});
 
 	afterAll(async () => {
@@ -32,9 +44,11 @@ describe("/places/:id", () => {
 		});
 
 		test("should return place from Google Places if place does not exist in DB", async () => {
-			jest.spyOn(prisma.place, "findFirst").mockResolvedValue(null);
-			googlePlaces.get.mockResolvedValue(GOOGLE_PLACE_GET);
-			googlePlaces.photos.getMedia.mockResolvedValue(GOOGLE_PHOTO_MEDIA);
+			vi.spyOn(prisma.place, "findFirst").mockResolvedValue(null);
+			(googlePlaces.get as Mock).mockResolvedValue(GOOGLE_PLACE_GET);
+			(googlePlaces.photos.getMedia as Mock).mockResolvedValue(
+				GOOGLE_PHOTO_MEDIA,
+			);
 			const response = await server.inject({
 				method: "GET",
 				url: "/places/123",
@@ -54,7 +68,7 @@ describe("/places/:id", () => {
 		});
 
 		test("should return place from DB if place exists in DB", async () => {
-			jest.spyOn(prisma.place, "findFirst").mockResolvedValue(PLACE);
+			vi.spyOn(prisma.place, "findFirst").mockResolvedValue(PLACE);
 			const response = await server.inject({
 				method: "GET",
 				url: "/places/123",

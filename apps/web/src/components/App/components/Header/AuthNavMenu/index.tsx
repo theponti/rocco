@@ -1,5 +1,5 @@
 import { List, LogOut, Mail, Search, Settings, UserCircle } from "lucide-react";
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import {
@@ -9,21 +9,31 @@ import {
 	LANDING,
 	LISTS,
 } from "src/constants/routes";
-import { logout } from "src/services/auth";
-import { useAppDispatch } from "src/services/hooks";
-import { useAuth } from "src/services/store";
+import { type User, logout } from "src/services/auth";
+import { useAppDispatch } from "src/services/store";
 
 import NavLink from "../../NavLink";
 
-const AuthNavMenu = () => {
+const AuthNavMenu = ({ user }: { user: User }) => {
+	const navMenuRef = useRef(null);
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
-	const { user } = useAuth();
 	const onLogoutClick = useCallback(() => {
 		dispatch(logout()).then(() => {
 			navigate(LANDING);
 		});
 	}, [dispatch, navigate]);
+
+	const onLinkClick = useCallback(() => {
+		navMenuRef.current?.click?.();
+	}, []);
+
+	const onLinkKeyDown = useCallback((event) => {
+		if (event.key === "Enter") {
+			event.preventDefault();
+			navMenuRef.current?.click?.();
+		}
+	}, []);
 
 	return (
 		<>
@@ -41,13 +51,18 @@ const AuthNavMenu = () => {
 			<div>
 				<details data-testid="dropdown" className="dropdown dropdown-end">
 					<summary
+						ref={navMenuRef}
 						data-testid="dropdown-button"
 						role="button"
-						className="btn bg-transparent border-none"
+						className="btn bg-transparent border-black"
 					>
 						<UserCircle />
 					</summary>
-					<ul className="p-1 pb-3 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52 mt-1">
+					<ul
+						className="p-1 pb-3 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52 mt-1"
+						onKeyDown={onLinkKeyDown}
+						onClick={onLinkClick}
+					>
 						<li>
 							<span className="flex justify-end text-sm text-secondary hover:outline-none">
 								{user.email}
