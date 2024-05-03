@@ -2,16 +2,16 @@ import "@testing-library/jest-dom";
 import { cleanup } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import React, { type PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 import { afterAll, afterEach, beforeAll, vi } from "vitest";
 
-import { baseURL } from "../services/api/base";
+import { baseURL } from "src/services/api/base";
 import { MOCK_PLACE, PLACE_HANDLERS } from "./mocks/place";
 
 export const TEST_LIST_ID = "list-id";
 
-vi.mock("react-router-dom", async () => {
-	const actual = await vi.importActual("react-router-dom");
+vi.mock("@tanstack/react-router", async () => {
+	const actual = await vi.importActual("@tanstack/react-router");
 	return {
 		...actual,
 		useParams: vi.fn(),

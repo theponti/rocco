@@ -1,5 +1,6 @@
 import { writeFileSync } from "node:fs";
 import * as path from "node:path";
+import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
 import react from "@vitejs/plugin-react";
 import analyze from "rollup-plugin-analyzer";
 import { defineConfig } from "vite";
@@ -11,6 +12,7 @@ export default defineConfig({
 	plugins: [
 		react(),
 		tsconfigPaths(),
+		TanStackRouterVite(),
 		VitePWA({
 			manifest: {
 				name: "Rocco",

@@ -1,6 +1,7 @@
 import type { AxiosError } from "axios";
 import { useState } from "react";
 import { type UseMutationOptions, useMutation, useQuery } from "react-query";
+
 import api from ".";
 import type { Place } from "../types";
 

@@ -1,0 +1,11 @@
+export const ACCOUNT = "/account";
+export const ADMIN = "/admin";
+export const AUTHENTICATE = "/authenticate";
+export const DASHBOARD = "/";
+export const LANDING = "/";
+export const INVITES = "/invites/";
+export const LIST = "/list/$id";
+export const LIST_INVITE = "/lists/$id/invites";
+export const LOGIN = "/login";
+export const PLACE = "/place/$id";
+export const WILDCARD = "*";
