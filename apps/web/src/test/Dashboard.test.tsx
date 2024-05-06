@@ -2,7 +2,7 @@ import { screen, waitFor } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { beforeEach, describe, expect, test } from "vitest";
 
-import Dashboard from "src/routes/dashboard/index.lazy";
+import Dashboard from "src/routes/dashboard";
 import { baseURL } from "src/services/api/base";
 import { testServer } from "src/test/test.setup";
 import { getMockLists, renderWithProviders } from "src/test/utils";

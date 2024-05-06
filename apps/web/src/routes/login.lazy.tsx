@@ -9,19 +9,15 @@ import * as Yup from "yup";
 
 import AuthWrap from "src/components/AuthenticationWrap";
 import Form from "src/components/Form";
-import api from "src/services/api";
-import { setCurrentEmail } from "src/services/auth";
+import { useAuth } from "src/services/auth";
 import { LANDING } from "src/services/constants/routes";
-import { useAuth } from "src/services/hooks";
-import { useAppDispatch } from "src/services/store";
 
 const LoginSchema = Yup.object().shape({
 	email: Yup.string().email(),
 });
 
 function Login() {
-	const dispatch = useAppDispatch();
-	const { user } = useAuth();
+	const { user, login } = useAuth();
 	const navigate = useNavigate();
 	const initialValues = useMemo(
 		() => ({
@@ -31,10 +27,7 @@ function Login() {
 	);
 
 	const { mutateAsync, isLoading, isError } = useMutation({
-		mutationFn: async ({ email }: { email: string }) => {
-			await api.post("/login", { email }, { withCredentials: false });
-			dispatch(setCurrentEmail(email));
-		},
+		mutationFn: async ({ email }: { email: string }) => login(email),
 		onSuccess: () => {
 			navigate({ to: "/authenticate" });
 		},

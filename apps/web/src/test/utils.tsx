@@ -62,36 +62,8 @@ export const getMockLists = () => [
 export const getMockStore = ({ isAuth, authOptions = {} }) =>
 	configureStore({
 		reducer: rootReducer,
-		preloadedState: {
-			auth: {
-				currentLocation: null,
-				isLoadingAuth: false,
-				authError: null,
-				loginEmail: null,
-				status: AuthStatus.Unloaded,
-				user: isAuth ? getMockUser() : null,
-				...authOptions,
-			},
-		},
+		preloadedState: {},
 	});
-
-export const useAuthMock = ({
-	isAuth = false,
-}: { isAuth?: boolean }): {
-	dispatch: ReturnType<typeof getMockStore>["dispatch"];
-	user: User | null;
-	isAuthenticated: boolean;
-	isLoadingAuth: boolean;
-	loginEmail: string | null;
-	status: AuthStatus;
-} => ({
-	dispatch: getMockStore({ isAuth }).dispatch,
-	user: isAuth ? getMockUser() : null,
-	isAuthenticated: isAuth,
-	isLoadingAuth: false,
-	loginEmail: null,
-	status: isAuth ? AuthStatus.Authenticated : AuthStatus.Unauthenticated,
-});
 
 export const TestProviders = ({
 	children,

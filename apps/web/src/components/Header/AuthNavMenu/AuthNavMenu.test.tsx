@@ -1,5 +1,5 @@
 import { act, screen, waitFor } from "@testing-library/react";
-import { beforeEach, describe, expect, test } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import { getMockUser, renderWithProviders } from "src/test/utils";
 

@@ -10,7 +10,7 @@ import { useCallback } from "react";
 
 import ListInviteForm from "src/components/ListInviteForm";
 import { useGetList, useGetListInvites } from "src/services/api";
-import { useAuth } from "src/services/hooks";
+import { useAuth } from "src/services/auth";
 
 const routeApi = getRouteApi("/list/$id/invites");
 

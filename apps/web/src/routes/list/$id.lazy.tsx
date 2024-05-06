@@ -12,8 +12,8 @@ import { useCallback, useState } from "react";
 import PlaceItem from "src/components/PlaceItem";
 import PlacesAutocomplete from "src/components/PlacesAutocomplete";
 import { useGetList } from "src/services/api";
+import { useAuth } from "src/services/auth";
 import { LANDING, PLACE } from "src/services/constants/routes";
-import { useAuth } from "src/services/hooks";
 import { useAppSelector } from "src/services/store";
 import type { SearchPlace } from "src/services/types";
 
@@ -21,7 +21,7 @@ const routerApi = getRouteApi("/list/$id");
 
 const List = () => {
 	const navigate = useNavigate();
-	const currentLocation = useAppSelector((state) => state.auth.currentLocation);
+	const { currentLocation } = useAuth();
 	const [isAddToListOpen, setIsAddToListOpen] = useState(false);
 	const [deleteError, setDeleteError] = useState<string | null>(null);
 	const { id: listId } = routerApi.useParams();

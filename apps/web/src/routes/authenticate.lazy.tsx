@@ -8,20 +8,16 @@ import * as Yup from "yup";
 
 import AuthWrap from "src/components/AuthenticationWrap";
 import Form from "src/components/Form";
-import { loadAuth, setCurrentEmail } from "src/services/auth";
-import { authenticate } from "src/services/auth/auth.api";
+import { useAuth } from "src/services/auth";
 import { DASHBOARD, LOGIN } from "src/services/constants/routes";
-import { getLoginEmail } from "src/services/hooks";
-import { useAppDispatch, useAppSelector } from "src/services/store";
 
 const AuthenticateSchema = Yup.object().shape({
 	emailToken: Yup.string().length(8),
 });
 
 function Authenticate() {
-	const loginEmail = useAppSelector(getLoginEmail);
+	const { authenticate, loginEmail } = useAuth();
 	const navigate = useNavigate();
-	const dispatch = useAppDispatch();
 	const initialValues = useMemo(
 		() => ({
 			emailToken: "",
@@ -37,8 +33,6 @@ function Authenticate() {
 			await authenticate({ email: loginEmail, emailToken });
 		},
 		onSuccess: () => {
-			dispatch(loadAuth());
-			dispatch(setCurrentEmail(null));
 			navigate({ to: DASHBOARD });
 		},
 	});
@@ -105,6 +99,6 @@ function Authenticate() {
 	);
 }
 
-export const Route = createLazyFileRoute("/authenticate/")({
+export const Route = createLazyFileRoute("/authenticate")({
 	component: Authenticate,
 });

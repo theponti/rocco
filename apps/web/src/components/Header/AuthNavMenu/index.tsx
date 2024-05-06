@@ -2,21 +2,18 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { List, LogOut, Mail, Search, Settings, UserCircle } from "lucide-react";
 import { useCallback, useRef } from "react";
 
-import { type User, logout } from "src/services/auth";
-import { ACCOUNT, LANDING } from "src/services/constants/routes";
-import { useAppDispatch } from "src/services/store";
-
-import NavLink from "../../NavLink";
+import NavLink from "src/components/NavLink";
+import { type User, useAuth } from "src/services/auth";
+import { LANDING } from "src/services/constants/routes";
 
 const AuthNavMenu = ({ user }: { user: User }) => {
 	const navMenuRef = useRef(null);
 	const navigate = useNavigate();
-	const dispatch = useAppDispatch();
-	const onLogoutClick = useCallback(() => {
-		dispatch(logout()).then(() => {
-			navigate({ to: LANDING });
-		});
-	}, [dispatch, navigate]);
+	const { logout } = useAuth();
+	const onLogoutClick = useCallback(async () => {
+		await logout();
+		navigate({ to: LANDING });
+	}, [logout, navigate]);
 
 	const onLinkClick = useCallback(() => {
 		navMenuRef.current?.click?.();

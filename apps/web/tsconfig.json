@@ -1,6 +1,7 @@
 {
   "extends": "tsconfig/react.json",
   "include": ["src", "../../packages/ui/Footer", "../../packages/ui/Header"],
+  "exclude": ["src/**/*.test.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }],
   "compilerOptions": {
     "baseUrl": ".",

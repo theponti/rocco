@@ -4,8 +4,8 @@ import Button from "@hominem/components/Button";
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 
+import { useAuth } from "src/services/auth";
 import { LANDING } from "src/services/constants/routes";
-import { useAuth } from "src/services/hooks";
 
 const Wrap = styled.div`
   display: flex;

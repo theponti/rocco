@@ -1,18 +1,11 @@
 import styled from "@emotion/styled";
 import Loading from "@hominem/components/Loading";
-import {
-	Link,
-	createFileRoute,
-	createLazyFileRoute,
-	useNavigate,
-} from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { Eye, Globe2, Heart, Pin } from "lucide-react";
 import api from "src/services/api";
-import { AuthStatus, loadAuth } from "src/services/auth";
+import { useAuth } from "src/services/auth";
 
 import { mediaQueries } from "src/services/constants/styles";
-import { AuthContext } from "src/services/hooks";
-import { useAppDispatch } from "src/services/store";
 
 const Wrap = styled.div`
   position: relative;
@@ -33,21 +26,15 @@ const Wrap = styled.div`
 `;
 
 export const Route = createFileRoute("/")({
-	loader: async () => {
-		const response = await api.get("/me");
-
-		if (!response.data || !response.data.id) {
-			return { status: AuthStatus.Unauthenticated };
-		}
-
-		return { status: AuthStatus.Authenticated, user: response.data };
-	},
+	loader: ({ context }) => api.get("/me").then((response) => response.data),
 	pendingComponent: () => <Loading size="xl" />,
 	component: () => {
-		const data = Route.useLoaderData();
-		const navigate = useNavigate();
+		const { setUser } = useAuth();
+		const user = Route.useLoaderData();
+		const navigate = Route.useNavigate();
 
-		if (data.status === AuthStatus.Authenticated) {
+		if (user) {
+			setUser(user);
 			navigate({ to: "/dashboard" });
 		}
 

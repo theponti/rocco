@@ -6,7 +6,7 @@ import { useCallback, useState } from "react";
 import ListForm from "src/components/ListForm";
 import Lists from "src/components/Lists";
 import { useGetLists } from "src/services/api";
-import { useAuth } from "src/services/hooks";
+import { useAuth } from "src/services/auth";
 
 const ListsScene = () => {
 	const navigate = useNavigate();

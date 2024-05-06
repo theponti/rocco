@@ -1,14 +1,16 @@
 import { Link } from "@tanstack/react-router";
 import { Globe } from "lucide-react";
 
+import { type User, useAuth } from "src/services/auth";
 import { APP_NAME } from "src/services/constants";
 import { LANDING, LOGIN } from "src/services/constants/routes";
-import { useAuth } from "src/services/hooks";
 
 import AuthNavMenu from "./AuthNavMenu";
 
 function Header() {
-	const { isAuthenticated, user } = useAuth();
+	const { user } = useAuth();
+
+	console.log({ user });
 
 	return (
 		<header className="navbar flex flex-row justify-between items-center pt-4 px-0">
@@ -19,7 +21,7 @@ function Header() {
 				<Globe className="animate-spin-slow mt-1 size-7 text-primary" />
 				{APP_NAME}
 			</Link>
-			{isAuthenticated ? (
+			{user ? (
 				<AuthNavMenu user={user} />
 			) : (
 				<Link to={LOGIN} className="btn btn-primary text-white">

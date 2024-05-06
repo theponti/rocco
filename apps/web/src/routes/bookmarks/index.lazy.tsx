@@ -4,7 +4,7 @@ import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import BookmarkForm from "src/components/BookmarkForm";
 import BookmarkListItem from "src/components/BookmarkListItem";
 import { useGetBookmarks } from "src/services/api/bookmarks";
-import { useAuth } from "src/services/hooks";
+import { useAuth } from "src/services/auth";
 
 const Recommendations = () => {
 	const navigate = useNavigate();

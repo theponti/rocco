@@ -2,7 +2,7 @@ import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 
 import InviteListItem from "src/components/InviteListItem";
 import { useGetInvites } from "src/services/api";
-import { useAuth } from "src/services/hooks";
+import { useAuth } from "src/services/auth";
 
 const Invites = () => {
 	const navigate = useNavigate();

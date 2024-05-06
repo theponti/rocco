@@ -5,12 +5,11 @@ import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Provider } from "react-redux";
 
-import type { MyRouterContext } from "src/routes/__root";
-import { AuthStatus } from "src/services/auth";
-import { useAuth } from "src/services/hooks";
+import { useAuth } from "src/services/auth";
 import { store } from "src/services/store";
 import "./index.css";
 import { routeTree } from "./routeTree.gen";
+import { AuthProvider } from "./services/auth";
 
 const queryClient = new QueryClient();
 
@@ -40,7 +39,9 @@ root.render(
 		<Provider store={store}>
 			<QueryClientProvider client={queryClient}>
 				<APIProvider apiKey={import.meta.env.VITE_GOOGLE_API_KEY}>
-					<InnerApp />
+					<AuthProvider>
+						<InnerApp />
+					</AuthProvider>
 				</APIProvider>
 			</QueryClientProvider>
 		</Provider>

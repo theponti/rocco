@@ -1,6 +1,11 @@
 import styled from "@emotion/styled";
 import Loading from "@hominem/components/Loading";
-import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
+import {
+	createFileRoute,
+	createLazyFileRoute,
+	useNavigate,
+} from "@tanstack/react-router";
+import { useApiIsLoaded } from "@vis.gl/react-google-maps";
 import type { MapMouseEvent } from "@vis.gl/react-google-maps/dist/components/map/use-map-events";
 import React, { useCallback, useEffect, useState } from "react";
 
@@ -8,8 +13,8 @@ import Lists from "src/components/Lists";
 import RoccoMap from "src/components/Map";
 import PlacesAutocomplete from "src/components/PlacesAutocomplete";
 import { useGetLists } from "src/services/api";
+import { useAuth } from "src/services/auth";
 import { mediaQueries } from "src/services/constants/styles";
-import { useAuth } from "src/services/hooks";
 import { useAppSelector } from "src/services/store";
 import type { Place } from "src/services/types";
 
@@ -31,9 +36,10 @@ const PlacesAutocompleteWrap = styled.div``;
 
 const DEFAULT_CENTER = { latitude: 37.7749, longitude: -122.4194 }; // Default center (San Francisco)
 
-function Dashboard({ isMapLoaded }: { isMapLoaded: boolean }) {
-	const { user } = useAuth();
-	const currentLocation = useAppSelector((state) => state.auth.currentLocation);
+function Dashboard() {
+	const user = Route.useLoaderData();
+	const { currentLocation } = useAuth();
+	const isMapLoaded = useApiIsLoaded();
 	const [selected, setSelected] = useState<Place | null>(null);
 	const [center, setCenter] = useState(currentLocation || DEFAULT_CENTER);
 	const navigate = useNavigate();
@@ -98,6 +104,13 @@ function Dashboard({ isMapLoaded }: { isMapLoaded: boolean }) {
 	);
 }
 
-export const Route = createLazyFileRoute("/dashboard/")({
+export const Route = createFileRoute("/dashboard")({
+	loader: ({ context }) => {
+		try {
+			return context.auth.loadAuth();
+		} catch (err) {
+			console.error(err);
+		}
+	},
 	component: Dashboard,
 });
