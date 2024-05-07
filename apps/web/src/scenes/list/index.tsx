@@ -9,8 +9,8 @@ import { useAuth } from "src/lib/auth";
 import type { SearchPlace } from "src/lib/types";
 import { PLACE } from "src/lib/utils/routes";
 
-import PlacesAutocomplete from "../dashboard/components/PlacesAutocomplete";
-import PlaceItem from "./components/PlaceItem";
+import PlaceItem from "../../components/PlaceItem";
+import PlacesAutocomplete from "../../components/PlacesAutocomplete";
 
 const List = () => {
 	const { currentLocation, user } = useAuth();
