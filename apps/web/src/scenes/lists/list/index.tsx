@@ -1,12 +1,12 @@
 import React, { Suspense } from "react";
 
-const LazyLists = React.lazy(
-	() => import(/* webpackChunkName: "lists" */ "./lists"),
+const LazyList = React.lazy(
+	() => import(/* webpackChunkName: "list" */ "./List"),
 );
 
 const Dashboard = (props) => (
 	<Suspense>
-		<LazyLists {...props} />
+		<LazyList {...props} />
 	</Suspense>
 );
 
