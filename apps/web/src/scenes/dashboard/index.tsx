@@ -10,9 +10,9 @@ import RoccoMap from "src/components/Map";
 import PlacesAutocomplete from "src/components/PlacesAutocomplete";
 import { useGetLists } from "src/lib/api";
 import { useAuth } from "src/lib/auth";
+import { PLACE } from "src/lib/routes";
+import { mediaQueries } from "src/lib/styles";
 import type { Place } from "src/lib/types";
-import { PLACE } from "src/lib/utils/routes";
-import { mediaQueries } from "src/lib/utils/styles";
 
 const Wrap = styled.div`
   display: flex;

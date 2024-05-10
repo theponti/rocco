@@ -6,8 +6,8 @@ import { Provider } from "react-redux";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import { AuthProvider } from "src/lib/auth";
+import * as ROUTES from "src/lib/routes";
 import { store } from "src/lib/store";
-import * as ROUTES from "src/lib/utils/routes";
 import Authenticate from "src/scenes/authenticate";
 import LandingPage from "src/scenes/index";
 import Login from "src/scenes/login";

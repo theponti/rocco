@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "src/lib/auth";
-import { LANDING } from "src/lib/utils/routes";
+import { LANDING } from "src/lib/routes";
 
 function useDeleteUserMutation() {
 	return {

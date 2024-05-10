@@ -9,7 +9,7 @@ import * as Yup from "yup";
 import AuthWrap from "src/components/AuthenticationWrap";
 import Form from "src/components/Form";
 import { useAuth } from "src/lib/auth";
-import { LANDING } from "src/lib/utils/routes";
+import { LANDING } from "src/lib/routes";
 
 const LoginSchema = Yup.object().shape({
 	email: Yup.string().email(),

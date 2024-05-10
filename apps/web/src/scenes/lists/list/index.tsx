@@ -3,13 +3,14 @@ import Loading from "@hominem/components/Loading";
 import { PlusCircle, Share } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Link, generatePath, useNavigate, useParams } from "react-router-dom";
+import ListMenu from "src/components/Lists/list-menu";
 
 import PlaceItem from "src/components/PlaceItem";
 import PlacesAutocomplete from "src/components/PlacesAutocomplete";
 import { useGetList } from "src/lib/api";
 import { useAuth } from "src/lib/auth";
+import { PLACE } from "src/lib/routes";
 import type { SearchPlace } from "src/lib/types";
-import { PLACE } from "src/lib/utils/routes";
 
 const List = () => {
 	const { currentLocation, user } = useAuth();
@@ -74,6 +75,7 @@ const List = () => {
 									</span>
 								</Link>
 							)}
+							<ListMenu list={data} isOwnList={data.userId === user.id} />
 						</div>
 					</div>
 					{(data.items.length === 0 || isAddToListOpen) && (

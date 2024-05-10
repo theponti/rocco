@@ -8,8 +8,8 @@ import * as Yup from "yup";
 import AuthWrap from "src/components/AuthenticationWrap";
 import Form from "src/components/Form";
 import { useAuth } from "src/lib/auth";
+import { DASHBOARD, LOGIN } from "src/lib/routes";
 import { useAppDispatch } from "src/lib/store";
-import { DASHBOARD, LOGIN } from "src/lib/utils/routes";
 
 const AuthenticateSchema = Yup.object().shape({
 	emailToken: Yup.string().length(8),

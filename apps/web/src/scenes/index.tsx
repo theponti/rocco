@@ -3,8 +3,8 @@ import { Eye, Globe2, Heart, Pin } from "lucide-react";
 import { Link, Navigate } from "react-router-dom";
 
 import { useAuth } from "src/lib/auth";
-import { DASHBOARD, LOGIN } from "src/lib/utils/routes";
-import { mediaQueries } from "src/lib/utils/styles";
+import { DASHBOARD, LOGIN } from "src/lib/routes";
+import { mediaQueries } from "src/lib/styles";
 
 const Wrap = styled.div`
   position: relative;
