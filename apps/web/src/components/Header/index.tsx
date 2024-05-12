@@ -6,7 +6,7 @@ import { AuthStatus } from "src/lib/auth/types";
 import { APP_NAME } from "src/lib/constants";
 import { LANDING, LOGIN } from "src/lib/routes";
 
-import AuthNavMenu from "./AuthNavMenu";
+import AuthNavMenu from "./auth-nav-menu";
 
 function Header() {
 	const { user, status } = useAuth();

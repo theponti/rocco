@@ -26,17 +26,6 @@ const AuthNavMenu = ({ user }: { user: User }) => {
 		logout.status === "success" && navigate(LANDING);
 	}, [logout.status, navigate]);
 
-	const onLinkClick = useCallback(() => {
-		navMenuRef.current?.click?.();
-	}, []);
-
-	const onLinkKeyDown = useCallback((event) => {
-		if (event.key === "Enter") {
-			event.preventDefault();
-			navMenuRef.current?.click?.();
-		}
-	}, []);
-
 	return (
 		<>
 			<div className="hidden md:visible md:flex gap-6 mr-4">
@@ -54,7 +43,7 @@ const AuthNavMenu = ({ user }: { user: User }) => {
 				<DropdownMenu>
 					<DropdownMenuTrigger
 						ref={navMenuRef}
-						data-testid="dropdown-button"
+						data-testid="auth-dropdown-button"
 						role="button"
 						className="btn bg-transparent border-black py-2 px-3"
 					>
