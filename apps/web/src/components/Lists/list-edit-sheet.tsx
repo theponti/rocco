@@ -1,18 +1,20 @@
+import Input from "@hominem/components/Input";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
+import { Button } from "src/components/ui/button";
+import { Sheet, SheetContent } from "src/components/ui/sheet";
 import api from "src/lib/api";
 import type { List } from "src/lib/types";
-import { Button } from "../ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
+import { useListMenu } from "./list-menu";
 
 export default function ListEditSheet({ list }: { list: List }) {
+	const { isEditSheetOpen, setIsEditSheetOpen } = useListMenu();
 	const [name, setName] = useState(list.name);
 	const [description, setDescription] = useState(list.description);
 	const updateList = useMutation({
 		mutationKey: ["updateList"],
-		mutationFn: async (data: any) => {
-			await api.put(`/lists/${list.id}`, data);
-		},
+		mutationFn: async (data: { name: string; description: string }) =>
+			api.put(`/lists/${list.id}`, data),
 	});
 
 	const handleSave = () => {
@@ -23,25 +25,23 @@ export default function ListEditSheet({ list }: { list: List }) {
 	};
 
 	return (
-		<Sheet>
-			<SheetTrigger>Edit</SheetTrigger>
+		<Sheet
+			open={isEditSheetOpen}
+			onOpenChange={(isOpen) => setIsEditSheetOpen(isOpen)}
+		>
 			<SheetContent>
 				<h1 className="text-2xl font-bold">Edit list</h1>
 				<form className="flex flex-col gap-4 mt-4" onSubmit={handleSave}>
-					<div className="flex flex-col gap-2">
-						<label htmlFor="name" className="text-sm font-semibold">
-							Name
-						</label>
-						<input
-							type="text"
-							id="name"
-							placeholder="Enter list name"
-							className="input"
-							defaultValue={list.name}
-							value={list.name}
-							onChange={(e) => setName(e.target.value)}
-						/>
-					</div>
+					<Input
+						type="text"
+						id="listName"
+						label="Name"
+						name="name"
+						placeholder="Enter list name"
+						value={name}
+						autoComplete="off"
+						onChange={(e) => setName(e.target.value)}
+					/>
 					<div className="flex flex-col gap-2">
 						<label htmlFor="description" className="text-sm font-semibold">
 							Description
@@ -49,9 +49,8 @@ export default function ListEditSheet({ list }: { list: List }) {
 						<textarea
 							id="description"
 							placeholder="Enter list description"
-							className="input"
-							defaultValue={list.description}
-							value={list.description}
+							className="border-2 rounded-lg p-2 h-24 w-full"
+							value={description}
 							onChange={(e) => setDescription(e.target.value)}
 						/>
 					</div>
@@ -106,16 +105,6 @@ export default function ListEditSheet({ list }: { list: List }) {
 						>
 							Save
 						</Button>
-						<button
-							type="button"
-							className="btn btn-secondary"
-							onClick={() => {
-								setName(list.name);
-								setDescription(list.description);
-							}}
-						>
-							Cancel
-						</button>
 					</div>
 				</form>
 			</SheetContent>
