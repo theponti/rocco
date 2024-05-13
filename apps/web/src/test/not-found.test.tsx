@@ -11,6 +11,7 @@ function mockUseMatch(paths: { [key: string]: boolean }) {
 		return paths[path] ?? false;
 	});
 }
+
 describe("not-found", () => {
 	test("should render not found for invites route", () => {
 		mockUseMatch({ "/invites": true });

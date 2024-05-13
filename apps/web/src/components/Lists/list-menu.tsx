@@ -7,11 +7,11 @@ import {
 	DropdownMenuTrigger,
 } from "src/components/ui/dropdown-menu";
 import type { List } from "src/lib/types";
+import ListEditSheet from "./list-edit-sheet";
 
 export default function ListMenu({
 	list,
 	isOwnList,
-	...props
 }: { list: List & { createdBy: { email: string } }; isOwnList: boolean }) {
 	if (!isOwnList) {
 		return null;
@@ -32,7 +32,7 @@ export default function ListMenu({
 			</DropdownMenuTrigger>
 			<DropdownMenuContent>
 				<DropdownMenuItem className="p-2" onClick={onEditClick}>
-					Edit
+					<ListEditSheet list={list} />
 				</DropdownMenuItem>
 				<DropdownMenuItem className="p-2" onClick={onDeleteClick}>
 					Delete

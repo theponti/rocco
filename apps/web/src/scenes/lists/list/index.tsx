@@ -11,6 +11,7 @@ import { useGetList } from "src/lib/api";
 import { useAuth } from "src/lib/auth";
 import { PLACE } from "src/lib/routes";
 import type { SearchPlace } from "src/lib/types";
+import { withAuth } from "src/lib/utils";
 
 const List = () => {
 	const { currentLocation, user } = useAuth();
@@ -29,11 +30,6 @@ const List = () => {
 	const handleDeleteError = () => {
 		setDeleteError("Could not delete place. Please try again.");
 	};
-
-	if (!user) {
-		navigate("/");
-		return null;
-	}
 
 	if (status === "pending") {
 		return <Loading />;
@@ -65,6 +61,7 @@ const List = () => {
 									<PlusCircle />
 								</button>
 							)}
+							{/* Only list owners can share with others. */}
 							{data.userId === user.id && (
 								<Link
 									to={`/lists/${data.id}/invites`}
@@ -114,4 +111,4 @@ const List = () => {
 	);
 };
 
-export const Component = List;
+export const Component = withAuth(List);

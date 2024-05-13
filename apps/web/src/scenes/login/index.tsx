@@ -61,13 +61,19 @@ function Login() {
 							<span className="label-text">What is your email?</span>
 						</label>
 						<Field
+							data-testid="email-input"
 							className="input input-bordered w-full font-semibold"
 							name="email"
 							type="email"
 							placeholder="Email"
 						/>
 					</div>
-					<Button isLoading={status === "pending"}>Get code</Button>
+					<Button
+						data-testid="login-button"
+						isLoading={login.status === "pending"}
+					>
+						Get code
+					</Button>
 					{login.error && (
 						<Alert type="error">
 							<p className="mb-1">

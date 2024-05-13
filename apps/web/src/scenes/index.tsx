@@ -36,7 +36,7 @@ const LandingPage = () => {
 			<div className="flex flex-col items-center justify-center w-full">
 				<div className="flex text-primary font-extrabold text-4xl mb-8">
 					<div>
-						<Globe2 className="animate-spin-slow" size={40} />
+						<Globe2 size={40} />
 					</div>
 					<p className="ml-2">Make the world yours.</p>
 				</div>
