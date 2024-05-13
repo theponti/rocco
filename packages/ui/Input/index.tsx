@@ -1,12 +1,14 @@
-import type { InputHTMLAttributes } from "react";
+import type { ComponentProps, InputHTMLAttributes } from "react";
 
-type Props = InputHTMLAttributes<HTMLInputElement> & {
+type Props = ComponentProps<"input"> & {
 	altLabel?: string;
 	bottomRightLabel?: string;
 	error?: string;
 	label: string;
 	name: string;
+	inputRef?: React.Ref<HTMLInputElement>;
 } & (
+		| { type: "text"; inputRef: React.Ref<HTMLInputElement> }
 		| { value: string; type: "text" }
 		| { value: string; type: "password" }
 		| { value: string; type: "email" }
@@ -28,6 +30,7 @@ function Input({
 	error,
 	label,
 	name,
+	inputRef,
 	...props
 }: Props) {
 	return (
@@ -39,6 +42,7 @@ function Input({
 				</div>
 				<input
 					name={name}
+					ref={inputRef}
 					className="input input-bordered w-full"
 					{...props}
 					type={props.type || "text"}

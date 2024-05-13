@@ -1,6 +1,7 @@
+import Alert from "@hominem/components/Alert";
 import Input from "@hominem/components/Input";
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "src/components/ui/button";
 import { Sheet, SheetContent } from "src/components/ui/sheet";
 import api from "src/lib/api";
@@ -9,38 +10,40 @@ import { useListMenu } from "./list-menu";
 
 export default function ListEditSheet({ list }: { list: List }) {
 	const { isEditSheetOpen, setIsEditSheetOpen } = useListMenu();
-	const [name, setName] = useState(list.name);
+	const nameInputRef = useRef<HTMLInputElement>();
 	const [description, setDescription] = useState(list.description);
 	const updateList = useMutation({
 		mutationKey: ["updateList"],
 		mutationFn: async (data: { name: string; description: string }) =>
 			api.put(`/lists/${list.id}`, data),
+		throwOnError: false,
 	});
 
-	const handleSave = () => {
-		updateList.mutate({
-			name,
+	const handleSave = async (e: React.FormEvent) => {
+		await updateList.mutateAsync({
+			name: nameInputRef.current?.value || list.name,
 			description,
 		});
 	};
 
 	return (
-		<Sheet
-			open={isEditSheetOpen}
-			onOpenChange={(isOpen) => setIsEditSheetOpen(isOpen)}
-		>
+		<Sheet open={isEditSheetOpen} onOpenChange={setIsEditSheetOpen}>
 			<SheetContent>
 				<h1 className="text-2xl font-bold">Edit list</h1>
-				<form className="flex flex-col gap-4 mt-4" onSubmit={handleSave}>
+				<form
+					data-testid="list-edit-form"
+					className="flex flex-col gap-4 mt-4"
+					onSubmit={handleSave}
+				>
 					<Input
 						type="text"
 						id="listName"
 						label="Name"
 						name="name"
 						placeholder="Enter list name"
-						value={name}
 						autoComplete="off"
-						onChange={(e) => setName(e.target.value)}
+						defaultValue={list.name}
+						inputRef={nameInputRef}
 					/>
 					<div className="flex flex-col gap-2">
 						<label htmlFor="description" className="text-sm font-semibold">
@@ -107,6 +110,11 @@ export default function ListEditSheet({ list }: { list: List }) {
 						</Button>
 					</div>
 				</form>
+				{updateList.status === "error" && (
+					<Alert type="error">
+						There was an issue editing your list. Try again later.
+					</Alert>
+				)}
 			</SheetContent>
 		</Sheet>
 	);

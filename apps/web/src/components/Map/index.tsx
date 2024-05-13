@@ -42,7 +42,6 @@ const RoccoMap = ({
 		[onMapClick, setSelected],
 	);
 
-	console.log({ mapsLoadingState });
 	if (mapsLoadingState === "FAILED") {
 		return <Alert type="error">The Maps Library could not be loaded.</Alert>;
 	}
