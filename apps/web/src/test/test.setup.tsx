@@ -2,7 +2,6 @@ import "@testing-library/jest-dom";
 import { cleanup } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import React, { type PropsWithChildren } from "react";
 import { afterAll, afterEach, beforeAll, vi } from "vitest";
 import "./utils";
 
@@ -15,11 +14,6 @@ vi.mock("react-router-dom", async (importOriginal) => {
 	const actual = await importOriginal();
 	return {
 		...(actual as any),
-		useParams: vi.fn(),
-		useMatch: vi.fn(),
-		Link: (props: PropsWithChildren<object>) => {
-			return <a {...props}>{props.children}</a>;
-		},
 	};
 });
 
