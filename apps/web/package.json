@@ -10,7 +10,7 @@
 		"cy": "cypress open",
 		"dev": "(npx spotlight-sidecar) & vite",
 		"lint:fix": "biome format --write ./src",
-		"lint:stylelint": "stylelint --config ../../.stylelintrc.json --cache --fix 'src/**/*.{css,scss,less,styl}'",
+		"lint:stylelint": "stylelint --config .stylelintrc.json --cache --fix 'src/**/*.{css,scss}'",
 		"lint": "biome lint ./src && npm run lint:stylelint",
 		"postinstall": "cypress install",
 		"preview:test": "start-server-and-test preview http://localhost:53422",
