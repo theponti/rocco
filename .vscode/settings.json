@@ -18,6 +18,9 @@
     "[javascript]": {
         "editor.defaultFormatter": "biomejs.biome"
     },
+    "[json]": {
+        "editor.defaultFormatter": "denoland.vscode-deno"
+    },
     "[css]": {
         "editor.defaultFormatter": "biomejs.biome"
     },
