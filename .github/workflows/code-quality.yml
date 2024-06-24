@@ -17,7 +17,9 @@ env:
   GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
   JWT_SECRET: ${{ secrets.JWT_SECRET }}
   SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
-  VITE_API_URL: ""
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  VITE_API_URL: http://127.0.0.1:4444
+  VITE_GOOGLE_API_KEY: ${{ secrets.VITE_GOOGLE_API_KEY }}
 
 jobs:
   code-quality:
@@ -80,12 +82,9 @@ jobs:
         env:
           # For recording and parallelization to work you must set your CYPRESS_RECORD_KEY
           # in GitHub repo → Settings → Secrets → Actions
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
+          # CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          # CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
           # Creating a token https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VITE_API_URL: http://127.0.0.1:4444
-          VITE_GOOGLE_API_KEY: ${{ secrets.VITE_GOOGLE_API_KEY }}
 
       # - name: ⬆️ Upload coverage
       #   uses: codecov/codecov-action@v3
