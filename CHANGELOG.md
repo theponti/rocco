@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.8.1](https://github.com/theponti/rocco/compare/v1.8.0...v1.8.1) (2024-10-14)
+
+
+### Bug Fixes
+
+* fix config ([2c2c435](https://github.com/theponti/rocco/commit/2c2c435d5ae38d70270ab529822e800e2a1a20c9))
+* redirect after authorize ([5631695](https://github.com/theponti/rocco/commit/5631695e8c9144e333795826b78087bb41d9db71))
+
 ## [1.8.0](https://github.com/theponti/rocco/compare/v1.7.0...v1.8.0) (2024-10-10)
 
 
