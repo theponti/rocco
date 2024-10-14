@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.1](https://github.com/theponti/rocco/compare/v1.8.0...v1.8.1) (2024-10-12)
+
+
+### Bug Fixes
+
+* fix config ([2c2c435](https://github.com/theponti/rocco/commit/2c2c435d5ae38d70270ab529822e800e2a1a20c9))
+
 ## [1.8.0](https://github.com/theponti/rocco/compare/v1.7.0...v1.8.0) (2024-10-10)
 
 
