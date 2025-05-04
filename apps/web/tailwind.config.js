@@ -1,13 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
 	darkMode: ["class"],
+	// Updated content paths for better purging of unused styles
 	content: [
-		"../../packages/ui/components/**/*.{ts,tsx}",
-		"./pages/**/*.{ts,tsx}",
-		"./components/**/*.{ts,tsx}",
-		"./app/**/*.{ts,tsx}",
-		"./src/**/*.{ts,tsx}",
+		"./app/**/*.{ts,tsx,js,jsx}",
 	],
+	// Enable just-in-time mode for faster builds and smaller CSS
+	future: {
+		hoverOnlyWhenSupported: true,
+	},
 	prefix: "",
 	theme: {
 		container: {
@@ -76,8 +77,35 @@ module.exports = {
 			},
 		},
 	},
-	plugins: [require("tailwindcss-animate"), require("daisyui")],
+	plugins: [
+		require("tailwindcss-animate"), 
+		require("daisyui")
+	],
 	daisyui: {
 		themes: ["winter"],
+		// Reduce DaisyUI's footprint by selecting only components you use
+		components: [
+			"alert",
+			"avatar",
+			"badge",
+			"button",
+			"card",
+			"carousel",
+			"collapse",
+			"dropdown",
+			"input",
+			"loading",
+			"modal",
+			"navbar",
+			"progress",
+			"select",
+			"stat",
+			"tab",
+			"tooltip",
+		],
+		// Optimize utility classes to reduce size
+		utils: true,
+		logs: false,
+		darkTheme: "winter",
 	},
 };

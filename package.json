@@ -7,41 +7,34 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npx nx affected -t build",
+    "build": "turbo run build",
     "commitlint": "commitlint --edit",
-    "dev": "caddy start & npx nx run-many -t dev",
-    "lint": "nx affected -t lint && npx nx affected -t typecheck",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint typecheck",
     "precommit": "npm run format && npm run lint",
     "prepush": "npm run test",
     "prerelease": "npm run test",
-    "test": "nx affected -t test",
-    "test:e2e:ci": "nx affected -t test:e2e:ci",
-    "test:update": "nx affected -t test:update",
-    "coverage:web": "open apps/web/coverage/lcov-report/index.html"
+    "test": "turbo run test",
+    "test:e2e:ci": "turbo run test:e2e:ci",
+    "test:update": "turbo run test:update",
+    "format": "biome format --write ."
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.3",
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",
-    "@nx/playwright": "20.0.0",
-    "@nx/vite": "20.0.0",
-    "@nx/web": "20.0.0",
-    "@playwright/test": "^1.48.0",
     "@types/node": "^22.7.5",
-    "@vitest/ui": "^2.1.2",
-    "nx": "20.0.0",
-    "typescript": "^5.6.3",
-    "vite": "^5.4.8",
-    "vitest": "^2.1.2"
+    "turbo": "^2.3.5",
+    "typescript": "^5.6.3"
   },
   "engines": {
-    "node": "20"
+    "node": ">20"
   },
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
-    "eslint": "^9.12.0",
     "lefthook": "^1.7.18",
     "workbox-build": "^7.1.1",
     "workbox-window": "^7.1.0"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
 }

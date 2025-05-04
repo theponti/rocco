@@ -52,21 +52,20 @@ jobs:
         run: yarn install
 
       - name: 🔬 Lint & Type check
-        run: yarn lint
+        run: yarn turbo run lint typecheck
 
       - name: 🧪 Unit tests
-        run: yarn test
+        run: yarn turbo run test
 
       - name: 🧪 End-to-end tests
         # Uses the official Cypress GitHub action https://github.com/cypress-io/github-action
-        uses: cypress-io/github-action@v2
-        # uses: cypress-io/github-action@v5
+        uses: cypress-io/github-action@v5
         with:
-          build: yarn build
+          build: yarn turbo run build
           # Starts web server for E2E tests - replace with your own server invocation
           # https://docs.cypress.io/guides/continuous-integration/introduction#Boot-your-server
-          start: yarn dev
-          command: yarn test:e2e:ci
+          start: yarn turbo run dev
+          command: yarn turbo run test:e2e:ci
 
       # - name: ⬆️ Upload coverage
       #   uses: codecov/codecov-action@v3

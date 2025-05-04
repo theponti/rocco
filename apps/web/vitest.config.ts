@@ -7,7 +7,7 @@ export default defineConfig({
 	test: {
 		globals: true,
 		environment: "jsdom",
-		setupFiles: "./src/test/test.setup.tsx",
+		setupFiles: "./app/test/test.setup.tsx",
 		clearMocks: true,
 		coverage: {
 			provider: "v8",
@@ -15,12 +15,12 @@ export default defineConfig({
 			enabled: true,
 			exclude: [
 				"build/**",
-				"src/services/constants",
-				"src/styles",
-				"src/testUtils",
-				"src/main.tsx",
-				"src/**/*.spec.{ts,tsx}",
-				"src/**/*.test.{ts,tsx}",
+				"app/services/constants",
+				"app/styles",
+				"app/testUtils",
+				"app/index.tsx",
+				"app/**/*.spec.{ts,tsx}",
+				"app/**/*.test.{ts,tsx}",
 				"test/**",
 				"*.config.{js,cjs}",
 			],

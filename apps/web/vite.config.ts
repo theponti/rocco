@@ -1,69 +1,74 @@
-import { writeFileSync } from "node:fs";
-import * as path from "node:path";
-import react from "@vitejs/plugin-react";
-import analyze from "rollup-plugin-analyzer";
+import { reactRouter } from "@react-router/dev/vite";
+import tailwindcss from "@tailwindcss/vite";
+import { visualizer } from "rollup-plugin-visualizer";
+import type { ConfigEnv, PluginOption, UserConfig } from "vite";
 import { defineConfig } from "vite";
-import { VitePWA } from "vite-plugin-pwa";
 import tsconfigPaths from "vite-tsconfig-paths";
 
-// https://vitejs.dev/config/
-export default defineConfig({
-	plugins: [
-		react(),
-		tsconfigPaths(),
-		VitePWA({
-			manifest: {
-				name: "Rocco",
-				short_name: "rocco",
-				start_url: "/",
-				display: "standalone",
-				theme_color: "#ffffff",
-				background_color: "#ffffff",
-				icons: [
-					{
-						src: "/favicon.ico",
-						sizes: "64x64 32x32 24x24 16x16",
-						type: "image/x-icon",
-					},
-				],
-			},
-			registerType: "autoUpdate",
-		}),
-	],
-	build: {
-		minify: "esbuild",
-		outDir: "build",
-		rollupOptions: {
-			plugins: [
-				analyze({
-					summaryOnly: true,
-					writeTo(analysisString) {
-						if (process.env.ANALYZE === "true") {
-							writeFileSync("build-analysis.txt", analysisString);
-						}
-					},
+export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
+	const isProd = mode === "production";
+	const isAnalyze = process.env.ANALYZE === "true";
+
+	return {
+		plugins: [
+			tailwindcss(),
+			reactRouter(),
+			tsconfigPaths(),
+			// Add bundle analyzer when ANALYZE flag is set
+			isAnalyze &&
+				visualizer({
+					open: true,
+					filename: "dist/stats.html",
+					gzipSize: true,
+					brotliSize: true,
 				}),
-			],
+		].filter(Boolean) as PluginOption[],
+
+		// CSS optimization options
+		css: {
+			// Enable CSS modules
+			modules: {
+				localsConvention: "camelCaseOnly" as const,
+			},
+			// Optimize in production
+			devSourcemap: !isProd,
+			preprocessorOptions: {
+				scss: {
+					charset: false,
+				},
+			},
 		},
-	},
-	preview: {
-		port: 53422,
-	},
-	resolve: {
-		alias: {
-			src: path.resolve(__dirname, "./src"),
+
+		// General performance optimizations
+		build: {
+			// Smaller chunks are better for caching
+			// cssCodeSplit: true,
+			// Reduce bundle size
+			minify: isProd ? "terser" : false,
+			terserOptions: {
+				compress: {
+					drop_console: isProd,
+					drop_debugger: isProd,
+				},
+			},
+			// Code splitting optimization
+			rollupOptions: {
+				output: {
+					manualChunks: {
+						vendor: [
+							"react",
+							"react-dom",
+							"react-router",
+							"@tanstack/react-query",
+							"@reduxjs/toolkit",
+							"react-redux",
+						],
+						// Other chunks as needed
+					},
+				},
+			},
+			// Improve source maps in production
+			sourcemap: isProd ? "hidden" : true,
 		},
-	},
-	server: {
-		port: 53422,
-		watch: {
-			ignored: [
-				"**/node_modules",
-				"**/.git",
-				"**/.yarn",
-				"**/.pnp.*",
-				"**/*.test.tsx",
-			],
-		},
-	},
+	};
 });

@@ -1,6 +1,6 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "globalDependencies": [],
+  "globalDependencies": ["**/.env"],
   "globalEnv": [
     "ANALYZE",
     "APP_URL",
@@ -26,66 +26,88 @@
   ],
   "tasks": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "build/**"
-      ],
-      "inputs": [
-        "prisma/**",
-        "src/**/*.tsx",
-        "src/**/*.ts",
-        "test/**/*.ts"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["build/**", "dist/**"]
+    },
+    "build:analyze": {
+      "dependsOn": ["^build"],
+      "outputs": ["build/**", "dist/**"]
     },
     "lint": {
+      "outputs": []
+    },
+    "lint:fix": {
+      "outputs": []
+    },
+    "lint:stylelint": {
       "outputs": []
     },
     "typecheck": {
       "outputs": []
     },
     "test": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [],
-      "inputs": [
-        "prisma/**",
-        "src/**/*.tsx",
-        "src/**/*.ts",
-        "test/**/*.ts"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
+    },
+    "test:coverage": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
+    },
+    "test:coverage:view": {
+      "dependsOn": ["test:coverage"],
+      "outputs": []
+    },
+    "test:e2e": {
+      "dependsOn": ["^build"],
+      "outputs": []
     },
     "test:e2e:ci": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [],
-      "inputs": [
-        "prisma/**",
-        "src/**/*.tsx",
-        "src/**/*.ts",
-        "test/**/*.ts"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "test:e2e:headless": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "test:update": {
+      "outputs": []
+    },
+    "test:watch": {
+      "outputs": []
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "preview": {
+      "dependsOn": ["build"]
+    },
+    "preview:test": {
+      "dependsOn": ["build"]
+    },
+    "start": {
+      "dependsOn": ["build"],
+      "cache": false
     },
     "prisma:deploy": {
       "cache": false,
-      "inputs": [
-        "prisma/**"
-      ]
+      "inputs": ["prisma/**"]
     },
     "prisma:generate": {
       "cache": false,
-      "inputs": [
-        "prisma/**"
-      ]
+      "inputs": ["prisma/**"]
     },
-    "start": {
-      "cache": false
+    "prisma:push": {
+      "cache": false,
+      "inputs": ["prisma/**"]
     },
-    "dev": {
-      "cache": false
+    "prisma:reset": {
+      "cache": false,
+      "inputs": ["prisma/**"]
+    },
+    "prisma:dev": {
+      "cache": false,
+      "inputs": ["prisma/**"]
     }
   }
 }
