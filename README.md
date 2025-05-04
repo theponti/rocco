@@ -8,7 +8,6 @@ This monorepo holds the services for Rocco.
 
 ## Packages
 
-- `tsconfig`: TypeScript configurations
 - `ui`: component library
 
 ### Utilities
