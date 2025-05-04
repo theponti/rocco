@@ -98,7 +98,7 @@ export const useGetLists = ({
 	});
 };
 
-type GetListResponse = UserList & {
+export type GetListResponse = UserList & {
 	id: string;
 	items: ListPlace[];
 };

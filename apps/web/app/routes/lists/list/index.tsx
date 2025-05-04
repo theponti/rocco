@@ -2,21 +2,14 @@ import { useAuth } from "@clerk/react-router";
 import ListMenu from "app/components/Lists/list-menu";
 import { PlusCircle, Share } from "lucide-react";
 import { useCallback, useState } from "react";
-import {
-	Link,
-	generatePath,
-	href,
-	redirect,
-	useNavigate,
-	useParams,
-} from "react-router";
+import { Link, href, redirect, useLoaderData, useNavigate } from "react-router";
 import Alert from "~/components/Alert";
 import ErrorBoundary from "~/components/ErrorBoundary";
 import { LoadingScreen } from "~/components/Loading";
 import PlaceItem from "~/components/PlaceItem";
 import PlacesAutocomplete from "~/components/PlacesAutocomplete";
 import { useGeolocation } from "~/hooks/useGeolocation";
-import { getList } from "~/lib/api";
+import { type GetListResponse, getList } from "~/lib/api";
 import { handleLoaderData } from "~/lib/loaders";
 import type { SearchPlace } from "~/lib/types";
 import type { Route } from "./+types";
@@ -43,12 +36,12 @@ export function HydrateFallback() {
 	return <LoadingScreen />;
 }
 
-export default function List({ loaderData }: Route.ComponentProps) {
+export default function ListPage() {
 	const { userId } = useAuth();
 	const { currentLocation } = useGeolocation();
 	const navigate = useNavigate();
 	const [deleteError, setDeleteError] = useState<string | null>(null);
-	const { list: data } = loaderData;
+	const { list: data } = useLoaderData<{ list: GetListResponse }>();
 	const [isAddToListOpen, setIsAddToListOpen] = useState(false);
 
 	const refetch = useCallback(async () => {

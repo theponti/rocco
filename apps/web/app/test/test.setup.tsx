@@ -10,10 +10,6 @@ import { AUTH_HANDLERS, MOCK_PLACE, PLACE_HANDLERS } from "./mocks/place";
 
 export const TEST_LIST_ID = "list-id";
 
-vi.mock("@clerk/react-router", () => ({
-	useAuth: () => ({ userId: "user-id", isLoaded: true, isSignedIn: true }),
-}));
-
 const restHandlers = [
 	http.get(`${baseURL}/lists/${TEST_LIST_ID}`, () => {
 		return HttpResponse.json({
