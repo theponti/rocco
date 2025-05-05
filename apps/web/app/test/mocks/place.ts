@@ -3,7 +3,7 @@ import { createElement } from "react";
 import { vi } from "vitest";
 
 import { baseURL } from "app/lib/api/base";
-import type { Place } from "app/lib/types";
+import type { ListPlace, Place } from "app/lib/types";
 
 vi.mock("@vis.gl/react-google-maps", async (importOriginal) => {
 	const actual = await importOriginal();
@@ -32,6 +32,17 @@ export const MOCK_PLACE: Place = {
 	rating: 4.5,
 	websiteUri: "https://test-place.example.com",
 	lists: [],
+};
+
+// Create a mock place that conforms to ListPlace type
+export const MOCK_LIST_PLACE: ListPlace = {
+	id: MOCK_PLACE.id,
+	itemId: MOCK_PLACE.id,
+	imageUrl: MOCK_PLACE.imageUrl,
+	name: MOCK_PLACE.name,
+	googleMapsId: MOCK_PLACE.googleMapsId,
+	types: MOCK_PLACE.types,
+	description: "Test place description",
 };
 
 export const MOCK_PLACE_SEARCH = [

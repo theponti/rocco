@@ -9,64 +9,8 @@ import type { ReactElement, ReactNode } from "react";
 import { Provider } from "react-redux";
 import { Outlet, createRoutesStub } from "react-router";
 import { vi } from "vitest";
+import { TEST_USER_EMAIL, TEST_USER_NAME, USER_ID, getMockUser } from "./mocks";
 import { testServer } from "./test.setup";
-
-// ============================================================================
-// CONSTANTS & TEST DATA
-// ============================================================================
-
-export const USER_ID = "user-id";
-export const TEST_USER_EMAIL = "test-user@ponti.io";
-export const TEST_USER_NAME = "Test User";
-
-export const TEST_USER: User = {
-	id: USER_ID,
-	avatar: "https://example.com/avatar.jpg",
-	isAdmin: "false",
-	name: TEST_USER_NAME,
-	email: TEST_USER_EMAIL,
-	createdAt: new Date().toISOString(),
-	updatedAt: new Date().toISOString(),
-};
-
-export const getMockUser = (): User => ({
-	id: USER_ID,
-	avatar: "https://example.com/avatar.jpg",
-	email: TEST_USER_EMAIL,
-	createdAt: "2021-01-01T00:00:00.000Z",
-	updatedAt: "2021-01-01T00:00:00.000Z",
-	isAdmin: "false",
-	name: TEST_USER_NAME,
-});
-
-export const getMockPlace = (): ListPlace => ({
-	imageUrl: "https://example.com/image.jpg",
-	googleMapsId: "123",
-	name: "Place Name",
-	types: ["type1", "type2"],
-	id: "123",
-	itemId: "123",
-	description: "Description",
-});
-
-export const getMockLists = () => [
-	{
-		id: "1",
-		name: "List 1",
-		createdAt: "2021-01-01T00:00:00.000Z",
-		updatedAt: "2021-01-01T00:00:00.000Z",
-		createdBy: getMockUser(),
-		places: [getMockPlace()],
-	},
-	{
-		id: "2",
-		name: "List 2",
-		createdAt: "2021-01-01T00:00:00.000Z",
-		updatedAt: "2021-01-01T00:00:00.000Z",
-		createdBy: getMockUser(),
-		places: [getMockPlace()],
-	},
-];
 
 // ============================================================================
 // MOCKS

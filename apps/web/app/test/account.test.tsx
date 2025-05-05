@@ -1,13 +1,15 @@
 import { screen, waitFor } from "@testing-library/react";
+import { http, HttpResponse } from "msw";
 import { describe, expect, test } from "vitest";
 
+import { baseURL } from "app/lib/api/base";
 import Account from "app/routes/account/index";
-import { getMockUser, renderWithRouter } from "app/test/utils";
-import { http, HttpResponse } from "msw";
-import { baseURL } from "~/lib/api/base";
-import { testServer } from "./test.setup";
+import { getMockUser } from "app/test/mocks/index";
+import { testServer } from "app/test/test.setup";
+import { renderWithRouter } from "app/test/utils";
 
 const MOCK_USER = getMockUser();
+
 describe("Account", () => {
 	test("renders account page with user information", async () => {
 		renderWithRouter({
