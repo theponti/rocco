@@ -450,19 +450,22 @@ describe("List", () => {
 			await user.click(screen.getByText("Save"));
 
 			// Verify API was called with correct data
-			expect(api.put).toHaveBeenCalledWith(`/lists/${TEST_LIST_ID}`, {
+			expect(api.put).toHaveBeenCalledWith(`${baseURL}/lists/${TEST_LIST_ID}`, {
 				name: "updated list name",
 				description: "updated description",
 			});
 		});
 
-		test.skip("should display error message when update fails", async () => {
+		test("should display error message when update fails", async () => {
 			const user = userEvent.setup();
 			testServer.use(
-				http.put(`/lists/${TEST_LIST_ID}`, () => {
-					return HttpResponse.json({
-						error: "Failed to update list",
-					});
+				http.put(`${baseURL}/lists/${TEST_LIST_ID}`, () => {
+					return HttpResponse.json(
+						{
+							error: "Failed to update list",
+						},
+						{ status: 500 },
+					);
 				}),
 			);
 

@@ -1,4 +1,4 @@
-import { useAuth, useClerk, useUser } from "@clerk/react-router";
+import { SignInButton, useAuth, useClerk, useUser } from "@clerk/react-router";
 import styled from "@emotion/styled";
 import {
 	Globe,
@@ -25,6 +25,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "app/components/ui/dropdown-menu";
+import Button from "../Button";
 
 const StyledHeader = styled.header`
 	& > * {
@@ -33,7 +34,7 @@ const StyledHeader = styled.header`
 `;
 
 function Header() {
-	const { isLoaded, userId } = useAuth();
+	const { userId } = useAuth();
 	const { user } = useUser();
 	const { signOut } = useClerk();
 	const navMenuRef = useRef(null);
@@ -48,13 +49,13 @@ function Header() {
 		<StyledHeader className="navbar flex flex-row justify-between items-center pt-4 px-0">
 			<Link
 				to="/"
-				className="flex flex-1 gap-2 items-center font-extrabold lowercase text-4xl py-1"
+				className="flex gap-2 items-center font-extrabold lowercase text-4xl py-1"
 			>
 				<Globe className="animate-spin-slow mt-1 size-7 text-primary" />
 				{APP_NAME}
 			</Link>
 
-			{isLoaded && userId ? (
+			{userId ? (
 				<div className="flex-1 justify-end">
 					<div className="hidden md:visible md:flex justify-end gap-6 mr-6">
 						<AppLink to="/dashboard" className="px-4 py-2 rounded-xl">
@@ -115,13 +116,9 @@ function Header() {
 					</DropdownMenu>
 				</div>
 			) : (
-				<Link
-					data-testid="header-login-button"
-					to={LOGIN}
-					className="btn btn-primary text-white"
-				>
-					Log In
-				</Link>
+				<SignInButton>
+					<Button>Log in</Button>
+				</SignInButton>
 			)}
 		</StyledHeader>
 	);

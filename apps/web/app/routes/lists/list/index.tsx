@@ -1,17 +1,18 @@
 import { useAuth } from "@clerk/react-router";
+import { PlusCircle, Share } from "lucide-react";
+import { useCallback, useState } from "react";
+import { Link, href, redirect, useLoaderData, useNavigate } from "react-router";
+
 import Alert from "app/components/Alert";
 import ErrorBoundary from "app/components/ErrorBoundary";
 import ListMenu from "app/components/Lists/list-menu";
 import { LoadingScreen } from "app/components/Loading";
-import PlaceItem from "app/components/PlaceItem";
 import PlacesAutocomplete from "app/components/PlacesAutocomplete";
+import PlaceItem from "app/components/places/place-item";
 import { useGeolocation } from "app/hooks/useGeolocation";
 import { type GetListResponse, getList } from "app/lib/api";
 import { handleLoaderData } from "app/lib/loaders";
 import type { SearchPlace } from "app/lib/types";
-import { PlusCircle, Share } from "lucide-react";
-import { useCallback, useState } from "react";
-import { Link, href, redirect, useLoaderData, useNavigate } from "react-router";
 import type { Route } from "./+types";
 
 export const clientLoader = async ({ params }: Route.ClientLoaderArgs) => {

@@ -3,17 +3,16 @@ import { PlusCircle } from "lucide-react";
 import { useCallback, useState } from "react";
 
 import ListForm from "app/components/ListForm";
-import Lists from "app/components/Lists";
 import { LoadingScreen } from "app/components/Loading";
 import api from "app/lib/api";
 import { useLoaderData } from "react-router";
+import Lists from "~/components/Lists/lists";
 
 export async function loader() {
 	try {
 		const response = await api.get("/lists");
 		return { lists: response.data };
 	} catch (error) {
-		console.error("Failed to fetch lists:", error);
 		throw new Response("Could not load lists.", { status: 500 });
 	}
 }
@@ -66,9 +65,7 @@ function ListsScene() {
 
 export default ListsScene;
 
-// ErrorBoundary to handle errors
-export function ErrorBoundary({ error }: { error: unknown }) {
-	console.error(error);
+export function ErrorBoundary() {
 	return <div>An unexpected error occurred while loading lists.</div>;
 }
 
