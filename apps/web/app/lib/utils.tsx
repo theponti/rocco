@@ -1,9 +1,9 @@
 import { useAuth } from "@clerk/react-router";
+import { LoadingScreen } from "app/components/Loading";
 import { type ClassValue, clsx } from "clsx";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { twMerge } from "tailwind-merge";
-import { LoadingScreen } from "~/components/Loading";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));

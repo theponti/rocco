@@ -7,13 +7,7 @@ import { redirect } from "react-router";
  * @returns An object with authenticated user information
  */
 export async function requireAuth(request: Request) {
-	// In server loaders, you'll need to use Clerk's server-side APIs
-	// This is a placeholder for actual implementation
-
-	// For a real implementation, you would get auth state from the request
-	// Example: const auth = await getAuth(request);
-
-	const auth = { userId: null }; // Replace with actual auth check
+	const auth = useAuth();
 
 	if (!auth.userId) {
 		const url = new URL(request.url);
@@ -48,13 +42,7 @@ export function AuthRequired({ children }: { children: React.ReactNode }) {
  * @returns Redirects to dashboard if user is already authenticated
  */
 export async function requireGuest(request: Request) {
-	// In server loaders, you'll need to use Clerk's server-side APIs
-	// This is a placeholder for actual implementation
-
-	// For a real implementation, you would get auth state from the request
-	// Example: const auth = await getAuth(request);
-
-	const auth = { userId: null }; // Replace with actual auth check
+	const auth = useAuth();
 
 	if (auth.userId) {
 		return redirect("/dashboard");

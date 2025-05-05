@@ -10,7 +10,7 @@ export default [
 	// Main layout with global UI elements
 	layout("routes/layout.tsx", [
 		// Public routes
-		index("./index.tsx"),
+		index("./routes/index.tsx"),
 		route("login", "./routes/login/index.tsx"),
 
 		// Auth-protected routes

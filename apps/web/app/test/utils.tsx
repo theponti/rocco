@@ -3,7 +3,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { type RenderOptions, render, screen } from "@testing-library/react";
 import { baseURL } from "app/lib/api/base";
 import { rootReducer } from "app/lib/store";
-import type { ListPlace, User } from "app/lib/types";
 import { HttpResponse, http } from "msw";
 import type { ReactElement, ReactNode } from "react";
 import { Provider } from "react-redux";
