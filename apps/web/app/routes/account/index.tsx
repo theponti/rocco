@@ -1,16 +1,18 @@
 import { UserCircle } from "lucide-react";
-import Alert from "~/components/Alert";
-import Button from "~/components/Button";
+import { redirect, useLoaderData, useNavigate } from "react-router";
 
-import { api, baseURL } from "app/lib/api/base"; // Added
-import type { User } from "app/lib/types"; // Added
-import { redirect, useFetcher, useLoaderData } from "react-router";
+import { useUser } from "@clerk/react-router";
+import { useMutation } from "@tanstack/react-query";
+import Alert from "app/components/Alert";
+import Button from "app/components/Button";
+import { api, baseURL } from "app/lib/api/base";
+import type { User } from "app/lib/types";
+import { useCallback } from "react";
+import { LoadingScreen } from "~/components/Loading";
 
-// Loader function to fetch user data
-export async function loader({ request }: { request: Request }) {
-	// Placeholder: Replace with actual Clerk auth check for loaders
-	const isAuthenticated = true; // Replace with actual check
-	if (!isAuthenticated) {
+export async function loader() {
+	const { user } = useUser();
+	if (!user) {
 		return redirect("/login");
 	}
 
@@ -20,17 +22,6 @@ export async function loader({ request }: { request: Request }) {
 	} catch (error) {
 		console.error("Failed to fetch user data:", error);
 		throw new Response("Could not load account data.", { status: 500 });
-	}
-}
-
-// Action function to handle account deletion
-export async function action({ request }: { request: Request }) {
-	try {
-		await api.delete(`${baseURL}/user`);
-		return redirect("/login");
-	} catch (error) {
-		console.error("Failed to delete account:", error);
-		throw new Response("Could not delete account.", { status: 500 });
 	}
 }
 
@@ -46,28 +37,49 @@ function MemberSince({ createdAt }: { createdAt: string }) {
 }
 
 function DeleteAccount() {
-	const fetcher = useFetcher();
+	const navigate = useNavigate();
+	const { isPending, isError, mutate } = useMutation({
+		mutationFn: async () => {
+			await api.delete(`${baseURL}/user`);
+		},
+		onSuccess: () => {
+			return navigate("/login");
+		},
+	});
+
+	const onSubmit = useCallback(
+		(e: React.FormEvent<HTMLFormElement>) => {
+			e.preventDefault();
+			mutate();
+		},
+		[mutate],
+	);
 
 	return (
 		<>
-			{fetcher.data?.error && (
-				<Alert type="error">{fetcher.data.error.message}</Alert>
+			{isError && (
+				<Alert type="error">
+					<span data-testid="delete-account-error">
+						There was an error deleting your account. Please try again.
+					</span>
+				</Alert>
 			)}
 
-			<fetcher.Form method="post">
+			<form onSubmit={onSubmit}>
 				<Button
+					data-testid="delete-account-form"
 					className="btn-ghost border-red-400 text-error min-h-fit h-fit px-4 py-2"
 					type="submit"
 				>
 					Delete account
 				</Button>
-			</fetcher.Form>
+			</form>
 		</>
 	);
 }
 
-function Account() {
-	const { user } = useLoaderData() as { user: User }; // Use data from loader
+export default function Account() {
+	const { user } = useLoaderData<{ user: User }>();
 
 	return (
 		<div className="flex flex-col w-full">
@@ -82,7 +94,7 @@ function Account() {
 								className="rounded-circle img-fluid profile-picture mb-3 mb-md-0"
 							/>
 						) : (
-							<UserCircle size={64} />
+							<UserCircle data-testid="user-circle-icon" size={64} />
 						)}
 						<p className="text-lg text-right w-full px-1 h-fit">{user?.name}</p>
 						<p className="text-sm text-black text-right w-full px-1 h-fit">
@@ -101,10 +113,11 @@ function Account() {
 	);
 }
 
-export default Account;
-
-// ErrorBoundary to handle errors
 export function ErrorBoundary({ error }: { error: unknown }) {
 	console.error(error);
 	return <Alert type="error">An unexpected error occurred.</Alert>;
+}
+
+export function HydrateFallback() {
+	return <LoadingScreen />;
 }
