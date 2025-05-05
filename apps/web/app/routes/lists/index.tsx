@@ -1,12 +1,12 @@
+import Button from "app/components/Button";
 import { PlusCircle } from "lucide-react";
 import { useCallback, useState } from "react";
-import Button from "~/components/Button";
 
 import ListForm from "app/components/ListForm";
 import Lists from "app/components/Lists";
+import { LoadingScreen } from "app/components/Loading";
 import api from "app/lib/api";
 import { useLoaderData } from "react-router";
-import { LoadingScreen } from "~/components/Loading";
 
 export async function loader() {
 	try {
@@ -70,4 +70,8 @@ export default ListsScene;
 export function ErrorBoundary({ error }: { error: unknown }) {
 	console.error(error);
 	return <div>An unexpected error occurred while loading lists.</div>;
+}
+
+export function HydrateFallback() {
+	return <LoadingScreen />;
 }
