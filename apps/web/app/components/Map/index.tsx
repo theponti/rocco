@@ -1,11 +1,12 @@
 import {
+	APIProvider,
 	Map as GoogleMap,
 	type MapMouseEvent,
 	useApiLoadingStatus,
 } from "@vis.gl/react-google-maps";
+import Alert from "app/components/Alert";
+import Loading from "app/components/Loading";
 import { useCallback } from "react";
-import Alert from "~/components/Alert";
-import Loading from "~/components/Loading";
 
 import type { Place, PlaceLocation } from "app/lib/types";
 
@@ -58,28 +59,30 @@ const RoccoMap = ({
 	}
 
 	return (
-		<div
-			data-testid="rocco-map"
-			data-zoom={zoom}
-			data-center={JSON.stringify(center)}
-			className="flex flex-1 relative overflow-hidden rounded-lg shadow-md size-full"
-		>
-			{isLoadingCurrentLocation ? (
-				<div className="absolute left-0 right-0 mt-2 mx-auto max-w-content z-10 p-1 px-4 rounded-lg border-blue-500 bg-blue-200 text-blue-600 text-sm">
-					<span className="animate-ping inline-flex size-1 rounded-full bg-blue-800 opacity-75 mb-[2px] mr-3" />
-					Loading current location
-				</div>
-			) : null}
-			<GoogleMap
-				zoom={zoom}
-				center={{
-					lat: center.latitude,
-					lng: center.longitude,
-				}}
-				onClick={onClick}
-				className={cn("flex size-full", styles.map)}
-			/>
-		</div>
+		<APIProvider apiKey={import.meta.env.VITE_GOOGLE_API_KEY}>
+			<div
+				data-testid="rocco-map"
+				data-zoom={zoom}
+				data-center={JSON.stringify(center)}
+				className="flex flex-1 relative overflow-hidden rounded-lg shadow-md size-full"
+			>
+				{isLoadingCurrentLocation ? (
+					<div className="absolute left-0 right-0 mt-2 mx-auto max-w-content z-10 p-1 px-4 rounded-lg border-blue-500 bg-blue-200 text-blue-600 text-sm">
+						<span className="animate-ping inline-flex size-1 rounded-full bg-blue-800 opacity-75 mb-[2px] mr-3" />
+						Loading current location
+					</div>
+				) : null}
+				<GoogleMap
+					zoom={zoom}
+					center={{
+						lat: center.latitude,
+						lng: center.longitude,
+					}}
+					onClick={onClick}
+					className={cn("flex size-full", styles.map)}
+				/>
+			</div>
+		</APIProvider>
 	);
 };
 

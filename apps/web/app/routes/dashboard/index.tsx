@@ -1,16 +1,18 @@
 import { useUser } from "@clerk/react-router";
 import styled from "@emotion/styled";
 import type { MapMouseEvent } from "@vis.gl/react-google-maps";
-import Lists from "app/components/Lists";
+import { useCallback, useEffect, useState } from "react";
+import { href, useLoaderData, useNavigate } from "react-router";
+
+import Lists from "app/components/Lists/lists";
 import LazyMap from "app/components/Map/LazyMap";
 import PlacesAutocomplete from "app/components/PlacesAutocomplete";
 import { useGeolocation } from "app/hooks/useGeolocation";
 import { api, baseURL } from "app/lib/api/base";
 import { mediaQueries } from "app/lib/styles";
 import type { Place, PlaceLocation, UserList } from "app/lib/types";
-import { useCallback, useEffect, useState } from "react";
-import { href, useLoaderData, useNavigate } from "react-router";
-import { requireAuth } from "~/routes/guards";
+import { requireAuth } from "app/routes/guards";
+import type { Route } from "./+types";
 
 /**
  * Define a default location in case geolocation fails or is loading
@@ -35,19 +37,24 @@ const Wrap = styled.div`
   }
 `;
 
-// Loader function to fetch data and check auth
-export async function loader({ request }: { request: Request }) {
-	// First, ensure the user is authenticated
-	await requireAuth(request);
+export async function loader(loaderArgs: Route.ClientLoaderArgs) {
+	const response = await requireAuth(loaderArgs);
 
-	try {
-		// Fetch lists using the imported api instance
-		const res = await api.get<UserList[]>(`${baseURL}/lists`);
-		return { lists: res.data };
-	} catch (error) {
-		console.error("Failed to fetch lists:", error);
-		// Throwing an error response triggers the nearest ErrorBoundary
-		throw new Response("Could not load lists.", { status: 500 });
+	if ("getToken" in response) {
+		const token = await response.getToken();
+		try {
+			// Fetch lists using the imported api instance
+			const res = await api.get<UserList[]>(`${baseURL}/lists`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			return { lists: res.data };
+		} catch (error) {
+			console.error("Failed to fetch lists:", token);
+			// Throwing an error response triggers the nearest ErrorBoundary
+			throw new Response("Could not load lists.", { status: 500 });
+		}
 	}
 }
 

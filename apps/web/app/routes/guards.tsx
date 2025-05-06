@@ -1,4 +1,5 @@
 import { useAuth } from "@clerk/react-router";
+import { getAuth } from "@clerk/react-router/ssr.server";
 import { redirect } from "react-router";
 
 /**
@@ -6,11 +7,11 @@ import { redirect } from "react-router";
  * @param request The request object
  * @returns An object with authenticated user information
  */
-export async function requireAuth(request: Request) {
-	const auth = useAuth();
+export async function requireAuth(loaderArgs: any) {
+	const auth = await getAuth(loaderArgs);
 
 	if (!auth.userId) {
-		const url = new URL(request.url);
+		const url = new URL(loaderArgs.request.url);
 		const redirectTo = url.pathname + url.search;
 		return redirect(`/login?redirectTo=${encodeURIComponent(redirectTo)}`);
 	}

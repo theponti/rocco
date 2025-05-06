@@ -11,11 +11,14 @@ export default [
 	layout("routes/layout.tsx", [
 		// Public routes
 		index("./routes/index.tsx"),
-		route("login", "./routes/login/index.tsx"),
 
 		// Auth-protected routes
 		// Dashboard section
-		route("dashboard", "./routes/dashboard/index.tsx"),
+		...prefix("dashboard", [
+			layout("./routes/dashboard/layout.tsx", [
+				index("./routes/dashboard/index.tsx"),
+			]),
+		]),
 
 		// Account management
 		route("account", "./routes/account/index.tsx"),

@@ -1,12 +1,17 @@
 import styled from "@emotion/styled";
-import { Combobox } from "@headlessui/react";
+import {
+	Combobox,
+	ComboboxInput,
+	ComboboxOption,
+	ComboboxOptions,
+} from "@headlessui/react";
 import { useQuery } from "@tanstack/react-query";
+import Alert from "app/components/Alert";
+import Loading from "app/components/Loading";
 import type { AxiosError } from "axios";
 import { Search } from "lucide-react";
 import type { ChangeEvent } from "react";
 import { memo, useCallback, useMemo, useRef, useState } from "react";
-import Alert from "~/components/Alert";
-import Loading from "~/components/Loading";
 
 import { URLS, api, queryKeys } from "app/lib/api/base";
 import type { Place, PlaceLocation } from "app/lib/types";
@@ -15,7 +20,7 @@ const Wrapper = styled.div`
   position: relative;
 `;
 
-const Options = styled(Combobox.Options)`
+const Options = styled(ComboboxOptions)`
   margin-top: 8px;
   border-radius: 4px;
   width: 100%;
@@ -24,7 +29,7 @@ const Options = styled(Combobox.Options)`
   z-index: 1;
 `;
 
-const Option = styled(Combobox.Option)`
+const Option = styled(ComboboxOption)`
   padding: 8px 20px;
 
   &:focus,
@@ -153,7 +158,7 @@ function PlacesAutocomplete({
 		<Wrapper data-testid="places-autocomplete">
 			<Combobox value={value} onChange={handleSelect}>
 				<InputWrap>
-					<Combobox.Input
+					<ComboboxInput
 						data-testid="places-autocomplete-input"
 						className="input input-bordered w-full"
 						value={value}
@@ -168,19 +173,7 @@ function PlacesAutocomplete({
 								<Loading />
 							</LoadingWrap>
 						) : (
-							data?.map((suggestion) => (
-								<Option
-									data-testid="places-autocomplete-option"
-									key={suggestion.googleMapsId}
-									value={suggestion.googleMapsId}
-									className="truncate text-primary"
-								>
-									<span className="font-medium">{suggestion.name}</span>,{" "}
-									<span className="text-slate-400 font-light">
-										{suggestion.address}
-									</span>
-								</Option>
-							))
+							data?.map((suggestion) => renderSuggestion({ suggestion }))
 						)}
 					</Options>
 				)}

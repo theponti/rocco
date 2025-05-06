@@ -4,31 +4,33 @@ import Header from "app/components/Header";
 import { LoadingScreen } from "app/components/Loading";
 import Toast from "app/components/Toast";
 import { Suspense } from "react";
-import { Outlet } from "react-router";
+import { Outlet, useLocation } from "react-router";
 
 export default function Layout() {
 	const { isLoaded, userId } = useAuth();
 	const isAuthenticated = isLoaded && userId;
+	const location = useLocation();
+	const isHome = location.pathname === "/";
 
 	return (
-		<div className="h-full w-full flex flex-col items-center">
-			<div className="h-full w-full flex flex-col sm:max-w-3xl px-2">
-				<Header />
-				<main
-					data-testid="app-main"
-					className="flex mt-8 w-full max-md:pb-16 pb-12"
-				>
-					{!isLoaded ? (
-						<LoadingScreen />
-					) : (
-						<Suspense fallback={<LoadingScreen />}>
-							<Outlet />
-						</Suspense>
-					)}
-					<Toast />
-				</main>
-			</div>
-			{isAuthenticated && <Footer />}
+		<div className="h-full w-full flex flex-col items-center bg-[#0d0c22]">
+			<Header />
+
+			<main
+				data-testid="app-main"
+				className="w-full lg:container lg:mx-auto mt-26 flex flex-col grow"
+			>
+				{!isLoaded ? (
+					<LoadingScreen />
+				) : (
+					<Suspense fallback={<LoadingScreen />}>
+						<Outlet />
+					</Suspense>
+				)}
+				<Toast />
+			</main>
+
+			{isAuthenticated && !isHome && <Footer />}
 		</div>
 	);
 }
