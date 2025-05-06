@@ -43,7 +43,6 @@ export async function loader(loaderArgs: Route.ClientLoaderArgs) {
 	if ("getToken" in response) {
 		const token = await response.getToken();
 		try {
-			// Fetch lists using the imported api instance
 			const res = await api.get<UserList[]>(`${baseURL}/lists`, {
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -51,8 +50,6 @@ export async function loader(loaderArgs: Route.ClientLoaderArgs) {
 			});
 			return { lists: res.data };
 		} catch (error) {
-			console.error("Failed to fetch lists:", token);
-			// Throwing an error response triggers the nearest ErrorBoundary
 			throw new Response("Could not load lists.", { status: 500 });
 		}
 	}
@@ -143,6 +140,15 @@ function Dashboard() {
 				/>
 			) : null}
 		</Wrap>
+	);
+}
+
+export function ErrorBoundary(errorArgs: Route.ErrorBoundaryProps) {
+	return (
+		<div className="flex flex-col items-center justify-center h-full text-white">
+			<h2>Something went wrong while loading the dashboard.</h2>
+			<p>Please try again later.</p>
+		</div>
 	);
 }
 
