@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { href, useLoaderData, useNavigate } from "react-router";
 
 import Lists from "~/components/lists-components/lists";
-import LazyMap from "~/components/Map/LazyMap";
+import LazyMap from "~/components/map.lazy";
 import PlacesAutocomplete from "~/components/places/places-autocomplete";
 import { useGeolocation } from "~/hooks/useGeolocation";
 import type { GooglePlacePrediction } from "~/hooks/useGooglePlacesAutocomplete";

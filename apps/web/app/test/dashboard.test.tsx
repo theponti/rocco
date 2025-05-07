@@ -6,7 +6,7 @@ import { MOCK_LISTS } from "~/test/mocks/index";
 import { renderWithProviders } from "~/test/utils";
 
 // Only mock components that are heavy or rely on external services
-vi.mock("app/components/Map/LazyMap", () => ({
+vi.mock("~/components/map.lazy", () => ({
 	default: ({ center, zoom }: { center: any; zoom: number }) => (
 		<div data-testid="rocco-map">
 			Map Component (Zoom: {zoom}, Lat: {center.latitude}, Lng:{" "}
@@ -15,7 +15,7 @@ vi.mock("app/components/Map/LazyMap", () => ({
 	),
 }));
 
-vi.mock("app/components/PlacesAutocomplete", () => ({
+vi.mock("~/components/places/places-autocomplete", () => ({
 	default: ({ center }: { center: any; setSelected: (place: any) => void }) => (
 		<div data-testid="places-autocomplete">
 			Places Autocomplete (Lat: {center.latitude}, Lng: {center.longitude})
@@ -24,7 +24,7 @@ vi.mock("app/components/PlacesAutocomplete", () => ({
 }));
 
 // Mock the geolocation hook
-vi.mock("app/hooks/useGeolocation", () => ({
+vi.mock("~/hooks/useGeolocation", () => ({
 	useGeolocation: () => ({
 		currentLocation: { latitude: 37.7749, longitude: -122.4194 },
 		isLoading: false,
@@ -50,7 +50,7 @@ vi.mock("react-router", async () => {
 });
 
 // Mock AppLink component to avoid router issues
-vi.mock("app/components/AppLink", () => ({
+vi.mock("~/components/app-link", () => ({
 	default: ({ to, children, className }: any) => (
 		<a href={to} className={className} data-testid="app-link">
 			{children}
@@ -81,7 +81,7 @@ describe("Dashboard", () => {
 
 	test("renders dashboard with loading message when location not available", async () => {
 		// Override the geolocation mock for this specific test
-		vi.mock("app/hooks/useGeolocation", () => ({
+		vi.mock("~/hooks/useGeolocation", () => ({
 			useGeolocation: () => ({
 				currentLocation: null,
 				isLoading: true,

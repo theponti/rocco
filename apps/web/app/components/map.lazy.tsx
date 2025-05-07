@@ -22,7 +22,7 @@ const MapPlaceholder = () => (
 
 const LazyMap = (props: LazyMapProps) => {
 	// Lazy load the actual Map component
-	const RoccoMap = lazy(() => import("./index"));
+	const RoccoMap = lazy(() => import("./map"));
 
 	return (
 		<Suspense fallback={<MapPlaceholder />}>
