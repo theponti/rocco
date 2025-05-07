@@ -3,7 +3,7 @@ import {
 	generateSrcSet,
 	getCdnImageUrl,
 	getPlaceholderImageUrl,
-} from "~/lib/image-cdn";
+} from "~/components/image/image-cdn";
 
 interface OptimizedImageProps
 	extends React.ImgHTMLAttributes<HTMLImageElement> {

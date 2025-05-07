@@ -38,7 +38,6 @@
 		"clsx",
 		"Formik",
 		"lucide",
-		"stylelint",
 		"tanstack",
 		"testid"
 	]

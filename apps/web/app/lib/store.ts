@@ -3,10 +3,9 @@ import {
 	type ThunkAction,
 	configureStore,
 } from "@reduxjs/toolkit";
-import { type TypedUseSelectorHook, useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { type TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
-import { toastSlice } from "./toast";
+import { toastSlice } from "../components/Toast/lib";
 
 export const rootReducer = {
 	toast: toastSlice.reducer,

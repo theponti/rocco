@@ -6,12 +6,13 @@ import { href, useLoaderData, useNavigate } from "react-router";
 
 import Lists from "app/components/Lists/lists";
 import LazyMap from "app/components/Map/LazyMap";
-import PlacesAutocomplete from "app/components/PlacesAutocomplete";
 import { useGeolocation } from "app/hooks/useGeolocation";
 import { api, baseURL } from "app/lib/api/base";
 import { mediaQueries } from "app/lib/styles";
 import type { Place, PlaceLocation, UserList } from "app/lib/types";
 import { requireAuth } from "app/routes/guards";
+import PlacesAutocomplete from "~/components/places/places-autocomplete";
+import type { GooglePlacePrediction } from '~/hooks/useGooglePlacesAutocomplete';
 import type { Route } from "./+types";
 
 /**
@@ -93,8 +94,8 @@ function Dashboard() {
 	);
 
 	const onSelectedChanged = useCallback(
-		(place: Place) => {
-			navigate(href("/places/:id", { id: place.googleMapsId }));
+		(place: GooglePlacePrediction) => {
+			navigate(href("/places/:id", { id: place.place_id }));
 		},
 		[navigate],
 	);
@@ -109,9 +110,9 @@ function Dashboard() {
 	return (
 		<Wrap data-testid="dashboard-scene">
 			<PlacesAutocompleteWrap>
-				{/* Conditionally render PlacesAutocomplete only when currentLocation is available */}
 				{currentLocation ? (
 					<PlacesAutocomplete
+						apiKey={import.meta.env.VITE_GOOGLE_API_KEY}
 						setSelected={onSelectedChanged}
 						center={currentLocation}
 					/>

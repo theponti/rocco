@@ -1,9 +1,9 @@
 import Loading from "app/components/Loading";
 
-import BookmarkForm from "app/components/BookmarkForm";
-import BookmarkListItem from "app/components/BookmarkListItem";
 import api from "app/lib/api";
 import { useLoaderData } from "react-router";
+import BookmarkForm from "~/components/bookmarks/bookmark-form";
+import BookmarkListItem from "~/components/bookmarks/bookmark-list-item";
 
 export async function loader() {
 	try {
@@ -46,7 +46,6 @@ const Bookmarks = () => {
 
 export default Bookmarks;
 
-// ErrorBoundary to handle errors
 export function ErrorBoundary({ error }: { error: unknown }) {
 	console.error(error);
 	return <div>An unexpected error occurred while loading bookmarks.</div>;

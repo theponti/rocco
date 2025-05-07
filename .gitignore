@@ -16,7 +16,6 @@ apps/web/cypress/videos/**
 
 # build
 .next
-.stylelintcache
 build
 tsconfig.tsbuildinfo
 build-analysis.txt

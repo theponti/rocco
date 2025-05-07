@@ -1,10 +1,10 @@
 "use client";
 
 import { api } from "@/lib/trpc/react";
-import classNames from "classnames";
-import AlertError from "components/AlertError";
+import AlertError from "app/components/AlertError";
 import { url } from "inspector";
-import { SyntheticEvent, useCallback } from "react";
+import { type SyntheticEvent, useCallback } from "react";
+import { cn } from '~/lib/utils';
 
 type BookmarksFormProps = {
 	onCreate?: () => void;
@@ -41,7 +41,7 @@ export default function BookmarksForm({ onCreate }: BookmarksFormProps) {
 				</div>
 				{!!url.length && (
 					<button
-						className={classNames(
+						className={cn(
 							"btn btn-primary float-right min-w-full mb-4 rounded text-white",
 							{ loading: isPending },
 						)}

@@ -7,12 +7,12 @@ import Alert from "app/components/Alert";
 import ErrorBoundary from "app/components/ErrorBoundary";
 import ListMenu from "app/components/Lists/list-menu";
 import { LoadingScreen } from "app/components/Loading";
-import PlacesAutocomplete from "app/components/PlacesAutocomplete";
 import PlaceItem from "app/components/places/place-item";
 import { useGeolocation } from "app/hooks/useGeolocation";
 import { type GetListResponse, getList } from "app/lib/api";
 import { handleLoaderData } from "app/lib/loaders";
 import type { SearchPlace } from "app/lib/types";
+import PlacesAutocomplete from "~/components/places/places-autocomplete";
 import type { Route } from "./+types";
 
 export const clientLoader = async ({ params }: Route.ClientLoaderArgs) => {

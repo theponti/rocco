@@ -5,11 +5,11 @@ import PlaceTypes from "app/components/places/PlaceTypes";
 import PlaceWebsite from "app/components/places/PlaceWebsite";
 import { Button } from "app/components/ui/button";
 import { api } from "app/lib/api/base";
-import { useToast } from "app/lib/toast/hooks";
 import type { Place } from "app/lib/types";
 import { ListPlus } from "lucide-react";
 import { useCallback } from "react";
 import { Link, href, redirect, useLoaderData } from "react-router";
+import { useToast } from "~/components/Toast/lib/hooks";
 import type { Route } from "./+types";
 import { usePlaceContext } from "./place-context";
 

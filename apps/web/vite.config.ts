@@ -56,22 +56,6 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
 					drop_debugger: isProd,
 				},
 			},
-			// Code splitting optimization
-			rollupOptions: {
-				output: {
-					manualChunks: {
-						vendor: [
-							"react",
-							"react-dom",
-							"react-router",
-							"@tanstack/react-query",
-							"@reduxjs/toolkit",
-							"react-redux",
-						],
-						// Other chunks as needed
-					},
-				},
-			},
 			// Improve source maps in production
 			sourcemap: isProd ? "hidden" : true,
 		},

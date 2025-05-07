@@ -1,6 +1,6 @@
-import OptimizedImage from "app/components/OptimizedImage";
 import type { Place } from "app/lib/types";
 import { memo } from "react";
+import OptimizedImage from "~/components/image";
 
 type Props = {
 	alt: string;
