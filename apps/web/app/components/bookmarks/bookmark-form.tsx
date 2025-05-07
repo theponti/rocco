@@ -1,9 +1,9 @@
 "use client";
 
 import { api } from "@/lib/trpc/react";
-import AlertError from "app/components/AlertError";
 import { url } from "inspector";
 import { type SyntheticEvent, useCallback } from "react";
+import AlertError from "~/components/AlertError";
 import { cn } from '~/lib/utils';
 
 type BookmarksFormProps = {

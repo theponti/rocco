@@ -6,8 +6,8 @@ import {
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from "app/components/ui/dropdown-menu";
-import type { List } from "app/lib/types";
+} from "~/components/ui/dropdown-menu";
+import type { List } from "~/lib/types";
 import ListEditSheet from "./list-edit-sheet";
 
 const ListMenuContext = React.createContext<{

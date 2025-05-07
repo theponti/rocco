@@ -2,11 +2,11 @@ import { screen, waitFor } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { describe, expect, test } from "vitest";
 
-import { baseURL } from "app/lib/api/base";
-import Account from "app/routes/account/index";
-import { getMockUser } from "app/test/mocks/index";
-import { testServer } from "app/test/test.setup";
-import { renderWithRouter } from "app/test/utils";
+import { baseURL } from "~/lib/api/base";
+import Account from "~/routes/account/index";
+import { getMockUser } from "~/test/mocks/index";
+import { testServer } from "~/test/test.setup";
+import { renderWithRouter } from "~/test/utils";
 
 const MOCK_USER = getMockUser();
 

@@ -3,17 +3,17 @@ import { ExternalLink, MoreVertical, Star } from "lucide-react";
 import { type MouseEvent, useState } from "react";
 import { href, useNavigate } from "react-router";
 
-import PlaceTypes from "app/components/places/PlaceTypes";
-import { Button } from "app/components/ui/button";
+import PlaceTypes from "~/components/places/PlaceTypes";
+import { Button } from "~/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from "app/components/ui/dropdown-menu";
-import { Sheet, SheetContent } from "app/components/ui/sheet";
-import { useRemoveListItem } from "app/lib/api/places";
-import type { ListPlace } from "app/lib/types";
+} from "~/components/ui/dropdown-menu";
+import { Sheet, SheetContent } from "~/components/ui/sheet";
+import { useRemoveListItem } from "~/lib/api/places";
+import type { ListPlace } from "~/lib/types";
 
 const PlaceCard = styled.div`
   position: relative;

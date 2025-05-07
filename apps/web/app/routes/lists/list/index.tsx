@@ -3,16 +3,16 @@ import { PlusCircle, Share } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Link, href, redirect, useLoaderData, useNavigate } from "react-router";
 
-import Alert from "app/components/Alert";
-import ErrorBoundary from "app/components/ErrorBoundary";
-import ListMenu from "app/components/Lists/list-menu";
-import { LoadingScreen } from "app/components/Loading";
-import PlaceItem from "app/components/places/place-item";
-import { useGeolocation } from "app/hooks/useGeolocation";
-import { type GetListResponse, getList } from "app/lib/api";
-import { handleLoaderData } from "app/lib/loaders";
-import type { SearchPlace } from "app/lib/types";
+import Alert from "~/components/Alert";
+import ErrorBoundary from "~/components/ErrorBoundary";
+import ListMenu from "~/components/Lists/list-menu";
+import { LoadingScreen } from "~/components/Loading";
+import PlaceItem from "~/components/places/place-item";
 import PlacesAutocomplete from "~/components/places/places-autocomplete";
+import { useGeolocation } from "~/hooks/useGeolocation";
+import { type GetListResponse, getList } from "~/lib/api";
+import { handleLoaderData } from "~/lib/loaders";
+import type { SearchPlace } from "~/lib/types";
 import type { Route } from "./+types";
 
 export const clientLoader = async ({ params }: Route.ClientLoaderArgs) => {

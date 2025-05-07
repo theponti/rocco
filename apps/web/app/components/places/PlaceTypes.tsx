@@ -1,4 +1,4 @@
-import PlaceType from "app/components/places/PlaceType";
+import PlaceType from "~/components/places/PlaceType";
 
 const EXCLUDED_TYPES = [
 	"establishment",

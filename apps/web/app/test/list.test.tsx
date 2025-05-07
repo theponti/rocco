@@ -3,13 +3,13 @@ import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
-import api, { type GetListResponse } from "app/lib/api";
-import { baseURL } from "app/lib/api/base";
-import List from "app/routes/lists/list/index";
-import { getMockUser } from "app/test/mocks/index";
-import { MOCK_LIST_PLACE } from "app/test/mocks/place";
-import { TEST_LIST_ID, testServer } from "app/test/test.setup";
-import { renderWithRouter } from "app/test/utils";
+import api, { type GetListResponse } from "~/lib/api";
+import { baseURL } from "~/lib/api/base";
+import List from "~/routes/lists/list/index";
+import { getMockUser } from "~/test/mocks/index";
+import { MOCK_LIST_PLACE } from "~/test/mocks/place";
+import { TEST_LIST_ID, testServer } from "~/test/test.setup";
+import { renderWithRouter } from "~/test/utils";
 
 vi.mock("~/hooks/useGeolocation", () => ({
 	useGeolocation: () => ({ currentLocation: { lat: 0, lng: 0 } }),

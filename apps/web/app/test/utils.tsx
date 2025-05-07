@@ -1,13 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { type RenderOptions, render, screen } from "@testing-library/react";
-import { baseURL } from "app/lib/api/base";
-import { rootReducer } from "app/lib/store";
 import { HttpResponse, http } from "msw";
 import type { ReactElement, ReactNode } from "react";
 import { Provider } from "react-redux";
 import { Outlet, createRoutesStub } from "react-router";
 import { vi } from "vitest";
+import { baseURL } from "~/lib/api/base";
+import { rootReducer } from "~/lib/store";
 import { TEST_USER_EMAIL, TEST_USER_NAME, USER_ID, getMockUser } from "./mocks";
 import { testServer } from "./test.setup";
 

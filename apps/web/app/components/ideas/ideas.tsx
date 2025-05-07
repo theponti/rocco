@@ -1,9 +1,9 @@
-import Loading from "app/components/Loading";
-
-import IdeaForm from "app/components/IdeaForm";
-import IdeaListItem from "app/components/IdeaListItem";
-import api from "app/lib/api";
 import { useLoaderData } from "react-router";
+
+import IdeaForm from "~/components/ideas/idea-form";
+import IdeaListItem from "~/components/ideas/idea-list-item";
+import Loading from "~/components/Loading";
+import api from "~/lib/api";
 
 export async function loader() {
 	try {

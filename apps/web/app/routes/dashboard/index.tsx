@@ -4,15 +4,15 @@ import type { MapMouseEvent } from "@vis.gl/react-google-maps";
 import { useCallback, useEffect, useState } from "react";
 import { href, useLoaderData, useNavigate } from "react-router";
 
-import Lists from "app/components/Lists/lists";
-import LazyMap from "app/components/Map/LazyMap";
-import { useGeolocation } from "app/hooks/useGeolocation";
-import { api, baseURL } from "app/lib/api/base";
-import { mediaQueries } from "app/lib/styles";
-import type { Place, PlaceLocation, UserList } from "app/lib/types";
-import { requireAuth } from "app/routes/guards";
+import Lists from "~/components/Lists/lists";
+import LazyMap from "~/components/Map/LazyMap";
 import PlacesAutocomplete from "~/components/places/places-autocomplete";
+import { useGeolocation } from "~/hooks/useGeolocation";
 import type { GooglePlacePrediction } from '~/hooks/useGooglePlacesAutocomplete';
+import { api, baseURL } from "~/lib/api/base";
+import { mediaQueries } from "~/lib/styles";
+import type { Place, PlaceLocation, UserList } from "~/lib/types";
+import { requireAuth } from "~/routes/guards";
 import type { Route } from "./+types";
 
 /**

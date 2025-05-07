@@ -4,13 +4,13 @@ import {
 	type MapMouseEvent,
 	useApiLoadingStatus,
 } from "@vis.gl/react-google-maps";
-import Alert from "app/components/Alert";
-import Loading from "app/components/Loading";
 import { useCallback } from "react";
+import Alert from "~/components/Alert";
+import Loading from "~/components/Loading";
 
-import type { Place, PlaceLocation } from "app/lib/types";
+import type { Place, PlaceLocation } from "~/lib/types";
 
-import { cn } from "app/lib/utils";
+import { cn } from "~/lib/utils";
 import styles from "./map.module.css";
 
 type RoccoMapProps = {

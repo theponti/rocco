@@ -3,12 +3,12 @@ import { redirect, useLoaderData, useNavigate } from "react-router";
 
 import { useUser } from "@clerk/react-router";
 import { useMutation } from "@tanstack/react-query";
-import Alert from "app/components/Alert";
-import Button from "app/components/Button";
-import { api, baseURL } from "app/lib/api/base";
-import type { User } from "app/lib/types";
 import { useCallback } from "react";
+import Alert from "~/components/Alert";
+import Button from "~/components/Button";
 import { LoadingScreen } from "~/components/Loading";
+import { api, baseURL } from "~/lib/api/base";
+import type { User } from "~/lib/types";
 
 export async function loader() {
 	const { user } = useUser();

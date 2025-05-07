@@ -1,4 +1,3 @@
-import type { Place } from "app/lib/types";
 import {
 	type PropsWithChildren,
 	createContext,
@@ -6,6 +5,7 @@ import {
 	useContext,
 	useState,
 } from "react";
+import type { Place } from "~/lib/types";
 
 const PlaceContext = createContext<{
 	place: Place | null;

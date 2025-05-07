@@ -1,16 +1,16 @@
 import styled from "@emotion/styled";
 import { Heart } from "lucide-react";
 
-import { Sheet, SheetContent } from "app/components/ui/sheet";
-import { useGetLists } from "app/lib/api";
+import { Sheet, SheetContent } from "~/components/ui/sheet";
+import { useGetLists } from "~/lib/api";
 import {
 	useAddPlaceToList,
 	useGetPlaceLists,
 	useRemoveListItem,
-} from "app/lib/api/places";
-import type { Place } from "app/lib/types";
-import { cn } from "app/lib/utils";
-import { usePlaceContext } from "app/routes/place/place-context";
+} from "~/lib/api/places";
+import type { Place } from "~/lib/types";
+import { cn } from "~/lib/utils";
+import { usePlaceContext } from "~/routes/place/place-context";
 
 const ListItem = styled.li`
   &:first-of-type {

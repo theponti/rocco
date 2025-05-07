@@ -1,14 +1,14 @@
 import styled from "@emotion/styled";
-import Alert from "app/components/Alert";
-import Button from "app/components/Button";
-import Input from "app/components/Input";
 import { validateYupSchema } from "formik";
 import { type SyntheticEvent, useCallback, useState } from "react";
 import * as Yup from "yup";
+import Alert from "~/components/Alert";
+import Button from "~/components/Button";
+import Input from "~/components/Input";
 
-import { useCreateListInvite } from "app/lib/api";
-import type { ListInvite } from "app/lib/types";
 import { useToast } from "~/components/Toast/lib/hooks";
+import { useCreateListInvite } from "~/lib/api";
+import type { ListInvite } from "~/lib/types";
 
 const Form = styled.form`
   display: flex;

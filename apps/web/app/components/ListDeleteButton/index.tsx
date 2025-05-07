@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import { Trash } from "lucide-react";
 
-import api from "app/lib/api";
-import { baseURL } from "app/lib/api/base";
+import api from "~/lib/api";
+import { baseURL } from "~/lib/api/base";
 
 const ListDeleteButton = ({
 	listId,

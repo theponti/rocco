@@ -1,12 +1,5 @@
 import { SignInButton, useAuth, useClerk, useUser } from "@clerk/react-router";
 import styled from "@emotion/styled";
-import AppLink from "app/components/AppLink";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "app/components/ui/dropdown-menu";
 import {
 	Globe,
 	LogOut,
@@ -19,6 +12,13 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
+import AppLink from "~/components/AppLink";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
 import Button from "../Button";
 
 const ACCOUNT = "/account";

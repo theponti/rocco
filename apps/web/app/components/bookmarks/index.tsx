@@ -1,9 +1,9 @@
-import Loading from "app/components/Loading";
+import Loading from "~/components/Loading";
 
-import api from "app/lib/api";
 import { useLoaderData } from "react-router";
 import BookmarkForm from "~/components/bookmarks/bookmark-form";
 import BookmarkListItem from "~/components/bookmarks/bookmark-list-item";
+import api from "~/lib/api";
 
 export async function loader() {
 	try {

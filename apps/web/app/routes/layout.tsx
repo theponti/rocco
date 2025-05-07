@@ -1,10 +1,10 @@
 import { useAuth } from "@clerk/react-router";
-import Footer from "app/components/Footer";
-import Header from "app/components/Header";
-import { LoadingScreen } from "app/components/Loading";
-import Toast from "app/components/Toast";
 import { Suspense } from "react";
 import { Outlet, useLocation } from "react-router";
+import Footer from "~/components/Footer";
+import Header from "~/components/Header";
+import { LoadingScreen } from "~/components/Loading";
+import Toast from "~/components/Toast";
 
 export default function Layout() {
 	const { isLoaded, userId } = useAuth();

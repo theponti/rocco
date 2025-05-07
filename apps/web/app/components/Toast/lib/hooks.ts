@@ -1,6 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { type RootState, useAppDispatch, useAppSelector } from "app/lib/store";
 import { useCallback, useMemo } from "react";
+import { type RootState, useAppDispatch, useAppSelector } from "~/lib/store";
 import { closeToast, openToast } from "./index";
 import type { ToastMessage } from "./types";
 

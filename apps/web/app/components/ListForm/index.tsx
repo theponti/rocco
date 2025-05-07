@@ -1,13 +1,13 @@
 import styled from "@emotion/styled";
 import { useMutation } from "@tanstack/react-query";
-import Alert from "app/components/Alert";
-import Input from "app/components/Input";
 import type { AxiosError } from "axios";
 import { Loader2, Plus } from "lucide-react";
 import { type SyntheticEvent, useCallback, useState } from "react";
+import Alert from "~/components/Alert";
+import Input from "~/components/Input";
 
-import Button from "app/components/Button";
-import { URLS, api } from "app/lib/api/base";
+import Button from "~/components/Button";
+import { URLS, api } from "~/lib/api/base";
 
 const MIN_LENGTH = 3;
 

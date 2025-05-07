@@ -1,9 +1,9 @@
 import { screen, waitFor } from "@testing-library/react";
 
-import Dashboard from "app/routes/dashboard/index";
-import { MOCK_LISTS } from "app/test/mocks/index";
-import { renderWithProviders } from "app/test/utils";
 import { describe, expect, test, vi } from "vitest";
+import Dashboard from "~/routes/dashboard/index";
+import { MOCK_LISTS } from "~/test/mocks/index";
+import { renderWithProviders } from "~/test/utils";
 
 // Only mock components that are heavy or rely on external services
 vi.mock("app/components/Map/LazyMap", () => ({

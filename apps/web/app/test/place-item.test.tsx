@@ -3,11 +3,11 @@ import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
-import PlaceItem from "app/components/places/place-item";
-import { baseURL } from "app/lib/api/base";
-import { getMockPlace } from "app/test/mocks";
-import { testServer } from "app/test/test.setup";
-import { renderWithRouter } from "app/test/utils";
+import PlaceItem from "~/components/places/place-item";
+import { baseURL } from "~/lib/api/base";
+import { getMockPlace } from "~/test/mocks";
+import { testServer } from "~/test/test.setup";
+import { renderWithRouter } from "~/test/utils";
 
 describe("PlaceItem", () => {
 	const place = getMockPlace();

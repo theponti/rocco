@@ -1,7 +1,7 @@
 import { useAuth } from "@clerk/react-router";
-import AppLink from "app/components/AppLink";
-import { useGetOutboundInvites } from "app/lib/api";
 import { useNavigate } from "react-router";
+import AppLink from "~/components/AppLink";
+import { useGetOutboundInvites } from "~/lib/api";
 
 export async function clientLoader() {
 	const response = await fetch("/api/invites/outbound");

@@ -1,6 +1,6 @@
-import InviteListItem from "app/components/InviteListItem";
-import api from "app/lib/api";
 import { useLoaderData } from "react-router";
+import InviteListItem from "~/components/InviteListItem";
+import api from "~/lib/api";
 
 export async function loader() {
 	try {

@@ -2,10 +2,10 @@ import { screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
-import { baseURL } from "app/lib/api/base";
-import { MOCK_PLACE } from "app/test/mocks/place";
-import { testServer } from "app/test/test.setup";
-import { renderWithRouter } from "app/test/utils";
+import { baseURL } from "~/lib/api/base";
+import { MOCK_PLACE } from "~/test/mocks/place";
+import { testServer } from "~/test/test.setup";
+import { renderWithRouter } from "~/test/utils";
 
 import RootLayout from "../routes/layout";
 import Place from "../routes/place/index";

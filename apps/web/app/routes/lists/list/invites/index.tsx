@@ -1,9 +1,9 @@
-import Alert from "app/components/Alert";
-import ListInviteForm from "app/components/ListInviteForm";
-import { LoadingScreen } from "app/components/Loading";
-import { getList, useGetListInvites } from "app/lib/api";
 import { useCallback } from "react";
 import { Link, useParams } from "react-router";
+import Alert from "~/components/Alert";
+import ListInviteForm from "~/components/ListInviteForm";
+import { LoadingScreen } from "~/components/Loading";
+import { getList, useGetListInvites } from "~/lib/api";
 import type { Route } from "./+types";
 
 export async function clientLoader({ params }: Route.ClientActionArgs) {

@@ -2,8 +2,8 @@ import { http, HttpResponse } from "msw";
 import { createElement } from "react";
 import { vi } from "vitest";
 
-import { baseURL } from "app/lib/api/base";
-import type { ListPlace, Place } from "app/lib/types";
+import { baseURL } from "~/lib/api/base";
+import type { ListPlace, Place } from "~/lib/types";
 
 vi.mock("@vis.gl/react-google-maps", async (importOriginal) => {
 	const actual = await importOriginal();

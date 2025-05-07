@@ -8,14 +8,14 @@ import {
 } from "lucide-react";
 import { Link } from "react-router";
 
-import ListDeleteButton from "app/components/ListDeleteButton";
+import ListDeleteButton from "~/components/ListDeleteButton";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from "app/components/ui/dropdown-menu";
-import type { List, User } from "app/lib/types";
+} from "~/components/ui/dropdown-menu";
+import type { List, User } from "~/lib/types";
 
 const ListCard = styled.li`
   position: relative;

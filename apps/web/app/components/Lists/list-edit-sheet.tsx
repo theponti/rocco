@@ -1,17 +1,17 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import Alert from "app/components/Alert";
-import Input from "app/components/Input";
-import { Button } from "app/components/ui/button";
+import { useCallback, useRef, useState } from "react";
+import Alert from "~/components/Alert";
+import Input from "~/components/Input";
+import { Button } from "~/components/ui/button";
 import {
 	Sheet,
 	SheetContent,
 	SheetDescription,
 	SheetTitle,
-} from "app/components/ui/sheet";
-import api from "app/lib/api";
-import type { List } from "app/lib/types";
-import { useCallback, useRef, useState } from "react";
+} from "~/components/ui/sheet";
+import api from "~/lib/api";
 import { baseURL } from "~/lib/api/base";
+import type { List } from "~/lib/types";
 import { useListMenu } from "./list-menu";
 
 export default function ListEditSheet({ list }: { list: List }) {

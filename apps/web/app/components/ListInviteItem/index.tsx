@@ -1,8 +1,8 @@
 import React, { useCallback } from "react";
 
-import Button from "app/components/Button";
-import { useAcceptInviteMutation } from "app/lib/api";
-import type { ListInvite } from "app/lib/types";
+import Button from "~/components/Button";
+import { useAcceptInviteMutation } from "~/lib/api";
+import type { ListInvite } from "~/lib/types";
 
 type ListInviteItemProps = {
 	invite: ListInvite;

@@ -2,9 +2,9 @@ import { screen, waitFor } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { describe, expect, test } from "vitest";
 
-import ListsScene, { ErrorBoundary, loader } from "app/routes/lists/index";
-import { testServer } from "app/test/test.setup";
-import { renderWithRouter } from "app/test/utils";
+import ListsScene, { ErrorBoundary, loader } from "~/routes/lists/index";
+import { testServer } from "~/test/test.setup";
+import { renderWithRouter } from "~/test/utils";
 import { MOCK_LISTS } from "./mocks";
 
 describe("ListsScene", () => {

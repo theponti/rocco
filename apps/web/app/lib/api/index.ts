@@ -13,7 +13,7 @@ import type {
 	ListPlace,
 	User,
 	UserList,
-} from "app/lib/types";
+} from "~/lib/types";
 
 import { api, baseURL } from "./base";
 

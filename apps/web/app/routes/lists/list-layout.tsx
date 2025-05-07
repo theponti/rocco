@@ -1,7 +1,3 @@
-import Alert from "app/components/Alert";
-import { LoadingScreen } from "app/components/Loading";
-import { api } from "app/lib/api/base";
-import type { List } from "app/lib/types";
 import { Suspense } from "react";
 import {
 	NavLink,
@@ -10,6 +6,10 @@ import {
 	useLoaderData,
 	useParams,
 } from "react-router";
+import Alert from "~/components/Alert";
+import { LoadingScreen } from "~/components/Loading";
+import { api } from "~/lib/api/base";
+import type { List } from "~/lib/types";
 
 // Types for the loader data
 type LoaderData = {
