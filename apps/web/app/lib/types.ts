@@ -21,7 +21,10 @@ export interface List extends BaseModel {
 	name: string;
 	description: string;
 	userId: string;
-	createdBy?: { email: string };
+	createdBy: User;
+	isOwnList?: boolean;
+	places: Place[];
+	isPublic?: boolean;
 }
 
 export interface ListInvite extends BaseModel {

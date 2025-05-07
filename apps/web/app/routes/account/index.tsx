@@ -4,9 +4,9 @@ import { redirect, useLoaderData, useNavigate } from "react-router";
 import { useUser } from "@clerk/react-router";
 import { useMutation } from "@tanstack/react-query";
 import { useCallback } from "react";
-import Alert from "~/components/Alert";
-import Button from "~/components/Button";
-import { LoadingScreen } from "~/components/Loading";
+import Alert from "~/components/alert";
+import Button from "~/components/button";
+import { LoadingScreen } from "~/components/loading";
 import { api, baseURL } from "~/lib/api/base";
 import type { User } from "~/lib/types";
 

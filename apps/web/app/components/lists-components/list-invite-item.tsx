@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 
-import Button from "~/components/Button";
+import Button from "~/components/button";
 import { useAcceptInviteMutation } from "~/lib/api";
 import type { ListInvite } from "~/lib/types";
 

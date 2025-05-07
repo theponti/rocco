@@ -12,14 +12,14 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
-import AppLink from "~/components/AppLink";
+import AppLink from "~/components/app-link";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import Button from "../Button";
+import Button from "./button";
 
 const ACCOUNT = "/account";
 const INVITES = "/invites";
@@ -396,6 +396,7 @@ function Header() {
 
 						{/* Mobile Menu Toggle */}
 						<button
+							type="button"
 							className="ml-2 p-1.5 rounded-lg bg-white/5 hover:bg-white/10 focus:outline-none md:hidden border border-white/10 transition-all duration-200"
 							aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
 							onClick={toggleMobileMenu}
@@ -423,6 +424,7 @@ function Header() {
 
 						{/* Mobile Menu Toggle */}
 						<button
+							type="button"
 							className="ml-2 p-1.5 rounded-lg bg-white/5 hover:bg-white/10 focus:outline-none md:hidden border border-white/10 transition-all duration-200"
 							aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
 							onClick={toggleMobileMenu}
@@ -440,13 +442,17 @@ function Header() {
 			{/* Mobile Menu */}
 			{mobileMenuOpen && (
 				<MobileMenu className="animate-in slide-in-from-top duration-300">
-					<div className="flex flex-col space-y-3 mt-4">
+					<div
+						className="flex flex-col space-y-3 mt-4"
+						onClick={toggleMobileMenu}
+					>
 						{userId ? (
 							<>
 								<AppLink
 									to="/dashboard"
 									className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-all"
 									onClick={toggleMobileMenu}
+									onKeyUp={toggleMobileMenu}
 								>
 									<Search size={20} />
 									Dashboard
@@ -456,6 +462,7 @@ function Header() {
 									to={LISTS}
 									className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-all"
 									onClick={toggleMobileMenu}
+									onKeyUp={toggleMobileMenu}
 								>
 									<svg
 										width="20"
@@ -480,6 +487,7 @@ function Header() {
 									to={INVITES}
 									className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-all"
 									onClick={toggleMobileMenu}
+									onKeyUp={toggleMobileMenu}
 								>
 									<Mail size={20} />
 									Invites
@@ -489,6 +497,7 @@ function Header() {
 									to={ACCOUNT}
 									className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-all"
 									onClick={toggleMobileMenu}
+									onKeyUp={toggleMobileMenu}
 								>
 									<Settings size={20} />
 									Settings

@@ -1,8 +1,32 @@
-import { createSelector } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSelector, createSlice } from "@reduxjs/toolkit";
 import { useCallback, useMemo } from "react";
 import { type RootState, useAppDispatch, useAppSelector } from "~/lib/store";
-import { closeToast, openToast } from "./index";
-import type { ToastMessage } from "./types";
+
+export type ToastMessage = {
+	text: string;
+	type: string;
+};
+
+export const toastSlice = createSlice({
+	name: "toast",
+	initialState: {
+		isOpen: false,
+		messages: [],
+	},
+	reducers: {
+		openToast(state, action: PayloadAction<ToastMessage>) {
+			state.isOpen = true;
+			(state.messages as ToastMessage[]).push(action.payload);
+		},
+		closeToast(state) {
+			state.isOpen = false;
+			state.messages = [];
+		},
+	},
+});
+
+export const { openToast, closeToast } = toastSlice.actions;
 
 // Memoized selectors
 const selectToastState = (state: RootState) => state.toast;

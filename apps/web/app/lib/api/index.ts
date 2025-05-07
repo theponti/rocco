@@ -7,15 +7,19 @@ import {
 } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 
-import type {
-	List,
-	ListInvite,
-	ListPlace,
-	User,
-	UserList,
-} from "~/lib/types";
+import type { List, ListInvite, ListPlace, User, UserList } from "~/lib/types";
 
 import { api, baseURL } from "./base";
+
+export type CreateListInvite = {
+	email: string;
+	id: string;
+};
+export const createListInvite = async ({ email, id }: CreateListInvite) => {
+	return api.post(`${baseURL}/lists/${id}/invites`, {
+		email,
+	});
+};
 
 export const useGetInvites = () => {
 	return useQuery<ListInvite[]>({
@@ -58,25 +62,6 @@ export const useGetListInvites = (id: string) => {
 			const res = await api.get(`${baseURL}/lists/${id}/invites`);
 			return res.data;
 		},
-	});
-};
-
-export const useCreateListInvite = ({
-	onSuccess,
-	onError,
-}: {
-	onSuccess: (data: ListInvite) => void;
-	onError?: (err: AxiosError) => void;
-}) => {
-	return useMutation({
-		mutationFn: async ({ email, id }: { email: string; id: string }) => {
-			const res = await api.post(`${baseURL}/lists/${id}/invites`, {
-				email,
-			});
-			return res.data;
-		},
-		onError,
-		onSuccess,
 	});
 };
 

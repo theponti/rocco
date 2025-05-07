@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { PlusCircle } from "lucide-react";
 import { memo, useMemo } from "react";
 import { Link } from "react-router";
-import Alert from "~/components/Alert";
+import Alert from "~/components/alert";
 
 import type { List, User } from "~/lib/types";
 import ListItem from "./list-item";

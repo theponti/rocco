@@ -6,8 +6,8 @@ import {
 	useLoaderData,
 	useParams,
 } from "react-router";
-import Alert from "~/components/Alert";
-import { LoadingScreen } from "~/components/Loading";
+import Alert from "~/components/alert";
+import { LoadingScreen } from "~/components/loading";
 import { api } from "~/lib/api/base";
 import type { List } from "~/lib/types";
 

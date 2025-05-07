@@ -5,8 +5,8 @@ import {
 	useApiLoadingStatus,
 } from "@vis.gl/react-google-maps";
 import { useCallback } from "react";
-import Alert from "~/components/Alert";
-import Loading from "~/components/Loading";
+import Alert from "~/components/alert";
+import Loading from "~/components/loading";
 
 import type { Place, PlaceLocation } from "~/lib/types";
 

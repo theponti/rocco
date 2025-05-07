@@ -1,5 +1,5 @@
 import { isRouteErrorResponse } from "react-router";
-import Header from "./Header";
+import Header from "./header";
 
 interface ErrorBoundaryProps {
 	error: unknown;

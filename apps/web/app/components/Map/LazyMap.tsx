@@ -1,6 +1,6 @@
 import type { MapMouseEvent } from "@vis.gl/react-google-maps";
 import { Suspense, lazy } from "react";
-import Loading from "~/components/Loading";
+import Loading from "~/components/loading";
 import type { Place, PlaceLocation } from "~/lib/types";
 
 type LazyMapProps = {

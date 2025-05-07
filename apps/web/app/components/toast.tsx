@@ -1,7 +1,5 @@
 import { CheckCircleIcon } from "lucide-react";
-
-import { useToast } from "~/components/Toast/lib/hooks";
-import type { ToastMessage } from "~/components/Toast/lib/types";
+import { type ToastMessage, useToast } from "./use-toast";
 
 const Toast = () => {
 	const { messages } = useToast();

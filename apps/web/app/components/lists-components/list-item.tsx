@@ -8,14 +8,14 @@ import {
 } from "lucide-react";
 import { Link } from "react-router";
 
-import ListDeleteButton from "~/components/ListDeleteButton";
+import ListDeleteButton from "~/components/lists-components/list-delete-button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import type { List, User } from "~/lib/types";
+import type { List, Place, User } from "~/lib/types";
 
 const ListCard = styled.li`
   position: relative;
@@ -55,7 +55,7 @@ const ListCard = styled.li`
 `;
 
 interface ListItemProps {
-	list: List & { createdBy: User; isOwnList?: boolean };
+	list: List;
 	isOwnList: boolean;
 	"aria-label"?: string;
 }
@@ -126,13 +126,7 @@ function ListItem({ list, isOwnList, "aria-label": ariaLabel }: ListItemProps) {
 
 							{isOwnList && (
 								<DropdownMenuItem>
-									<ListDeleteButton
-										listId={list.id}
-										name={list.name}
-										className="text-red-400 hover:text-red-300 focus:text-red-300 w-full text-left"
-									>
-										Delete
-									</ListDeleteButton>
+									<ListDeleteButton listId={list.id} onDelete={() => {}} />
 								</DropdownMenuItem>
 							)}
 						</DropdownMenuContent>

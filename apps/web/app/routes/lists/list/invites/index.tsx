@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { Link, useParams } from "react-router";
-import Alert from "~/components/Alert";
-import ListInviteForm from "~/components/ListInviteForm";
-import { LoadingScreen } from "~/components/Loading";
+import Alert from "~/components/alert";
+import ListInviteForm from "~/components/lists-components/list-invite-form";
+import { LoadingScreen } from "~/components/loading";
 import { getList, useGetListInvites } from "~/lib/api";
 import type { Route } from "./+types";
 

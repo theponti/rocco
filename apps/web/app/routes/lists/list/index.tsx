@@ -3,10 +3,10 @@ import { PlusCircle, Share } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Link, href, redirect, useLoaderData, useNavigate } from "react-router";
 
-import Alert from "~/components/Alert";
 import ErrorBoundary from "~/components/ErrorBoundary";
-import ListMenu from "~/components/Lists/list-menu";
-import { LoadingScreen } from "~/components/Loading";
+import Alert from "~/components/alert";
+import ListMenu from "~/components/lists-components/list-menu";
+import { LoadingScreen } from "~/components/loading";
 import PlaceItem from "~/components/places/place-item";
 import PlacesAutocomplete from "~/components/places/places-autocomplete";
 import { useGeolocation } from "~/hooks/useGeolocation";

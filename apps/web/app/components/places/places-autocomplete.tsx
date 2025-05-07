@@ -8,8 +8,8 @@ import {
 import { Search } from "lucide-react";
 import type { ChangeEvent } from "react";
 import { memo, useCallback, useRef, useState } from "react";
-import Alert from "~/components/Alert";
-import Loading from "~/components/Loading";
+import Alert from "~/components/alert";
+import Loading from "~/components/loading";
 import {
 	type GooglePlacePrediction,
 	useGooglePlacesAutocomplete,

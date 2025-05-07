@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useRef, useState } from "react";
-import Alert from "~/components/Alert";
-import Input from "~/components/Input";
+import Alert from "~/components/alert";
+import Input from "~/components/input";
 import { Button } from "~/components/ui/button";
 import {
 	Sheet,

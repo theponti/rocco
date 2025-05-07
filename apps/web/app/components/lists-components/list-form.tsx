@@ -3,10 +3,10 @@ import { useMutation } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import { Loader2, Plus } from "lucide-react";
 import { type SyntheticEvent, useCallback, useState } from "react";
-import Alert from "~/components/Alert";
-import Input from "~/components/Input";
+import Alert from "~/components/alert";
+import Input from "~/components/input";
 
-import Button from "~/components/Button";
+import Button from "~/components/button";
 import { URLS, api } from "~/lib/api/base";
 
 const MIN_LENGTH = 3;
