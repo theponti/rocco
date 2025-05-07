@@ -3,8 +3,8 @@ import type { Idea } from "app/lib/types";
 import { TrashIcon } from "lucide-react";
 import React, { useCallback } from "react";
 
-import Button from "~/components/Button";
-import Loading from "~/components/Loading";
+import Button from "app/components/Button";
+import Loading from "app/components/Loading";
 
 type IdeaListItemProps = {
 	idea: Idea;

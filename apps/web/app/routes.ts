@@ -45,8 +45,5 @@ export default [
 				route(":id", "./routes/place/index.tsx"),
 			]),
 		]),
-
-		// Catch-all route for 404s
-		// route("*", "./routes/not-found.tsx"),
 	]),
 ] satisfies RouteConfig;

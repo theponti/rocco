@@ -9,11 +9,7 @@ export default defineConfig({
 		environment: "jsdom",
 		setupFiles: "./app/test/test.setup.tsx",
 		clearMocks: true,
-		exclude: [
-			"**/node_modules/**",
-			"**/dist/**",
-			"**/cypress/**"
-		],
+		exclude: ["**/node_modules/**", "**/dist/**", "**/cypress/**"],
 		coverage: {
 			provider: "v8",
 			clean: true,

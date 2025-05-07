@@ -16,7 +16,7 @@ const AppLink = ({
 	}
 >) => {
 	const matches = useMatches();
-	const isActive = matches.some(match => match.pathname === to);
+	const isActive = matches.some((match) => match.pathname === to);
 
 	if (btn) {
 		return (

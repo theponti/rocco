@@ -1,6 +1,6 @@
+import Alert from "app/components/Alert";
+import Button from "app/components/Button";
 import { type SyntheticEvent, useCallback, useState } from "react";
-import Alert from "~/components/Alert";
-import Button from "~/components/Button";
 
 import { useCreateIdea } from "app/lib/api/ideas";
 

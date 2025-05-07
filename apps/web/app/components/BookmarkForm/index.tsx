@@ -1,8 +1,8 @@
 "use client";
 
+import Alert from "app/components/Alert";
+import Button from "app/components/Button";
 import { type SyntheticEvent, useCallback, useState } from "react";
-import Alert from "~/components/Alert";
-import Button from "~/components/Button";
 
 import { useCreateBookmark } from "app/lib/api/bookmarks";
 

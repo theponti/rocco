@@ -1,13 +1,14 @@
 import PlaceType from "app/components/places/PlaceType";
 
+const EXCLUDED_TYPES = [
+	"establishment",
+	"food",
+	"point_of_interest",
+	"political",
+];
+
 const PlaceTypes = ({ limit, types }: { limit?: number; types: string[] }) => {
-	const excludedTypes = [
-		"establishment",
-		"food",
-		"point_of_interest",
-		"political",
-	];
-	const filterExcludedTypes = (type: string) => !excludedTypes.includes(type);
+	const filterExcludedTypes = (type: string) => !EXCLUDED_TYPES.includes(type);
 
 	const isPointOfInterest =
 		types.length === 2 &&

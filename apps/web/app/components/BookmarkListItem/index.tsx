@@ -1,6 +1,6 @@
+import Button from "app/components/Button";
 import { TrashIcon } from "lucide-react";
 import React, { useCallback, type MouseEvent } from "react";
-import Button from "~/components/Button";
 
 import { useDeleteBookmark } from "app/lib/api/bookmarks";
 import type { Bookmark } from "app/lib/types";

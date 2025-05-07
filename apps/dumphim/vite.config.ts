@@ -4,5 +4,9 @@ import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
+	plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
+	server: {
+		port: 4455,
+		strictPort: true,
+	},
 });

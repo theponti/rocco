@@ -2,9 +2,7 @@
 module.exports = {
 	darkMode: ["class"],
 	// Updated content paths for better purging of unused styles
-	content: [
-		"./app/**/*.{ts,tsx,js,jsx}",
-	],
+	content: ["./app/**/*.{ts,tsx,js,jsx}"],
 	// Enable just-in-time mode for faster builds and smaller CSS
 	future: {
 		hoverOnlyWhenSupported: true,
@@ -77,10 +75,7 @@ module.exports = {
 			},
 		},
 	},
-	plugins: [
-		require("tailwindcss-animate"), 
-		require("daisyui")
-	],
+	plugins: [require("tailwindcss-animate"), require("daisyui")],
 	daisyui: {
 		themes: ["winter"],
 		// Reduce DaisyUI's footprint by selecting only components you use

@@ -61,6 +61,7 @@ export type ListPlace = {
 	googleMapsId: Place["googleMapsId"];
 	types: string[];
 	description: string;
+	rating?: number;
 };
 
 export type Place = {

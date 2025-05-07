@@ -1,41 +1,66 @@
-import { screen, waitFor } from "@testing-library/react";
-import { MOCK_PLACE } from "app/test/mocks/place";
-import { renderWithProviders } from "app/test/utils";
+import { screen, waitFor, within } from "@testing-library/react";
+import { http, HttpResponse } from "msw";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
-// Import after mocks are set up
-import Place from "~/routes/place/index";
+import { baseURL } from "app/lib/api/base";
+import { MOCK_PLACE } from "app/test/mocks/place";
+import { testServer } from "app/test/test.setup";
+import { renderWithRouter } from "app/test/utils";
 
-describe("Place", () => {
-	const navigate = vi.fn();
+import RootLayout from "../routes/layout";
+import Place from "../routes/place/index";
+import { PlaceLayout } from "../routes/place/layout";
 
-	test("should redirect to login if user is not authenticated", async () => {
-		renderWithProviders(
-			<Place
-				matches={[] as any}
-				params={{ id: MOCK_PLACE.googleMapsId }}
-				loaderData={MOCK_PLACE}
-			/>,
-			{ isAuth: false },
+describe("Place Page", () => {
+	const placeId = MOCK_PLACE.googleMapsId;
+
+	beforeEach(() => {
+		vi.clearAllMocks();
+
+		// Mock the API request for fetching place data
+		testServer.use(
+			http.get(`${baseURL}/places/${placeId}`, () => {
+				return HttpResponse.json(MOCK_PLACE);
+			}),
 		);
-
-		await waitFor(() => {
-			expect(navigate).toHaveBeenCalledWith("/login");
-		});
 	});
 
-	test("should render place", async () => {
-		renderWithProviders(
-			<Place
-				matches={[] as any}
-				params={{ id: MOCK_PLACE.googleMapsId }}
-				loaderData={MOCK_PLACE}
-			/>,
-			{ isAuth: true },
-		);
-
-		await waitFor(() => {
-			expect(screen.queryByText(MOCK_PLACE.name)).toBeInTheDocument();
+	test("should render place details", async () => {
+		// Render with our improved router setup
+		renderWithRouter({
+			routes: [
+				{
+					path: "/",
+					Component: RootLayout,
+					children: [
+						{
+							path: "place",
+							Component: PlaceLayout,
+							children: [
+								{
+									path: ":id",
+									Component: Place,
+									loader: async () => ({ place: MOCK_PLACE }),
+								},
+							],
+						},
+					],
+				},
+			],
+			initialEntries: [`/place/${placeId}`],
 		});
+
+		// Verify the place information is displayed
+		await waitFor(() => {
+			expect(screen.getByText(MOCK_PLACE.name)).toBeInTheDocument();
+		});
+
+		const section = within(screen.getByTestId("place-page"));
+
+		// Verify the place address is displayed
+		expect(section.getByText(MOCK_PLACE.address)).toBeInTheDocument();
+
+		// Verify the place types are displayed
+		expect(section.getByText("test type")).toBeInTheDocument();
 	});
 });

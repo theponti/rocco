@@ -42,9 +42,7 @@ describe("ListsScene", () => {
 		});
 
 		await waitFor(() => {
-			expect(
-				screen.getByText("Your lists will appear here once you create them."),
-			).toBeInTheDocument();
+			expect(screen.getByText("Create your first list")).toBeInTheDocument();
 		});
 	});
 

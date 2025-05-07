@@ -1,18 +1,34 @@
-import Button from "app/components/Button";
+import { getAuth } from "@clerk/react-router/ssr.server";
 import { PlusCircle } from "lucide-react";
 import { useCallback, useState } from "react";
-
-import ListForm from "app/components/ListForm";
-import { LoadingScreen } from "app/components/Loading";
-import api from "app/lib/api";
-import { useLoaderData } from "react-router";
+import { redirect, useLoaderData } from "react-router";
+import Button from "~/components/Button";
+import ListForm from "~/components/ListForm";
 import Lists from "~/components/Lists/lists";
+import { LoadingScreen } from "~/components/Loading";
+import api from "~/lib/api";
+import { baseURL } from "~/lib/api/base";
+import type { UserList } from "~/lib/types";
+import type { Route } from "./+types";
 
-export async function loader() {
+export async function loader(loaderArgs: Route.LoaderArgs) {
+	const response = await getAuth(loaderArgs);
+
+	if (!response) {
+		return redirect("/login");
+	}
+
+	const token = await response.getToken();
 	try {
-		const response = await api.get("/lists");
-		return { lists: response.data };
+		const res = await api.get<UserList[]>(`${baseURL}/lists`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
+		return { lists: res.data };
 	} catch (error) {
+		console.error("Failed to fetch lists:", error);
+		// Throwing an error response triggers the nearest ErrorBoundary
 		throw new Response("Could not load lists.", { status: 500 });
 	}
 }

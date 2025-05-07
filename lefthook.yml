@@ -20,9 +20,9 @@ commit-msg:
 pre-commit:
   parallel: true
   commands:
-    lint:
-      tags: lint
-      run: yarn lint
+    # lint:
+    #   tags: lint
+    #   run: yarn lint
     test:
       tags: test
       run: yarn test

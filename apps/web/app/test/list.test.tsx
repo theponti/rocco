@@ -1,4 +1,4 @@
-import { screen, waitFor } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { beforeEach, describe, expect, test, vi } from "vitest";
@@ -576,7 +576,12 @@ describe("List", () => {
 			await user.click(screen.getByText("Edit"));
 
 			// Verify form fields have correct values
-			const nameInput = screen.getByLabelText("Name") as HTMLInputElement;
+			const editSheet = screen.getByTestId("list-edit-form");
+			expect(editSheet).toBeInTheDocument();
+
+			const nameInput = within(editSheet).getByLabelText(
+				"Name",
+			) as HTMLInputElement;
 			expect(nameInput.value).toBe("test list");
 
 			const descriptionInput = screen.getByLabelText(

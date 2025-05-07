@@ -1,4 +1,4 @@
-import Loading from "~/components/Loading";
+import Loading from "app/components/Loading";
 
 import BookmarkForm from "app/components/BookmarkForm";
 import BookmarkListItem from "app/components/BookmarkListItem";

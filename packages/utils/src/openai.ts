@@ -3,5 +3,5 @@ import OpenAI from "openai";
 import "server-only";
 
 export const openai = new OpenAI({
-  apiKey: env.OPENAI_API_KEY!,
+	apiKey: env.OPENAI_API_KEY!,
 });

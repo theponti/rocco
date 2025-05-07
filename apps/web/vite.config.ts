@@ -39,6 +39,11 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
 			},
 		},
 
+		server: {
+			port: 4454,
+			strictPort: true,
+		},
+
 		// General performance optimizations
 		build: {
 			// Smaller chunks are better for caching

@@ -1,9 +1,9 @@
+import Button from "app/components/Button";
+import { useAcceptInviteMutation } from "app/lib/api";
+import type { ListInvite } from "app/lib/types";
 import { Link2 } from "lucide-react";
 import { useCallback } from "react";
 import { Link } from "react-router";
-import Button from "~/components/Button";
-import { useAcceptInviteMutation } from "~/lib/api";
-import type { ListInvite } from "~/lib/types";
 
 type InviteListItemProps = {
 	listInvite: ListInvite;

@@ -1,4 +1,4 @@
-import Loading from "~/components/Loading";
+import Loading from "app/components/Loading";
 
 import IdeaForm from "app/components/IdeaForm";
 import IdeaListItem from "app/components/IdeaListItem";

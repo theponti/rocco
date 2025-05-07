@@ -1,5 +1,5 @@
 .list-item {
-  @apply text-primary
+	@apply text-primary
     flex
     flex-col
     min-h-full

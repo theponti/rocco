@@ -322,13 +322,13 @@ export default function LandingPage() {
 								"As someone who travels constantly, Rocco helps me remember all the amazing places I've been. Highly recommend!",
 							stars: 5,
 						},
-					].map((testimonial, index) => (
-						<motion.div key={index} variants={fadeIn}>
+					].map((testimonial) => (
+						<motion.div key={testimonial.name} variants={fadeIn}>
 							<Card className="h-full p-6">
 								<div className="flex gap-1 mb-4">
-									{[...Array(testimonial.stars)].map((_, i) => (
+									{[...Array(testimonial.stars)].map((_) => (
 										<Star
-											key={i}
+											key={_}
 											size={16}
 											fill="#6366f1"
 											className="text-indigo-400"
@@ -398,8 +398,8 @@ export default function LandingPage() {
 									"Up to 50 saved places",
 									"3 custom lists",
 									"Basic sharing options",
-								].map((feature, i) => (
-									<li key={i} className="flex items-start gap-2">
+								].map((feature) => (
+									<li key={feature} className="flex items-start gap-2">
 										<Check size={16} className="text-green-400 mt-1 shrink-0" />
 										<span className="text-white/80">{feature}</span>
 									</li>
@@ -433,8 +433,8 @@ export default function LandingPage() {
 									"Advanced sharing options",
 									"Collaborative editing",
 									"Priority support",
-								].map((feature, i) => (
-									<li key={i} className="flex items-start gap-2">
+								].map((feature) => (
+									<li key={feature} className="flex items-start gap-2">
 										<Check size={16} className="text-green-400 mt-1 shrink-0" />
 										<span className="text-white/80">{feature}</span>
 									</li>
@@ -469,8 +469,8 @@ export default function LandingPage() {
 									"API access",
 									"Dedicated support",
 									"Custom branding",
-								].map((feature, i) => (
-									<li key={i} className="flex items-start gap-2">
+								].map((feature) => (
+									<li key={feature} className="flex items-start gap-2">
 										<Check size={16} className="text-green-400 mt-1 shrink-0" />
 										<span className="text-white/80">{feature}</span>
 									</li>
@@ -530,8 +530,8 @@ export default function LandingPage() {
 						<div>
 							<h4 className="font-medium mb-3">Product</h4>
 							<ul className="space-y-2">
-								{["Features", "Pricing", "API", "FAQ"].map((item, i) => (
-									<li key={i}>
+								{["Features", "Pricing", "API", "FAQ"].map((item) => (
+									<li key={item}>
 										<a
 											href="#"
 											className="text-white/60 hover:text-white transition-colors"
@@ -546,8 +546,8 @@ export default function LandingPage() {
 						<div>
 							<h4 className="font-medium mb-3">Company</h4>
 							<ul className="space-y-2">
-								{["About", "Blog", "Careers", "Contact"].map((item, i) => (
-									<li key={i}>
+								{["About", "Blog", "Careers", "Contact"].map((item) => (
+									<li key={item}>
 										<a
 											href="#"
 											className="text-white/60 hover:text-white transition-colors"
@@ -562,8 +562,8 @@ export default function LandingPage() {
 						<div>
 							<h4 className="font-medium mb-3">Legal</h4>
 							<ul className="space-y-2">
-								{["Privacy", "Terms", "Security"].map((item, i) => (
-									<li key={i}>
+								{["Privacy", "Terms", "Security"].map((item) => (
+									<li key={item}>
 										<a
 											href="#"
 											className="text-white/60 hover:text-white transition-colors"
@@ -583,9 +583,9 @@ export default function LandingPage() {
 					</p>
 
 					<div className="flex gap-4 mt-4 sm:mt-0">
-						{["Twitter", "GitHub", "LinkedIn"].map((platform, i) => (
+						{["Twitter", "GitHub", "LinkedIn"].map((platform) => (
 							<a
-								key={i}
+								key={platform}
 								href="#"
 								className="text-white/40 hover:text-white transition-colors text-sm"
 							>

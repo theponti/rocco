@@ -4,12 +4,12 @@ import PlacePhotos from "app/components/places/PlacePhotos";
 import PlaceTypes from "app/components/places/PlaceTypes";
 import PlaceWebsite from "app/components/places/PlaceWebsite";
 import { Button } from "app/components/ui/button";
+import { api } from "app/lib/api/base";
 import { useToast } from "app/lib/toast/hooks";
+import type { Place } from "app/lib/types";
 import { ListPlus } from "lucide-react";
 import { useCallback } from "react";
-import { Link, href, redirect } from "react-router";
-import { api } from "~/lib/api/base";
-import type { Place } from "~/lib/types";
+import { Link, href, redirect, useLoaderData } from "react-router";
 import type { Route } from "./+types";
 import { usePlaceContext } from "./place-context";
 
@@ -22,11 +22,11 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 		throw redirect("/404");
 	}
 
-	return place.data;
+	return { place: place.data };
 }
 
-export default function PlacePage({ loaderData }: Route.ComponentProps) {
-	const place = loaderData;
+export default function PlacePage() {
+	const { place } = useLoaderData<{ place: Place }>();
 	const { openToast } = useToast();
 	const { openSaveSheet, isSaveSheetOpen } = usePlaceContext();
 
@@ -42,7 +42,7 @@ export default function PlacePage({ loaderData }: Route.ComponentProps) {
 	}, [openSaveSheet]);
 
 	return (
-		<div className="mt-3 w-full">
+		<div data-testid="place-page" className="mt-3 w-full">
 			<PlacePhotos alt={place.name} photos={place.photos} />
 			<div className="rounded-box bg-slate-100 mt-4 px-4 py-6">
 				<div className="mb-4">

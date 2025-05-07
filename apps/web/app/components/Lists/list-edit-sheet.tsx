@@ -1,35 +1,64 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import Alert from "app/components/Alert";
+import Input from "app/components/Input";
 import { Button } from "app/components/ui/button";
-import { Sheet, SheetContent } from "app/components/ui/sheet";
+import {
+	Sheet,
+	SheetContent,
+	SheetDescription,
+	SheetTitle,
+} from "app/components/ui/sheet";
 import api from "app/lib/api";
 import type { List } from "app/lib/types";
-import { useRef, useState } from "react";
-import Alert from "~/components/Alert";
-import Input from "~/components/Input";
+import { useCallback, useRef, useState } from "react";
+import { baseURL } from "~/lib/api/base";
 import { useListMenu } from "./list-menu";
 
 export default function ListEditSheet({ list }: { list: List }) {
 	const { isEditSheetOpen, setIsEditSheetOpen } = useListMenu();
-	const nameInputRef = useRef<HTMLInputElement>(null);
+	const queryClient = useQueryClient();
+	const [name, setName] = useState(list.name);
 	const [description, setDescription] = useState(list.description);
 	const updateList = useMutation({
 		mutationKey: ["updateList"],
-		mutationFn: async (data: { name: string; description: string }) =>
-			api.put(`/lists/${list.id}`, data),
+		mutationFn: async (data: { name: string; description: string }) => {
+			const response = await api.put(`${baseURL}/lists/${list.id}`, data);
+			return response.data;
+		},
+		onSuccess: () => {
+			setIsEditSheetOpen(false);
+			// Refetch the list or update the local state
+			queryClient.invalidateQueries(
+				{ queryKey: ["list", list.id] },
+				{ cancelRefetch: true },
+			);
+		},
+		onError: (error) => {
+			// console.error("Error updating list:", error);
+		},
 		throwOnError: false,
 	});
 
-	const handleSave = async (e: React.FormEvent) => {
-		await updateList.mutateAsync({
-			name: nameInputRef.current?.value || list.name,
-			description,
-		});
-	};
+	const handleSave = useCallback(
+		async (e: React.FormEvent) => {
+			e.preventDefault();
+			try {
+				await updateList.mutateAsync({
+					name,
+					description,
+				});
+			} catch (error) {
+				// Error is handled by React Query's isError, so nothing to do here
+			}
+		},
+		[name, description, updateList],
+	);
 
 	return (
 		<Sheet open={isEditSheetOpen} onOpenChange={setIsEditSheetOpen}>
 			<SheetContent>
-				<h1 className="text-2xl font-bold">Edit list</h1>
+				<SheetTitle>Edit list</SheetTitle>
+				<SheetDescription>Update your list information</SheetDescription>
 				<form
 					data-testid="list-edit-form"
 					className="flex flex-col gap-4 mt-4"
@@ -42,8 +71,8 @@ export default function ListEditSheet({ list }: { list: List }) {
 						name="name"
 						placeholder="Enter list name"
 						autoComplete="off"
-						defaultValue={list.name}
-						inputRef={nameInputRef}
+						value={name}
+						onChange={(e) => setName(e.target.value)}
 					/>
 					<div className="flex flex-col gap-2">
 						<label htmlFor="description" className="text-sm font-semibold">
@@ -102,6 +131,7 @@ export default function ListEditSheet({ list }: { list: List }) {
 					</div> */}
 					<div className="flex gap-4">
 						<Button
+							data-status={updateList.status}
 							type="submit"
 							className="btn btn-primary"
 							disabled={updateList.status === "pending"}
@@ -110,11 +140,11 @@ export default function ListEditSheet({ list }: { list: List }) {
 						</Button>
 					</div>
 				</form>
-				{updateList.status === "error" && (
+				{updateList.isError ? (
 					<Alert type="error">
 						There was an issue editing your list. Try again later.
 					</Alert>
-				)}
+				) : null}
 			</SheetContent>
 		</Sheet>
 	);

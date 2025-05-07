@@ -5,16 +5,16 @@ import {
 	ComboboxOption,
 	ComboboxOptions,
 } from "@headlessui/react";
-import { useQuery } from "@tanstack/react-query";
 import Alert from "app/components/Alert";
 import Loading from "app/components/Loading";
-import type { AxiosError } from "axios";
+import {
+	type GooglePlacePrediction,
+	useGooglePlacesAutocomplete,
+} from "app/hooks/useGooglePlacesAutocomplete";
 import { Search } from "lucide-react";
 import type { ChangeEvent } from "react";
-import { memo, useCallback, useMemo, useRef, useState } from "react";
-
-import { URLS, api, queryKeys } from "app/lib/api/base";
-import type { Place, PlaceLocation } from "app/lib/types";
+import { memo, useCallback, useRef, useState } from "react";
+import type { PlaceLocation } from "~/lib/types";
 
 const Wrapper = styled.div`
   position: relative;
@@ -80,75 +80,44 @@ const LoadingWrap = styled.div`
 function PlacesAutocomplete({
 	center,
 	setSelected,
+	apiKey,
 }: {
 	center: PlaceLocation | null;
-	setSelected: (place: Place) => void;
+	setSelected: (place: GooglePlacePrediction) => void;
+	apiKey: string;
 }) {
-	const [value, setValue] = useState<Place["googleMapsId"]>("");
-	// Use consistent query keys
-	const queryKey = useMemo(
-		() => queryKeys.places.search(value, center),
-		[value, center],
-	);
-
-	// Create params object using memoization
-	const queryParams = useMemo(
-		() => ({
-			query: value,
-			...(center
-				? {
-						latitude: center.latitude,
-						longitude: center.longitude,
-						radius: 100,
-					}
-				: {}),
-		}),
-		[value, center],
-	);
-
-	const { data, error, isLoading, refetch } = useQuery<Place[], AxiosError>({
-		queryKey,
-		queryFn: async () => {
-			if (value.length < 3 || !center) return Promise.resolve([]);
-
-			const response = await api.get<Place[]>(`${URLS.places}/search`, {
-				params: queryParams,
-			});
-
-			return response.data;
-		},
-		enabled: !!value && value.length >= 3 && !!center,
-		retry: 1,
-		staleTime: 1000 * 60, // 1 minute
-	});
-
-	// This debounce prevents excess API requests.
+	const [value, setValue] = useState("");
 	const timeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const DEBOUNCE_TIME_MS = 1000;
-	const onInputChange = useCallback(
-		(e: ChangeEvent<HTMLInputElement>) => {
-			setValue(e.target.value);
 
-			if (timeoutId.current) {
-				clearTimeout(timeoutId.current);
-			}
+	const [debouncedValue, setDebouncedValue] = useState("");
 
-			// Store the timeout ID
-			const id = setTimeout(async () => {
-				refetch();
-			}, DEBOUNCE_TIME_MS);
+	const onInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+		setValue(e.target.value);
+		if (timeoutId.current) {
+			clearTimeout(timeoutId.current);
+		}
+		const id = setTimeout(() => {
+			setDebouncedValue(e.target.value);
+		}, DEBOUNCE_TIME_MS);
+		timeoutId.current = id;
+	}, []);
 
-			timeoutId.current = id;
-		},
-		[refetch],
-	);
+	const { data, error, isLoading } = useGooglePlacesAutocomplete({
+		input: debouncedValue,
+		location: center
+			? { latitude: center.latitude, longitude: center.longitude }
+			: undefined,
+		radius: 100,
+		apiKey,
+	});
 
 	const handleSelect = useCallback(
-		async (googleMapsId: Place["googleMapsId"]) => {
+		async (placeId: string) => {
 			if (!data) return;
-			const selectedPlace = data.find((p) => p.googleMapsId === googleMapsId);
-			if (selectedPlace) {
-				setSelected(selectedPlace);
+			const selected = data.find((p) => p.place_id === placeId);
+			if (selected) {
+				setSelected(selected);
 			}
 		},
 		[data, setSelected],
@@ -184,17 +153,23 @@ function PlacesAutocomplete({
 }
 
 // Rendering options - memoized to avoid recreating on every render
-const renderSuggestion = memo(({ suggestion }: { suggestion: Place }) => (
-	<Option
-		data-testid="places-autocomplete-option"
-		key={suggestion.googleMapsId}
-		value={suggestion.googleMapsId}
-		className="truncate text-primary"
-	>
-		<span className="font-medium">{suggestion.name}</span>,{" "}
-		<span className="text-slate-400 font-light">{suggestion.address}</span>
-	</Option>
-));
+const renderSuggestion = memo(
+	({ suggestion }: { suggestion: GooglePlacePrediction }) => (
+		<Option
+			data-testid="places-autocomplete-option"
+			key={suggestion.place_id}
+			value={suggestion.place_id}
+			className="truncate text-primary"
+		>
+			<span className="font-medium">
+				{suggestion.structured_formatting.main_text}
+			</span>
+			,{" "}
+			<span className="text-slate-400 font-light">
+				{suggestion.structured_formatting.secondary_text}
+			</span>
+		</Option>
+	),
+);
 
-// Memoize to prevent unnecessary re-renders of the entire component
 export default memo(PlacesAutocomplete);

@@ -26,7 +26,10 @@ const INVITES = "/invites";
 const LISTS = "/lists";
 const APP_NAME = "rocco";
 
-const StyledHeader = styled.header`
+const StyledHeader = styled.header<{
+	isHome: boolean;
+	scrolled: boolean;
+}>`
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -35,7 +38,7 @@ const StyledHeader = styled.header`
 	width: 100%;
 	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	backdrop-filter: blur(12px);
-	background: ${(props) => (props.isHome && !props.scrolled ? "transparent" : "rgba(8, 8, 13, 0.85)")};
+	background: ${(props) => (props.isHome && !props.scrolled ? "transparent" : "rgba(30, 30, 36, 0.5)")};
 	border-bottom: 1px solid ${(props) => (props.isHome && !props.scrolled ? "transparent" : "rgba(255, 255, 255, 0.06)")};
 	box-shadow: ${(props) => (props.scrolled ? "0 8px 32px rgba(0, 0, 0, 0.2)" : "none")};
 
