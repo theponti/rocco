@@ -45,7 +45,7 @@ export function useListMenu() {
 }
 
 type ListMenuProps = {
-	list: List & { createdBy: { email: string } };
+	list: List;
 	isOwnList: boolean;
 };
 export function ListMenu({ list, isOwnList }: ListMenuProps) {

@@ -10,9 +10,9 @@ import { LoadingScreen } from "~/components/loading";
 import PlaceItem from "~/components/places/place-item";
 import PlacesAutocomplete from "~/components/places/places-autocomplete";
 import { useGeolocation } from "~/hooks/useGeolocation";
+import type { GooglePlacePrediction } from "~/hooks/useGooglePlacesAutocomplete";
 import { type GetListResponse, getList } from "~/lib/api";
 import { handleLoaderData } from "~/lib/loaders";
-import type { SearchPlace } from "~/lib/types";
 import type { Route } from "./+types";
 
 export const clientLoader = async ({ params }: Route.ClientLoaderArgs) => {
@@ -51,8 +51,8 @@ export default function ListPage() {
 	}, []);
 
 	const onSelectedChanged = useCallback(
-		(place: SearchPlace) =>
-			navigate(href("/places/:id", { id: place.googleMapsId })),
+		(place: GooglePlacePrediction) =>
+			navigate(href("/places/:id", { id: place.place_id })),
 		[navigate],
 	);
 
@@ -100,7 +100,7 @@ export default function ListPage() {
 							<ListMenu list={data} isOwnList={data.userId === userId} />
 						</div>
 					</div>
-					{(data?.items?.length === 0 || isAddToListOpen) && (
+					{(data?.places?.length === 0 || isAddToListOpen) && (
 						<div
 							data-testid="add-to-list"
 							className="mb-6 bg-slate-100 rounded-lg p-4 pb-8"
@@ -109,18 +109,19 @@ export default function ListPage() {
 								Add a place
 							</label>
 							<PlacesAutocomplete
+								apiKey={import.meta.env.VITE_GOOGLE_API_KEY}
 								setSelected={onSelectedChanged}
 								center={currentLocation}
 							/>
 						</div>
 					)}
-					{data.items.length === 0 && (
+					{data.places.length === 0 && (
 						<Alert type="info">
 							This list is empty. Start adding places with the search bar above.
 						</Alert>
 					)}
 					<div className="grid gap-x-6 gap-y-14 grid-cols-2 sm:grid-cols-3">
-						{data.items.map((place) => (
+						{data.places.map((place) => (
 							<PlaceItem
 								key={place.id}
 								onError={handleDeleteError}

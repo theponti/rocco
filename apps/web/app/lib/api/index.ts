@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 
-import type { List, ListInvite, ListPlace, User, UserList } from "~/lib/types";
+import type { List, ListInvite, ListPlace, User } from "~/lib/types";
 
 import { api, baseURL } from "./base";
 
@@ -69,11 +69,11 @@ export const useGetLists = ({
 	options,
 }: {
 	options?: Omit<
-		UseQueryOptions<UserList[], { message: string }, UserList[], QueryKey>,
+		UseQueryOptions<List[], { message: string }, List[], QueryKey>,
 		"queryKey" | "queryFn"
 	>;
 } = {}) => {
-	return useQuery<UserList[], { message: string }>({
+	return useQuery<List[], { message: string }>({
 		queryKey: ["lists"],
 		queryFn: async () => {
 			const res = await api.get(`${baseURL}/lists`);
@@ -83,12 +83,9 @@ export const useGetLists = ({
 	});
 };
 
-export type GetListResponse = UserList & {
-	id: string;
-	items: ListPlace[];
-};
+export type GetListResponse = List;
 export const getList = async (id: string) => {
-	const res = await api.get<GetListResponse>(`${baseURL}/lists/${id}`);
+	const res = await api.get<List>(`${baseURL}/lists/${id}`);
 	return res.data;
 };
 

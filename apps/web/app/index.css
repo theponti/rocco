@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @plugin "daisyui" {
+	/* biome-ignore lint: Custom plugin property */
 	themes: light --default, dark --prefersdark, cupcake;
 }
 
@@ -92,7 +93,6 @@
 			hsl(var(--primary-gradient-start)),
 			hsl(var(--primary-gradient-end))
 		);
-		-webkit-text-fill-color: transparent;
 		background-clip: text;
 	}
 
@@ -109,6 +109,12 @@
 		transform: translateY(-4px);
 		box-shadow: 0 15px 40px -10px rgb(99 102 241 / 30%);
 		border-color: rgb(99 102 241 / 30%);
+	}
+
+	.text-title-large-light {
+		font-size: 2.5rem;
+		line-height: 3rem;
+		font-weight: 600;
 	}
 }
 

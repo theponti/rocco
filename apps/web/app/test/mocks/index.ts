@@ -2,7 +2,7 @@
 // CONSTANTS & TEST DATA
 // ============================================================================
 
-import type { ListPlace, User, UserList } from "~/lib/types";
+import type { List, ListPlace, User } from "~/lib/types";
 
 export * from "./place";
 
@@ -59,24 +59,24 @@ export const getMockLists = () => [
 	},
 ];
 
-export const MOCK_LIST = {
+export const MOCK_LIST: List = {
 	id: "list-1",
 	name: "Coffee Spots",
 	description: "Great places for coffee",
 	userId: "test-user-id",
-	listId: "list-1",
+	places: [],
 	createdAt: new Date().toISOString(),
 	updatedAt: new Date().toISOString(),
 	createdBy: TEST_USER,
 };
 
-export const MOCK_LISTS: UserList[] = [
+export const MOCK_LISTS: List[] = [
 	MOCK_LIST,
 	{
 		id: "list-2",
 		name: "Weekend Getaways",
 		description: "Places to visit on weekends",
-		listId: "list-2",
+		places: [],
 		userId: "test-user-id",
 		createdAt: new Date().toISOString(),
 		updatedAt: new Date().toISOString(),

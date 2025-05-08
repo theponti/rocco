@@ -15,7 +15,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import type { List, Place, User } from "~/lib/types";
+import type { List } from "~/lib/types";
 
 const ListCard = styled.li`
   position: relative;

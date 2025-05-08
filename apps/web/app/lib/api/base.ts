@@ -10,6 +10,17 @@ export const CACHE_TIME = {
 	LONG: 1000 * 60 * 60 * 24, // 24 hours
 };
 
+// Token provider for authentication
+let tokenProvider: Promise<string | null> | null = null;
+
+export const setTokenProvider = (provider: Promise<string | null>) => {
+	tokenProvider = provider;
+};
+
+export const getToken = async (): Promise<string | null> => {
+	return tokenProvider || null;
+};
+
 // Create optimized QueryClient with better caching defaults
 export const queryClient = new QueryClient({
 	defaultOptions: {
@@ -45,9 +56,23 @@ export const api = axios.create({
 });
 
 // Add interceptors for performance monitoring and caching
-api.interceptors.request.use((config) => {
+api.interceptors.request.use(async (config) => {
 	// Set request start time for performance tracking
 	config.headers.metadata = { startTime: Date.now() };
+
+	// Add auth token to request if available
+	try {
+		// For client-side requests, get the token from the provider
+		if (typeof window !== "undefined") {
+			const token = await getToken();
+			if (token) {
+				config.headers.Authorization = `Bearer ${token}`;
+			}
+		}
+	} catch (error) {
+		console.error("Error adding auth token to request:", error);
+	}
+
 	return config;
 });
 

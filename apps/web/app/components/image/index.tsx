@@ -84,8 +84,10 @@ const OptimizedImage = ({
 						...blurStyle,
 					}}
 					aria-hidden="true"
+					role="presentation"
 				/>
 			)}
+			{/* biome-ignore lint/a11y/useAltText: This error is through due to `rest` spread */}
 			<img
 				src={optimizedSrc}
 				srcSet={srcSet}

@@ -25,12 +25,11 @@ describe("List", () => {
 		const list: GetListResponse = {
 			id: TEST_LIST_ID,
 			name: "test list",
-			items: [MOCK_LIST_PLACE],
+			places: [MOCK_LIST_PLACE],
 			userId: "other-user-id",
 			description: "Test list description",
 			createdAt: new Date().toISOString(),
 			updatedAt: new Date().toISOString(),
-			listId: TEST_LIST_ID,
 			createdBy: getMockUser(),
 		};
 
@@ -71,12 +70,11 @@ describe("List", () => {
 		const list: GetListResponse = {
 			id: TEST_LIST_ID,
 			name: "test list",
-			items: [MOCK_LIST_PLACE],
+			places: [MOCK_LIST_PLACE],
 			userId: "user-id",
 			description: "Test list description",
 			createdAt: new Date().toISOString(),
 			updatedAt: new Date().toISOString(),
-			listId: TEST_LIST_ID,
 			createdBy: getMockUser(),
 		};
 
@@ -139,12 +137,11 @@ describe("List", () => {
 			const emptyList: GetListResponse = {
 				id: TEST_LIST_ID,
 				name: "test list",
-				items: [],
+				places: [],
 				userId: "user-id",
 				description: "Test list description",
 				createdAt: new Date().toISOString(),
 				updatedAt: new Date().toISOString(),
-				listId: TEST_LIST_ID,
 				createdBy: getMockUser(),
 			};
 
@@ -172,12 +169,11 @@ describe("List", () => {
 		const list: GetListResponse = {
 			id: TEST_LIST_ID,
 			name: "test list",
-			items: [MOCK_LIST_PLACE],
+			places: [MOCK_LIST_PLACE],
 			userId: "other-user-id",
 			description: "Test list description",
 			createdAt: new Date().toISOString(),
 			updatedAt: new Date().toISOString(),
-			listId: TEST_LIST_ID,
 			createdBy: getMockUser(),
 		};
 
@@ -202,12 +198,11 @@ describe("List", () => {
 		const list: GetListResponse = {
 			id: TEST_LIST_ID,
 			name: "test list",
-			items: [MOCK_LIST_PLACE],
+			places: [MOCK_LIST_PLACE],
 			userId: "user-id",
 			description: "Test list description",
 			createdAt: new Date().toISOString(),
 			updatedAt: new Date().toISOString(),
-			listId: TEST_LIST_ID,
 			createdBy: getMockUser(),
 		};
 
@@ -235,12 +230,11 @@ describe("List", () => {
 		const list: GetListResponse = {
 			id: TEST_LIST_ID,
 			name: "test list",
-			items: [MOCK_LIST_PLACE],
+			places: [MOCK_LIST_PLACE],
 			userId: "user-id",
 			description: "Test list description",
 			createdAt: new Date().toISOString(),
 			updatedAt: new Date().toISOString(),
-			listId: TEST_LIST_ID,
 			createdBy: getMockUser(),
 		};
 
@@ -272,12 +266,11 @@ describe("List", () => {
 		const emptyList: GetListResponse = {
 			id: TEST_LIST_ID,
 			name: "test list",
-			items: [],
+			places: [],
 			userId: "user-id",
 			description: "Test list description",
 			createdAt: new Date().toISOString(),
 			updatedAt: new Date().toISOString(),
-			listId: TEST_LIST_ID,
 			createdBy: getMockUser(),
 		};
 
@@ -304,12 +297,11 @@ describe("List", () => {
 		const list: GetListResponse = {
 			id: TEST_LIST_ID,
 			name: "test list",
-			items: [MOCK_LIST_PLACE],
+			places: [MOCK_LIST_PLACE],
 			userId: "user-id",
 			description: "Test list description",
 			createdAt: new Date().toISOString(),
 			updatedAt: new Date().toISOString(),
-			listId: TEST_LIST_ID,
 			createdBy: getMockUser(),
 		};
 
@@ -351,7 +343,7 @@ describe("List", () => {
 		});
 
 		test("should not display list menu for other user's list", async () => {
-			const otherUserList = {
+			const otherList = {
 				...list,
 				userId: "other-user-id",
 			};
@@ -362,7 +354,7 @@ describe("List", () => {
 					{
 						path: `/lists/${TEST_LIST_ID}`,
 						Component: List,
-						loader: () => ({ list: otherUserList }),
+						loader: () => ({ list: otherList }),
 					},
 				],
 				initialEntries: [`/lists/${TEST_LIST_ID}`],

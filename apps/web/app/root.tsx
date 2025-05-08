@@ -6,6 +6,7 @@ import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import type { Route } from "./+types/root";
 import "./index.css";
 import { queryClient } from "./lib/api/base";
+import { AuthProvider } from "./lib/auth-provider";
 import { store } from "./lib/store";
 
 export const links: Route.LinksFunction = () => [
@@ -53,7 +54,9 @@ export default function App({
 		>
 			<Provider store={store}>
 				<QueryClientProvider client={queryClient}>
-					<Outlet />
+					<AuthProvider>
+						<Outlet />
+					</AuthProvider>
 				</QueryClientProvider>
 			</Provider>
 		</ClerkProvider>

@@ -1,10 +1,14 @@
 import styled from "@emotion/styled";
 import { ExternalLink, MoreVertical, Star } from "lucide-react";
-import { type MouseEvent, useState } from "react";
+import {
+	type MouseEvent,
+	type KeyboardEvent as ReactKeyboardEvent,
+	useState,
+} from "react";
 import { href, useNavigate } from "react-router";
 
+import { Button } from "~/components/button";
 import PlaceTypes from "~/components/places/PlaceTypes";
-import { Button } from "~/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -15,7 +19,9 @@ import { Sheet, SheetContent } from "~/components/ui/sheet";
 import { useRemoveListItem } from "~/lib/api/places";
 import type { ListPlace } from "~/lib/types";
 
-const PlaceCard = styled.div`
+const PlaceCard = styled.button`
+  all: unset;
+  display: block;
   position: relative;
   overflow: hidden;
   border-radius: 16px;
@@ -96,7 +102,10 @@ const ListItem = ({
 		onSuccess: () => onDelete(place.id),
 		onError,
 	});
-	const onPlaceNameClick = async (e: MouseEvent<HTMLDivElement>) => {
+
+	const handlePlaceNavigation = (
+		e: MouseEvent<HTMLButtonElement> | ReactKeyboardEvent<HTMLButtonElement>,
+	) => {
 		e.preventDefault();
 		navigator.vibrate?.(10);
 		navigate(href("/places/:id", { id: place.googleMapsId }));
@@ -112,20 +121,27 @@ const ListItem = ({
 		setIsDeleteModalOpen(false);
 	};
 
+	const handleOpenGoogleMaps = (
+		e: MouseEvent<HTMLButtonElement> | ReactKeyboardEvent<HTMLButtonElement>,
+		placeName: string,
+	) => {
+		e.stopPropagation();
+		window.open(`https://maps.google.com/?q=${placeName}`, "_blank");
+	};
+
 	// Format rating to always have 1 decimal place
 	const formattedRating = place.rating?.toFixed(1);
 
 	return (
 		<>
 			<PlaceCard
-				role="button"
 				tabIndex={0}
 				data-testid="place-item"
 				className="flex flex-col w-full h-fit cursor-pointer"
-				onClick={onPlaceNameClick}
+				onClick={handlePlaceNavigation}
 				onKeyDown={(e) => {
 					if (e.key === "Enter" || e.key === " ") {
-						onPlaceNameClick(e as any);
+						handlePlaceNavigation(e);
 					}
 				}}
 			>
@@ -174,17 +190,16 @@ const ListItem = ({
 							<PlaceTypes limit={2} types={place.types} />
 						</div>
 					</div>
-					<div
-						className="flex items-center ml-2"
-						onClick={(e) => {
-							e.stopPropagation();
-							window.open(`https://maps.google.com/?q=${place.name}`, "_blank");
-						}}
+					<Button
+						type="button"
+						className="ml-2 p-1.5 rounded-full bg-indigo-500/20 hover:bg-indigo-500/30 transition-colors"
+						onClick={(e: MouseEvent<HTMLButtonElement>) =>
+							handleOpenGoogleMaps(e, place.name)
+						}
+						aria-label={`Open ${place.name} in Google Maps`}
 					>
-						<div className="p-1.5 rounded-full bg-indigo-500/20 hover:bg-indigo-500/30 transition-colors">
-							<ExternalLink size={14} className="text-indigo-400" />
-						</div>
-					</div>
+						<ExternalLink size={14} className="text-indigo-400" />
+					</Button>
 				</div>
 			</PlaceCard>
 
@@ -203,7 +218,6 @@ const ListItem = ({
 						<div className="mt-6 flex gap-4 justify-end">
 							<Button
 								type="button"
-								variant="outline"
 								onClick={() => setIsDeleteModalOpen(false)}
 								className="bg-transparent border border-white/10 text-white hover:bg-white/10"
 							>

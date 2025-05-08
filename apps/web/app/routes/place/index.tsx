@@ -1,12 +1,12 @@
 import { ListPlus } from "lucide-react";
 import { useCallback } from "react";
 import { Link, href, redirect, useLoaderData } from "react-router";
+import { Button } from "~/components/button";
 import AddPlaceToList from "~/components/places/AddPlaceToList";
 import PlaceAddress from "~/components/places/PlaceAddress";
 import PlacePhotos from "~/components/places/PlacePhotos";
 import PlaceTypes from "~/components/places/PlaceTypes";
 import PlaceWebsite from "~/components/places/PlaceWebsite";
-import { Button } from "~/components/ui/button";
 import { useToast } from "~/components/use-toast";
 import { api } from "~/lib/api/base";
 import type { Place } from "~/lib/types";

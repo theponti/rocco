@@ -1,0 +1,11 @@
+# Caddyfile
+
+# dumphim app
+dumphim.ponti.local {
+    reverse_proxy localhost:4455
+}
+
+# web app
+web.ponti.local {
+    reverse_proxy localhost:4454
+}

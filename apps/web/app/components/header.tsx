@@ -440,12 +440,9 @@ function Header() {
 			</div>
 
 			{/* Mobile Menu */}
-			{mobileMenuOpen && (
-				<MobileMenu className="animate-in slide-in-from-top duration-300">
-					<div
-						className="flex flex-col space-y-3 mt-4"
-						onClick={toggleMobileMenu}
-					>
+{mobileMenuOpen && (
+  <MobileMenu className="animate-in slide-in-from-top duration-300">
+    <div className="flex flex-col space-y-3 mt-4">
 						{userId ? (
 							<>
 								<AppLink
@@ -525,29 +522,29 @@ function Header() {
 									Log in
 								</Link>
 
-								<a
-									href="#features"
-									className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-all"
-									onClick={toggleMobileMenu}
-								>
-									Features
-								</a>
+        <Link
+            to="#features"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-all"
+            onClick={toggleMobileMenu}
+        >
+            Features
+        </Link>
 
-								<a
-									href="#testimonials"
-									className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-all"
-									onClick={toggleMobileMenu}
-								>
-									Testimonials
-								</a>
+        <Link
+            to="#testimonials"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-all"
+            onClick={toggleMobileMenu}
+        >
+            Testimonials
+        </Link>
 
-								<a
-									href="#pricing"
-									className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-all"
-									onClick={toggleMobileMenu}
-								>
-									Pricing
-								</a>
+        <Link
+            to="#pricing"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-all"
+            onClick={toggleMobileMenu}
+        >
+            Pricing
+        </Link>
 
 								<SignInButton>
 									<ButtonPrimary className="w-full justify-center py-3 mt-2">

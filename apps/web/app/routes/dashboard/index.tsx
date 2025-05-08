@@ -11,7 +11,7 @@ import { useGeolocation } from "~/hooks/useGeolocation";
 import type { GooglePlacePrediction } from "~/hooks/useGooglePlacesAutocomplete";
 import { api, baseURL } from "~/lib/api/base";
 import { mediaQueries } from "~/lib/styles";
-import type { Place, PlaceLocation, UserList } from "~/lib/types";
+import type { List, Place, PlaceLocation } from "~/lib/types";
 import { requireAuth } from "~/routes/guards";
 import type { Route } from "./+types";
 
@@ -44,7 +44,7 @@ export async function loader(loaderArgs: Route.ClientLoaderArgs) {
 	if ("getToken" in response) {
 		const token = await response.getToken();
 		try {
-			const res = await api.get<UserList[]>(`${baseURL}/lists`, {
+			const res = await api.get<List[]>(`${baseURL}/lists`, {
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},
@@ -66,7 +66,7 @@ export const ZOOM_LEVELS = {
 
 function Dashboard() {
 	// Use data fetched by the loader
-	const { lists } = useLoaderData() as { lists: UserList[] };
+	const { lists } = useLoaderData() as { lists: List[] };
 	const { user } = useUser(); // Added: Get user from Clerk
 	const { currentLocation, isLoading: isLoadingLocation } = useGeolocation();
 	const [selected, setSelected] = useState<Place | null>(null);

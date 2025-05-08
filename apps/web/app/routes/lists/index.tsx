@@ -8,7 +8,7 @@ import Lists from "~/components/lists-components/lists";
 import { LoadingScreen } from "~/components/loading";
 import api from "~/lib/api";
 import { baseURL } from "~/lib/api/base";
-import type { UserList } from "~/lib/types";
+import type { List } from "~/lib/types";
 import type { Route } from "./+types";
 
 export async function loader(loaderArgs: Route.LoaderArgs) {
@@ -20,11 +20,12 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
 
 	const token = await response.getToken();
 	try {
-		const res = await api.get<UserList[]>(`${baseURL}/lists`, {
+		const res = await api.get<List[]>(`${baseURL}/lists`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
 		});
+		console.log("Fetched lists:", res.data);
 		return { lists: res.data };
 	} catch (error) {
 		console.error("Failed to fetch lists:", error);
@@ -34,7 +35,7 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
 }
 
 function ListsScene() {
-	const { lists: data } = useLoaderData() as { lists: any[] };
+	const { lists: data } = useLoaderData() as { lists: List[] };
 	const [isListFormOpen, setIsListFormOpen] = useState(false);
 
 	const refetch = useCallback(async () => {

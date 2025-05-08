@@ -2,9 +2,9 @@ import styled from "@emotion/styled";
 import { PlusCircle } from "lucide-react";
 import { memo, useMemo } from "react";
 import { Link } from "react-router";
-import Alert from "~/components/alert";
 
-import type { List, User } from "~/lib/types";
+import Alert from "~/components/alert";
+import type { List } from "~/lib/types";
 import ListItem from "./list-item";
 
 const EmptyStateCard = styled.div`
@@ -96,7 +96,7 @@ function Lists({
 	currentUserEmail,
 }: {
 	status: string;
-	lists: (List & { createdBy: User })[];
+	lists: List[];
 	error: any;
 	currentUserEmail: string;
 }) {

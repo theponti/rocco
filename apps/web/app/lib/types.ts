@@ -23,8 +23,9 @@ export interface List extends BaseModel {
 	userId: string;
 	createdBy: User;
 	isOwnList?: boolean;
-	places: Place[];
+	places: ListPlace[];
 	isPublic?: boolean;
+	users?: User[];
 }
 
 export interface ListInvite extends BaseModel {
@@ -42,11 +43,6 @@ export interface Bookmark extends BaseModel {
 	siteName: string;
 	url: string;
 }
-
-export type UserList = List & {
-	listId: string;
-	createdBy: User;
-};
 
 export type SearchPlace = {
 	address: string;
