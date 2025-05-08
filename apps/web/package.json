@@ -9,7 +9,7 @@
 		"dev": "(npx spotlight-sidecar) & react-router dev",
 		"format": "biome format --write ./app",
 		"lint": "biome lint ./app",
-		"preview:test": "start-server-and-test preview http://localhost:53422",
+		"preview:test": "start-server-and-test preview http://localhost:3000",
 		"preview": "react-router build && react-router-serve ./build/server/index.js",
 		"start": "react-router-serve ./build/server/index.js",
 		"test": "NODE_ENV=test vitest run",
