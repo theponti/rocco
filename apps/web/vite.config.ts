@@ -44,6 +44,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
 			strictPort: true,
 			// Enable CORS for development
 			cors: true,
+			allowedHosts: ["rocco.ponti.local"],
 		},
 
 		// General performance optimizations

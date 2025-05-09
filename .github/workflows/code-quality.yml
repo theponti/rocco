@@ -6,15 +6,7 @@ on:
   pull_request:
 
 env:
-  APP_URL: ${{ secrets.APP_URL }}
-  COOKIE_DOMAIN: ${{ secrets.COOKIE_DOMAIN }}
-  COOKIE_NAME: ${{ secrets.COOKIE_NAME }}
-  COOKIE_SALT: ${{ secrets.COOKIE_SALT }}
-  COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
-  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/rocco
-  GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
-  JWT_SECRET: ${{ secrets.JWT_SECRET }}
-  SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+  CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   VITE_API_URL: http://127.0.0.1:4444
   VITE_GOOGLE_API_KEY: ${{ secrets.VITE_GOOGLE_API_KEY }}

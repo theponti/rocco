@@ -46,6 +46,8 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
 	if (userId) {
 		return redirect("/dashboard");
 	}
+
+	return null;
 }
 
 export default function LandingPage() {
