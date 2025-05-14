@@ -34,7 +34,6 @@ const StyledHeader = styled.header<{
 	top: 0;
 	left: 0;
 	right: 0;
-	z-index: 1000;
 	width: 100%;
 	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	backdrop-filter: blur(12px);
@@ -216,7 +215,7 @@ function Header() {
 			} transition-all duration-300`}
 		>
 			{/* Logo */}
-			<Link to="/" className="flex items-center gap-2.5 z-[101] relative group">
+			<Link to="/" className="flex items-center gap-2.5 relative group">
 				<Logo>
 					<Globe className="logo-icon size-7 text-white group-hover:text-indigo-300 transition-colors duration-300" />
 					<span className="logo-text lowercase text-xl md:text-2xl">
@@ -293,7 +292,7 @@ function Header() {
 			</nav>
 
 			{/* Auth Section */}
-			<div className="flex items-center gap-2 z-[101]">
+			<div className="flex items-center gap-2">
 				{userId ? (
 					<>
 						{/* User Dropdown */}
@@ -440,9 +439,9 @@ function Header() {
 			</div>
 
 			{/* Mobile Menu */}
-{mobileMenuOpen && (
-  <MobileMenu className="animate-in slide-in-from-top duration-300">
-    <div className="flex flex-col space-y-3 mt-4">
+			{mobileMenuOpen && (
+				<MobileMenu className="animate-in slide-in-from-top duration-300">
+					<div className="flex flex-col space-y-3 mt-4">
 						{userId ? (
 							<>
 								<AppLink
@@ -522,29 +521,29 @@ function Header() {
 									Log in
 								</Link>
 
-        <Link
-            to="#features"
-            className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-all"
-            onClick={toggleMobileMenu}
-        >
-            Features
-        </Link>
+								<Link
+									to="#features"
+									className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-all"
+									onClick={toggleMobileMenu}
+								>
+									Features
+								</Link>
 
-        <Link
-            to="#testimonials"
-            className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-all"
-            onClick={toggleMobileMenu}
-        >
-            Testimonials
-        </Link>
+								<Link
+									to="#testimonials"
+									className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-all"
+									onClick={toggleMobileMenu}
+								>
+									Testimonials
+								</Link>
 
-        <Link
-            to="#pricing"
-            className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-all"
-            onClick={toggleMobileMenu}
-        >
-            Pricing
-        </Link>
+								<Link
+									to="#pricing"
+									className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-all"
+									onClick={toggleMobileMenu}
+								>
+									Pricing
+								</Link>
 
 								<SignInButton>
 									<ButtonPrimary className="w-full justify-center py-3 mt-2">
