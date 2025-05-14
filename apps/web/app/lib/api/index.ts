@@ -5,9 +5,8 @@ import {
 	useMutation,
 	useQuery,
 } from "@tanstack/react-query";
-import type { AxiosError } from "axios";
 
-import type { List, ListInvite, ListPlace, User } from "~/lib/types";
+import type { List, ListInvite, User } from "~/lib/types";
 
 import { api, baseURL } from "./base";
 
