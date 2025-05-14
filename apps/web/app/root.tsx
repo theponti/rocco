@@ -37,6 +37,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
 	);
 }
 
+process.env.VITE_CLERK_PUBLISHABLE_KEY =
+	import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+process.env.CLERK_SECRET_KEY = import.meta.env.VITE_CLERK_SECRET_KEY;
+
 export async function loader(args: Route.LoaderArgs) {
 	return rootAuthLoader(args);
 }
