@@ -129,7 +129,7 @@ function PlacesAutocomplete({
 				<InputWrap>
 					<ComboboxInput
 						data-testid="places-autocomplete-input"
-						className="input input-bordered w-full"
+						className="input input-bordered w-full text-primary"
 						value={value}
 						onChange={onInputChange}
 					/>
@@ -142,7 +142,12 @@ function PlacesAutocomplete({
 								<Loading />
 							</LoadingWrap>
 						) : (
-							data?.map((suggestion) => renderSuggestion({ suggestion }))
+							data?.map((suggestion) => (
+								<PlaceSuggestion
+									key={suggestion.place_id}
+									suggestion={suggestion}
+								/>
+							))
 						)}
 					</Options>
 				)}
@@ -152,8 +157,7 @@ function PlacesAutocomplete({
 	);
 }
 
-// Rendering options - memoized to avoid recreating on every render
-const renderSuggestion = memo(
+const PlaceSuggestion = memo(
 	({ suggestion }: { suggestion: GooglePlacePrediction }) => (
 		<Option
 			data-testid="places-autocomplete-option"

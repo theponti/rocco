@@ -1,74 +1,15 @@
-import styled from "@emotion/styled";
 import { PlusCircle } from "lucide-react";
-import { memo, useMemo } from "react";
+import { memo } from "react";
 import { Link } from "react-router";
 
 import Alert from "~/components/alert";
 import type { List } from "~/lib/types";
 import ListItem from "./list-item";
-
-const EmptyStateCard = styled.div`
-  position: relative;
-  border-radius: 16px;
-  padding: 2.5rem 1.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  background: rgba(30, 30, 36, 0.3);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 60%);
-    z-index: -1;
-  }
-  
-  .create-button {
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    transition: all 0.3s ease;
-    
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px -5px rgba(99, 102, 241, 0.6);
-    }
-    
-    &:active {
-      transform: translateY(0);
-    }
-  }
-`;
-
-const SkeletonLoader = styled.li`
-  background: linear-gradient(90deg, rgba(30, 30, 36, 0.4) 0%, rgba(50, 50, 60, 0.4) 50%, rgba(30, 30, 36, 0.4) 100%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.03);
-  
-  @keyframes shimmer {
-    0% {
-      background-position: 200% 0;
-    }
-    100% {
-      background-position: -200% 0;
-    }
-  }
-`;
+import styles from "./lists.module.css";
 
 const NoResults = () => {
 	return (
-		<EmptyStateCard>
+		<div className={styles.emptyStateCard}>
 			<div className="w-16 h-16 rounded-full bg-indigo-500/10 flex items-center justify-center mb-6">
 				<PlusCircle size={30} className="text-indigo-400" />
 			</div>
@@ -79,12 +20,12 @@ const NoResults = () => {
 			</p>
 			<Link
 				to="/lists/new"
-				className="create-button flex items-center gap-2 px-5 py-2.5 rounded-lg text-white font-medium"
+				className={`${styles.createButton} flex items-center gap-2 px-5 py-2.5 rounded-lg text-white font-medium`}
 				data-testid="create-list-cta"
 			>
 				Create your first list
 			</Link>
-		</EmptyStateCard>
+		</div>
 	);
 };
 
@@ -104,7 +45,7 @@ function Lists({
 		return (
 			<div className="space-y-3" data-testid="lists-skeleton">
 				{skeletonArray.map((_) => (
-					<SkeletonLoader key={_} className="h-[72px]" />
+					<li key={_} className={styles.skeletonLoader} />
 				))}
 			</div>
 		);
@@ -136,17 +77,9 @@ function Lists({
 		return null;
 	}
 
-	// Memoize the ownership calculation to prevent recalculations on re-render
-	const listsWithOwnership = useMemo(() => {
-		return lists.map((list) => ({
-			...list,
-			isOwnList: list.createdBy.email === currentUserEmail,
-		}));
-	}, [lists, currentUserEmail]);
-
 	return (
 		<ul data-testid="lists" className="space-y-3">
-			{listsWithOwnership.map((list) => (
+			{lists.map((list) => (
 				<ListItem
 					key={list.id}
 					list={list}

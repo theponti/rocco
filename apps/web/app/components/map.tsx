@@ -67,7 +67,7 @@ const RoccoMap = ({
 				className="flex flex-1 relative overflow-hidden rounded-lg shadow-md size-full"
 			>
 				{isLoadingCurrentLocation ? (
-					<div className="absolute left-0 right-0 mt-2 mx-auto max-w-content z-10 p-1 px-4 rounded-lg border-blue-500 bg-blue-200 text-blue-600 text-sm">
+					<div className="absolute left-0 right-0 mt-2 mx-auto max-w-fit z-10 p-1 px-4 rounded-lg border-blue-500 bg-blue-200 text-blue-600 text-sm">
 						<span className="animate-ping inline-flex size-1 rounded-full bg-blue-800 opacity-75 mb-[2px] mr-3" />
 						Loading current location
 					</div>

@@ -24,39 +24,29 @@ const DEFAULT_LOCATION: PlaceLocation = {
 	longitude: -122.4194,
 };
 
-const Wrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  width: 100%;
-  height: 100%;
-  padding-bottom: 32px;
-
-  ${mediaQueries.belowMedium} {
-    max-width: calc(100% - 16px);
-    margin: 0 auto;
-  }
-`;
-
 export async function loader(loaderArgs: Route.ClientLoaderArgs) {
 	const response = await requireAuth(loaderArgs);
 
 	if ("getToken" in response) {
 		const token = await response.getToken();
+
 		try {
-			const res = await api.get<List[]>(`${baseURL}/lists`, {
+			const res = await api.get<{ lists: List[] }>(`${baseURL}/lists`, {
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},
 			});
-			return { lists: res.data };
+			return {
+				lists: res.data.lists.map((list) => ({
+					...list,
+					isOwnList: list.userId === response.userId,
+				})),
+			};
 		} catch (error) {
 			throw new Response("Could not load lists.", { status: 500 });
 		}
 	}
 }
-
-const PlacesAutocompleteWrap = styled.div``;
 
 export const ZOOM_LEVELS = {
 	DEFAULT: 10,
@@ -65,7 +55,6 @@ export const ZOOM_LEVELS = {
 };
 
 function Dashboard() {
-	// Use data fetched by the loader
 	const { lists } = useLoaderData() as { lists: List[] };
 	const { user } = useUser(); // Added: Get user from Clerk
 	const { currentLocation, isLoading: isLoadingLocation } = useGeolocation();
@@ -108,8 +97,11 @@ function Dashboard() {
 	}, [navigate, selected]);
 
 	return (
-		<Wrap data-testid="dashboard-scene">
-			<PlacesAutocompleteWrap>
+		<div
+			className="flex flex-col gap-4 w-full h-full pb-8 md:max-w-3xl md:mx-auto"
+			data-testid="dashboard-scene"
+		>
+			<div>
 				{currentLocation ? (
 					<PlacesAutocomplete
 						apiKey={import.meta.env.VITE_GOOGLE_API_KEY}
@@ -120,7 +112,7 @@ function Dashboard() {
 					// Optional: Show a loading state or placeholder while location is loading
 					<div>Loading location for search...</div>
 				)}
-			</PlacesAutocompleteWrap>
+			</div>
 			<div className="min-h-60 h-60">
 				<LazyMap
 					isLoadingCurrentLocation={isLoadingLocation}
@@ -140,7 +132,7 @@ function Dashboard() {
 					currentUserEmail={user.primaryEmailAddress.emailAddress}
 				/>
 			) : null}
-		</Wrap>
+		</div>
 	);
 }
 

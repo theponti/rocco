@@ -22,7 +22,7 @@ export interface List extends BaseModel {
 	description: string;
 	userId: string;
 	createdBy: User;
-	isOwnList?: boolean;
+	isOwnList: boolean;
 	places: ListPlace[];
 	isPublic?: boolean;
 	users?: User[];
