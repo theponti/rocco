@@ -11,14 +11,17 @@ export const CACHE_TIME = {
 };
 
 // Token provider for authentication
-let tokenProvider: Promise<string | null> | null = null;
+let tokenProvider: (() => Promise<string | null>) | null = null;
 
-export const setTokenProvider = (provider: Promise<string | null>) => {
+export const setTokenProvider = (provider: () => Promise<string | null>) => {
 	tokenProvider = provider;
 };
 
 export const getToken = async (): Promise<string | null> => {
-	return tokenProvider || null;
+	if (tokenProvider) {
+		return tokenProvider();
+	}
+	return null;
 };
 
 // Create optimized QueryClient with better caching defaults
@@ -65,6 +68,7 @@ api.interceptors.request.use(async (config) => {
 		// For client-side requests, get the token from the provider
 		if (typeof window !== "undefined") {
 			const token = await getToken();
+			console.log("Token:", token);
 			if (token) {
 				config.headers.Authorization = `Bearer ${token}`;
 			}

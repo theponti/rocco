@@ -4,6 +4,7 @@ import {
 	type UseQueryOptions,
 	useMutation,
 	useQuery,
+	useQueryClient,
 } from "@tanstack/react-query";
 
 import type { List, ListInvite, User } from "~/lib/types";
@@ -75,7 +76,9 @@ export const useGetLists = ({
 	return useQuery<List[], { message: string }>({
 		queryKey: ["lists"],
 		queryFn: async () => {
-			const res = await api.get(`${baseURL}/lists`);
+			const searchParams = new URLSearchParams();
+			searchParams.append("itemType", "PLACE");
+			const res = await api.get(`${baseURL}/lists?${searchParams}`);
 			return res.data;
 		},
 		...options,
@@ -88,23 +91,91 @@ export const getList = async (id: string) => {
 	return res.data;
 };
 
-export const useUpdateList = () => {
-	return useMutation({
-		mutationFn: async (list: List) => {
-			const res = await api.put(`${baseURL}/lists/${list.id}`, {
-				list,
-			});
+// Hook to get a single list
+export const useGetList = (id: string) => {
+	return useQuery<List>({
+		queryKey: ["list", id],
+		queryFn: async () => {
+			const res = await api.get<List>(`${baseURL}/lists/${id}`);
 			return res.data;
 		},
 	});
 };
 
-export const useDeleteList = () => {
+export const useCreateList = (
+	options?: UseMutationOptions<List, unknown, { name: string }>,
+) => {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: async ({ name }: { name: string }) => {
+			const res = await api.post<List>(`${baseURL}/lists`, { name });
+			return res.data;
+		},
+		onSuccess: (newList) => {
+			// Invalidate lists query to trigger refetch
+			queryClient.invalidateQueries({ queryKey: ["lists"] });
+
+			// Optimistic update: Add the new list to the current lists query data
+			queryClient.setQueryData<List[]>(["lists"], (oldLists = []) => {
+				return [...oldLists, newList];
+			});
+		},
+		...options,
+	});
+};
+
+export type UpdateListData = {
+	id: string;
+	name?: string;
+	description?: string;
+};
+
+export const useUpdateList = (
+	options?: UseMutationOptions<List, unknown, UpdateListData>,
+) => {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: async (data: UpdateListData) => {
+			const res = await api.put<List>(`${baseURL}/lists/${data.id}`, data);
+			return res.data;
+		},
+		onSuccess: (updatedList) => {
+			// Update the specific list in the cache
+			queryClient.setQueryData<List>(["list", updatedList.id], updatedList);
+
+			// Update the list in the lists array
+			queryClient.setQueryData<List[]>(["lists"], (oldLists = []) => {
+				return oldLists.map((list) =>
+					list.id === updatedList.id ? updatedList : list,
+				);
+			});
+		},
+		...options,
+	});
+};
+
+export const useDeleteList = (
+	options?: UseMutationOptions<unknown, unknown, string>,
+) => {
+	const queryClient = useQueryClient();
+
 	return useMutation({
 		mutationFn: async (id: string) => {
 			const res = await api.delete(`${baseURL}/lists/${id}`);
 			return res.data;
 		},
+		onSuccess: (_, id) => {
+			// Remove the list from the cache
+			queryClient.removeQueries({ queryKey: ["list", id] });
+
+			// Update the lists array to remove the deleted list
+			queryClient.setQueryData<List[]>(["lists"], (oldLists = []) => {
+				return oldLists.filter((list) => list.id !== id);
+			});
+		},
+		...options,
 	});
 };
 

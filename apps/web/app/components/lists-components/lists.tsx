@@ -34,12 +34,10 @@ function Lists({
 	status,
 	lists,
 	error,
-	currentUserEmail,
 }: {
 	status: string;
 	lists: List[];
 	error: any;
-	currentUserEmail: string;
 }) {
 	if (status === "loading") {
 		return (

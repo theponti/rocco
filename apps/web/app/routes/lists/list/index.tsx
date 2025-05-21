@@ -20,17 +20,17 @@ export const clientLoader = async ({ params }: Route.ClientLoaderArgs) => {
 		return redirect("/404");
 	}
 
-	const list = await handleLoaderData(
+	const response = await handleLoaderData(
 		getList(params.id),
 		"Failed to load list",
 	);
 
 	// Redirect if list doesn't exist
-	if (!list) {
+	if (!response) {
 		return redirect("/404");
 	}
 
-	return { list };
+	return response;
 };
 
 export function HydrateFallback() {

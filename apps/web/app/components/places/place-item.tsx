@@ -16,7 +16,7 @@ import {
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Sheet, SheetContent } from "~/components/ui/sheet";
-import { useRemoveListItem } from "~/lib/api/places";
+import { useRemoveListItem } from "~/lib/places";
 import type { ListPlace } from "~/lib/types";
 
 const PlaceCard = styled.button`

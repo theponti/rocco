@@ -17,6 +17,7 @@ apps/web/cypress/videos/**
 # build
 .next
 build
+dist
 tsconfig.tsbuildinfo
 build-analysis.txt
 

@@ -61,8 +61,6 @@ interface ListItemProps {
 }
 
 function ListItem({ list, isOwnList, "aria-label": ariaLabel }: ListItemProps) {
-	const placeCount = list.places?.length ?? 0;
-
 	return (
 		<ListCard
 			data-testid={`list-item-${list.id}`}
@@ -83,7 +81,7 @@ function ListItem({ list, isOwnList, "aria-label": ariaLabel }: ListItemProps) {
 					<div className="flex items-center gap-1.5">
 						<BookmarkPlus size={14} />
 						<span>
-							{placeCount} {placeCount === 1 ? "place" : "places"}
+							{list.itemCount} {list.itemCount === 1 ? "place" : "places"}
 						</span>
 					</div>
 

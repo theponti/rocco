@@ -7,7 +7,7 @@ import {
 	useAddPlaceToList,
 	useGetPlaceLists,
 	useRemoveListItem,
-} from "~/lib/api/places";
+} from "~/lib/places";
 import type { Place } from "~/lib/types";
 import { cn } from "~/lib/utils";
 import { usePlaceContext } from "~/routes/place/place-context";

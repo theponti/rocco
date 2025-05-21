@@ -1,8 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
 import { Trash } from "lucide-react";
-
-import api from "~/lib/api";
-import { baseURL } from "~/lib/api/base";
+import { useDeleteList } from "~/lib/api";
 
 const ListDeleteButton = ({
 	listId,
@@ -11,11 +8,7 @@ const ListDeleteButton = ({
 	listId: string;
 	onDelete: () => void;
 }) => {
-	const { mutateAsync } = useMutation({
-		mutationKey: ["deleteList", listId],
-		mutationFn: async () => {
-			await api.delete(`${baseURL}/lists/${listId}`);
-		},
+	const { mutateAsync } = useDeleteList({
 		onSuccess: () => {
 			onDelete();
 		},
@@ -26,12 +19,12 @@ const ListDeleteButton = ({
 			return;
 		}
 
-		await mutateAsync();
+		await mutateAsync(listId);
 	};
 
 	const onDeleteKeyDown = async (e: React.KeyboardEvent) => {
 		if (e.key === "Enter") {
-			await mutateAsync();
+			await mutateAsync(listId);
 		}
 	};
 

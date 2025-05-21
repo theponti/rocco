@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import { useMutation } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import { Loader2, Plus } from "lucide-react";
 import { type SyntheticEvent, useCallback, useState } from "react";
@@ -7,7 +6,8 @@ import Alert from "~/components/alert";
 import Input from "~/components/input";
 
 import Button from "~/components/button";
-import { URLS, api } from "~/lib/api/base";
+import { useCreateList } from "~/lib/api";
+import type { List } from "~/lib/types";
 
 const MIN_LENGTH = 3;
 
@@ -90,18 +90,15 @@ const SubmitButton = styled(Button)`
 
 type ListFormProps = {
 	onCancel: () => void;
-	onCreate: () => void;
+	onCreate: (newList: List) => void;
 };
 
 export default function ListForm({ onCreate, onCancel }: ListFormProps) {
 	const [name, setName] = useState("");
-	const { error, mutate, status } = useMutation({
-		mutationFn: async () => {
-			await api.post(URLS.lists, { name });
-		},
-		onSuccess: () => {
+	const { error, mutate, status } = useCreateList({
+		onSuccess: (newList) => {
 			setName("");
-			onCreate();
+			onCreate(newList);
 		},
 	});
 
@@ -117,9 +114,9 @@ export default function ListForm({ onCreate, onCancel }: ListFormProps) {
 	const onSubmit = useCallback(
 		(e: SyntheticEvent<HTMLFormElement>) => {
 			e.preventDefault();
-			mutate();
+			mutate({ name });
 		},
-		[mutate],
+		[mutate, name],
 	);
 
 	const onNameChange = useCallback((e: SyntheticEvent<HTMLInputElement>) => {
@@ -133,7 +130,9 @@ export default function ListForm({ onCreate, onCancel }: ListFormProps) {
 		<FormContainer>
 			<FormTitle>Create a New List</FormTitle>
 
-			{error && <Alert type="error">{(error as AxiosError).message}</Alert>}
+			{error ? (
+				<Alert type="error">{(error as AxiosError).message as string}</Alert>
+			) : null}
 
 			<form onSubmit={onSubmit}>
 				<Input

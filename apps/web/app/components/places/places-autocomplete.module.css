@@ -1,0 +1,32 @@
+.loadingItem {
+  padding: 8px 20px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, rgba(30, 30, 36, 0.2) 0%, rgba(50, 50, 60, 0.3) 50%, rgba(30, 30, 36, 0.2) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  height: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  margin: 4px 0;
+}
+
+.loadingItem:first-of-type {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.loadingItem:last-of-type {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

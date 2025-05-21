@@ -1,4 +1,4 @@
-import { useAuth } from "@clerk/react-router";
+import { useAuth, useClerk } from "@clerk/react-router";
 import { type ReactNode, useEffect } from "react";
 import { setTokenProvider } from "./api/base";
 
@@ -7,18 +7,15 @@ import { setTokenProvider } from "./api/base";
  * This component should be rendered near the root of your application
  */
 export function AuthProvider({ children }: { children: ReactNode }) {
-	const { getToken, isSignedIn } = useAuth();
+	const { isSignedIn } = useAuth();
+	const clerk = useClerk();
 
 	useEffect(() => {
-		if (isSignedIn) {
-			// Set the token provider to the Clerk getToken function
-			// This will be used by the API interceptor to add the token to requests
-			setTokenProvider(getToken());
-		} else {
-			// Clear the token provider when the user is not signed in
-			setTokenProvider(Promise.resolve(null));
-		}
-	}, [isSignedIn, getToken]);
+		const noop = () => Promise.resolve(null);
+		setTokenProvider(
+			isSignedIn && clerk.session ? clerk.session.getToken : noop,
+		);
+	}, [isSignedIn, clerk]);
 
 	return <>{children}</>;
 }

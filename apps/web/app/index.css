@@ -89,6 +89,10 @@
 		font-family: inherit;
 	}
 
+	h1, h2, h3, h4, h5, h6 {
+		color: hsl(var(--primary));
+	}
+
 	/* Gradient text utility */
 	.text-gradient {
 		background: linear-gradient(

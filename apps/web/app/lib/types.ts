@@ -26,6 +26,7 @@ export interface List extends BaseModel {
 	places: ListPlace[];
 	isPublic?: boolean;
 	users?: User[];
+	itemCount?: number;
 }
 
 export interface ListInvite extends BaseModel {

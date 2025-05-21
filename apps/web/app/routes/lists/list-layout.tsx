@@ -54,7 +54,7 @@ export default function ListLayout() {
 					<NavLink
 						to={`/lists/${params.id}`}
 						className={({ isActive }) =>
-							`px-4 py-2 ${isActive ? "border-b-2 border-blue-500 font-medium" : "text-gray-500"}`
+							`px-4 py-2 ${isActive ? "border-b-2 border-blue-500 font-medium text-primary" : "text-gray-500"}`
 						}
 						end
 					>
@@ -63,7 +63,7 @@ export default function ListLayout() {
 					<NavLink
 						to={`/lists/${params.id}/invites`}
 						className={({ isActive }) =>
-							`px-4 py-2 ${isActive ? "border-b-2 border-blue-500 font-medium" : "text-gray-500"}`
+							`px-4 py-2 ${isActive ? "border-b-2 border-blue-500 font-medium text-primary" : "text-gray-500"}`
 						}
 					>
 						Collaborators

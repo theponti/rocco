@@ -1,5 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import Alert from "~/components/alert";
 import { Button } from "~/components/button";
 import Input from "~/components/input";
@@ -9,29 +8,18 @@ import {
 	SheetDescription,
 	SheetTitle,
 } from "~/components/ui/sheet";
-import api from "~/lib/api";
-import { baseURL } from "~/lib/api/base";
+import { useUpdateList } from "~/lib/api";
 import type { List } from "~/lib/types";
 import { useListMenu } from "./list-menu";
 
 export default function ListEditSheet({ list }: { list: List }) {
 	const { isEditSheetOpen, setIsEditSheetOpen } = useListMenu();
-	const queryClient = useQueryClient();
 	const [name, setName] = useState(list.name);
 	const [description, setDescription] = useState(list.description);
-	const updateList = useMutation({
-		mutationKey: ["updateList"],
-		mutationFn: async (data: { name: string; description: string }) => {
-			const response = await api.put(`${baseURL}/lists/${list.id}`, data);
-			return response.data;
-		},
+
+	const updateList = useUpdateList({
 		onSuccess: () => {
 			setIsEditSheetOpen(false);
-			// Refetch the list or update the local state
-			queryClient.invalidateQueries(
-				{ queryKey: ["list", list.id] },
-				{ cancelRefetch: true },
-			);
 		},
 		onError: (error) => {
 			// console.error("Error updating list:", error);
@@ -44,6 +32,7 @@ export default function ListEditSheet({ list }: { list: List }) {
 			e.preventDefault();
 			try {
 				await updateList.mutateAsync({
+					id: list.id,
 					name,
 					description,
 				});
@@ -51,7 +40,7 @@ export default function ListEditSheet({ list }: { list: List }) {
 				// Error is handled by React Query's isError, so nothing to do here
 			}
 		},
-		[name, description, updateList],
+		[name, description, list.id, updateList],
 	);
 
 	return (
@@ -86,49 +75,6 @@ export default function ListEditSheet({ list }: { list: List }) {
 							onChange={(e) => setDescription(e.target.value)}
 						/>
 					</div>
-					{/* <div className="flex flex-col gap-2">
-						<label htmlFor="visibility" className="text-sm font-semibold">
-							Visibility
-						</label>
-						<select
-							id="visibility"
-							className="input"
-							defaultValue={list.visibility}
-							value={list.visibility}
-							onChange={(e) => setVisibility(e.target.value)}
-						>
-							<option value="public">Public</option>
-							<option value="private">Private</option>
-						</select>
-					</div>
-					<div className="flex flex-col gap-2">
-						<label htmlFor="collaborators" className="text-sm font-semibold">
-							Collaborators
-						</label>
-						<input
-							type="text"
-							id="collaborators"
-							placeholder="Enter email addresses"
-							className="input"
-							defaultValue={list.collaborators}
-							value={list.collaborators}
-							onChange={(e) => setCollaborators(e.target.value)}
-						/>
-					</div>
-					<div className="flex flex-col gap-2">
-						<label htmlFor="tags" className="text-sm font-semibold">
-							Tags
-						</label>
-						<input
-							type="text"
-							id="tags"
-							placeholder="Enter tags"
-							className="input"
-							defaultValue={list.tags}
-							value={list.tags}
-							onChange={(e) => setTags(e.target.value)}
-						/>
-					</div> */}
 					<div className="flex gap-4">
 						<Button
 							data-status={updateList.status}

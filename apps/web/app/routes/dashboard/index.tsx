@@ -1,16 +1,15 @@
 import { useUser } from "@clerk/react-router";
-import styled from "@emotion/styled";
 import type { MapMouseEvent } from "@vis.gl/react-google-maps";
 import { useCallback, useEffect, useState } from "react";
 import { href, useLoaderData, useNavigate } from "react-router";
 
 import Lists from "~/components/lists-components/lists";
 import LazyMap from "~/components/map.lazy";
+import PlaceDrawer from "~/components/places/place-drawer";
 import PlacesAutocomplete from "~/components/places/places-autocomplete";
 import { useGeolocation } from "~/hooks/useGeolocation";
 import type { GooglePlacePrediction } from "~/hooks/useGooglePlacesAutocomplete";
 import { api, baseURL } from "~/lib/api/base";
-import { mediaQueries } from "~/lib/styles";
 import type { List, Place, PlaceLocation } from "~/lib/types";
 import { requireAuth } from "~/routes/guards";
 import type { Route } from "./+types";
@@ -31,11 +30,15 @@ export async function loader(loaderArgs: Route.ClientLoaderArgs) {
 		const token = await response.getToken();
 
 		try {
-			const res = await api.get<{ lists: List[] }>(`${baseURL}/lists`, {
-				headers: {
-					Authorization: `Bearer ${token}`,
+			const res = await api.get<{ lists: List[] }>(
+				`${baseURL}/lists?itemType=PLACE`,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
 				},
-			});
+			);
+
 			return {
 				lists: res.data.lists.map((list) => ({
 					...list,
@@ -56,9 +59,9 @@ export const ZOOM_LEVELS = {
 
 function Dashboard() {
 	const { lists } = useLoaderData() as { lists: List[] };
-	const { user } = useUser(); // Added: Get user from Clerk
 	const { currentLocation, isLoading: isLoadingLocation } = useGeolocation();
 	const [selected, setSelected] = useState<Place | null>(null);
+	const [isPlaceDrawerOpen, setIsPlaceDrawerOpen] = useState(false);
 	// Initialize center state with currentLocation or default
 	const [center, setCenter] = useState<PlaceLocation>(
 		currentLocation ?? DEFAULT_LOCATION,
@@ -82,12 +85,32 @@ function Dashboard() {
 		[navigate],
 	);
 
-	const onSelectedChanged = useCallback(
-		(place: GooglePlacePrediction) => {
-			navigate(href("/places/:id", { id: place.place_id }));
-		},
-		[navigate],
-	);
+	const onSelectedChanged = useCallback((info: GooglePlacePrediction) => {
+		// Convert GooglePlacePrediction to Place type
+		if (info.location) {
+			// Map the GooglePlacePrediction to a Place object
+			const placeData: Place = {
+				id: info.place_id,
+				googleMapsId: info.place_id,
+				name: info.structured_formatting.main_text,
+				address: info.structured_formatting.secondary_text,
+				latitude: info.location.latitude,
+				longitude: info.location.longitude,
+				// Default values for required Place properties
+				imageUrl: "",
+				phoneNumber: "",
+				photos: [],
+				price_level: info.priceLevel ? Number.parseInt(info.priceLevel, 10) : 0,
+				rating: 0,
+				types: [], // Default to empty array
+				websiteUri: "",
+			};
+
+			setCenter(info.location);
+			setSelected(placeData);
+			setIsPlaceDrawerOpen(true); // Open the drawer when a place is selected
+		}
+	}, []);
 
 	const onMarkerClick = useCallback(() => {
 		if (!selected) {
@@ -123,15 +146,16 @@ function Dashboard() {
 					setSelected={setSelected}
 				/>
 			</div>
-			{/* Use lists data from loader and pass currentUserEmail */}
-			{lists && user?.primaryEmailAddress?.emailAddress ? (
-				<Lists
-					status={"success"}
-					lists={lists}
-					error={null}
-					currentUserEmail={user.primaryEmailAddress.emailAddress}
-				/>
-			) : null}
+
+			{lists ? <Lists status={"success"} lists={lists} error={null} /> : null}
+
+			{/* Place Drawer */}
+			<PlaceDrawer
+				place={selected}
+				isOpen={isPlaceDrawerOpen}
+				onOpenChange={setIsPlaceDrawerOpen}
+				lists={lists || []}
+			/>
 		</div>
 	);
 }

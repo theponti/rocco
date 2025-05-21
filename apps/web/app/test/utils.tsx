@@ -144,3 +144,11 @@ export function renderWithProviders(
 		options,
 	);
 }
+
+// Mock ResizeObserver for test environment
+class ResizeObserver {
+	observe() {}
+	unobserve() {}
+	disconnect() {}
+}
+(global as any).ResizeObserver = ResizeObserver;
