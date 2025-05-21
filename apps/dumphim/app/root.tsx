@@ -1,3 +1,5 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import * as React from "react";
 import {
 	Links,
 	Meta,
@@ -7,6 +9,8 @@ import {
 	isRouteErrorResponse,
 } from "react-router";
 
+import { AuthProvider } from "~/components/AuthProvider";
+import { PokemonThemeProvider } from "~/lib/pokemon-theme-context";
 import type { Route } from "./+types/root";
 import "./app.css";
 
@@ -24,6 +28,7 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
+	const queryClient = React.useRef(new QueryClient()).current;
 	return (
 		<html lang="en">
 			<head>
@@ -33,7 +38,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<Links />
 			</head>
 			<body>
-				{children}
+				<QueryClientProvider client={queryClient}>
+					<AuthProvider>
+						<PokemonThemeProvider>{children}</PokemonThemeProvider>
+					</AuthProvider>
+				</QueryClientProvider>
 				<ScrollRestoration />
 				<Scripts />
 			</body>
