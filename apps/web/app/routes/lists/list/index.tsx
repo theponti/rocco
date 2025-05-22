@@ -69,7 +69,7 @@ export default function ListPage() {
 	}
 
 	return (
-		<div className="flex flex-col px-0.5 w-full">
+		<div className="container mx-auto flex flex-col px-0.5 w-full">
 			{data && (
 				<div className="flex flex-col px-0.5">
 					<div className="flex justify-between items-center mb-6">
@@ -92,9 +92,7 @@ export default function ListPage() {
 									to={`/lists/${data.id}/invites`}
 									className="flex gap-2 text-black hover:bg-opacity-80 focus:bg-opacity-80"
 								>
-									<span className="hover:cursor-pointer">
-										<Share />
-									</span>
+									<Share className="hover:cursor-pointer" />
 								</Link>
 							)}
 							<ListMenu list={data} isOwnList={data.userId === userId} />
@@ -120,7 +118,7 @@ export default function ListPage() {
 							This list is empty. Start adding places with the search bar above.
 						</Alert>
 					)}
-					<div className="grid gap-x-6 gap-y-14 grid-cols-2 sm:grid-cols-3">
+					<div className="grid gap-x-6 gap-y-14 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 						{data.places.map((place) => (
 							<PlaceItem
 								key={place.id}

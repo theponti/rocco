@@ -1,4 +1,3 @@
-import styled from "@emotion/styled";
 import {
 	BookmarkPlus,
 	ChevronsRight,
@@ -17,43 +16,6 @@ import {
 } from "~/components/ui/dropdown-menu";
 import type { List } from "~/lib/types";
 
-const ListCard = styled.li`
-  position: relative;
-  border-radius: 16px;
-  transition: all 0.3s ease;
-  background: rgba(30, 30, 36, 0.5);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.3);
-  overflow: hidden;
-  
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 40px -10px rgba(99, 102, 241, 0.3);
-    border-color: rgba(99, 102, 241, 0.2);
-  }
-  
-  .list-name {
-    position: relative;
-    display: inline;
-    
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: linear-gradient(90deg, #6366f1, #8b5cf6);
-      transition: width 0.3s ease;
-    }
-  }
-  
-  &:hover .list-name::after {
-    width: 100%;
-  }
-`;
-
 interface ListItemProps {
 	list: List;
 	isOwnList: boolean;
@@ -62,32 +24,29 @@ interface ListItemProps {
 
 function ListItem({ list, isOwnList, "aria-label": ariaLabel }: ListItemProps) {
 	return (
-		<ListCard
+		<li
 			data-testid={`list-item-${list.id}`}
-			className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 p-4"
+			className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-5 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200"
 			aria-label={ariaLabel}
 		>
 			<div className="flex flex-col flex-1 min-w-0">
-				<div className="flex items-center gap-2 mb-1">
-					<div className="w-8 h-8 rounded-full bg-indigo-500/10 flex items-center justify-center">
-						<Globe size={16} className="text-indigo-400" />
+				<div className="flex items-center gap-3 mb-1">
+					<div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center">
+						<Globe size={18} className="text-gray-700" />
 					</div>
-					<h3 className="text-lg font-medium text-white truncate">
-						<span className="list-name">{list.name}</span>
+					<h3 className="text-xl font-semibold text-gray-900 truncate">
+						<span>{list.name}</span>
+						<span className="text-gray-400 text-sm flex items-center gap-1">
+							<BookmarkPlus size={15} />
+							{list.itemCount} {list.itemCount === 1 ? "place" : "places"}
+						</span>
 					</h3>
 				</div>
 
-				<div className="flex items-center gap-4 text-white/60 text-sm mt-1">
-					<div className="flex items-center gap-1.5">
-						<BookmarkPlus size={14} />
-						<span>
-							{list.itemCount} {list.itemCount === 1 ? "place" : "places"}
-						</span>
-					</div>
-
+				<div className="flex items-center gap-6 text-gray-500 text-base mt-1">
 					{list.isPublic && (
-						<div className="flex items-center gap-1.5">
-							<Users size={14} />
+						<div className="flex items-center gap-2">
+							<Users size={15} className="text-gray-400" />
 							<span>Public</span>
 						</div>
 					)}
@@ -98,16 +57,16 @@ function ListItem({ list, isOwnList, "aria-label": ariaLabel }: ListItemProps) {
 				{isOwnList && (
 					<DropdownMenu>
 						<DropdownMenuTrigger
-							className="bg-white/5 hover:bg-white/10 rounded-full p-2 text-white transition-colors"
+							className="bg-gray-100 hover:bg-gray-200 rounded-full p-2 text-gray-700 transition-colors"
 							data-testid={`list-dropdown-${list.id}`}
 						>
-							<MoreVertical size={16} />
+							<MoreVertical size={18} />
 						</DropdownMenuTrigger>
-						<DropdownMenuContent className="bg-zinc-900/95 border border-white/10 text-white backdrop-blur-md">
+						<DropdownMenuContent className="bg-white border border-gray-200 text-gray-900 shadow-lg rounded-xl">
 							<DropdownMenuItem asChild>
 								<Link
 									to={`/lists/${list.id}/edit`}
-									className="flex w-full items-center gap-2 cursor-pointer"
+									className="flex w-full items-center gap-2 cursor-pointer px-3 py-2 rounded-lg hover:bg-gray-50"
 								>
 									Edit
 								</Link>
@@ -116,7 +75,7 @@ function ListItem({ list, isOwnList, "aria-label": ariaLabel }: ListItemProps) {
 							<DropdownMenuItem asChild>
 								<Link
 									to={`/lists/${list.id}/invites`}
-									className="flex w-full items-center gap-2 cursor-pointer"
+									className="flex w-full items-center gap-2 cursor-pointer px-3 py-2 rounded-lg hover:bg-gray-50"
 								>
 									Invites
 								</Link>
@@ -134,13 +93,13 @@ function ListItem({ list, isOwnList, "aria-label": ariaLabel }: ListItemProps) {
 				<Link
 					to={`/lists/${list.id}`}
 					data-testid={`list-view-button-${list.id}`}
-					className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-indigo-600/90 to-indigo-600/80 hover:from-indigo-600 hover:to-indigo-600 rounded-lg text-white text-sm font-medium transition-all hover:shadow-lg hover:shadow-indigo-500/20"
+					className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white text-base font-medium rounded-lg hover:bg-gray-700 transition-colors"
 				>
 					View
-					<ChevronsRight size={16} />
+					<ChevronsRight size={17} />
 				</Link>
 			</div>
-		</ListCard>
+		</li>
 	);
 }
 

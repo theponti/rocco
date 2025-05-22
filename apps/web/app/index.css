@@ -38,41 +38,6 @@
 		--glass-border: 0 0% 0% / 10%; /* Light semi-transparent border for light theme glass */
 		--glass-blur: 12px; /* Consistent blur for glass effect */
 	}
-
-	 @media (prefers-color-scheme: dark) {
-		:root {
-			/* Populated from .dark theme for consistency and completeness */
-			--background: 240 39% 9%; /* #0d0c22 */
-			--foreground: 0 0% 100%;
-			--card: 236 20% 13% / 50%; /* rgba(30, 30, 36, 0.5) */
-			--card-foreground: 0 0% 100%;
-			--popover: 240 21% 12% / 95%; /* rgba(24, 24, 27, 0.95) */
-			--popover-foreground: 0 0% 100%;
-			--primary: 239 84% 75%; /* lighter #8a8bed */
-			--primary-gradient-start: 239 84% 75%; /* lighter #8a8bed */
-			--primary-gradient-end: 263 70% 73%; /* lighter #a88deb */
-			--primary-foreground: 0 0% 100%;
-			--secondary: 240 10% 18%; /* #2a2a31 */
-			--secondary-foreground: 0 0% 100%;
-			--muted: 240 6% 15%; /* #25252a */
-			--muted-foreground: 0 0% 70%; /* rgba(255, 255, 255, 0.7) */
-			--accent: 239 84% 67% / 15%; /* rgba(99, 102, 241, 0.15) */
-			--accent-foreground: 0 0% 100%;
-			--destructive: 350 89% 60%; /* #f43f5e */
-			--destructive-gradient-start: 350 89% 60%; /* #f43f5e */
-			--destructive-gradient-end: 0 84% 60%; /* #ef4444 */
-			--destructive-foreground: 0 0% 100%;
-			--success: 161 84% 40%; /* #10b981 */
-			--warning: 48 96% 53%; /* #facc15 */
-			--border: 0 0% 100% / 6%; /* rgba(255, 255, 255, 0.06) */
-			--input: 0 0% 100% / 10%; /* rgba(255, 255, 255, 0.1) */
-			--input-background: hsl(0, 0%, 0%); /* Kept from user's media query */
-			--ring: 239 84% 67%; /* #6366f1 */
-			--glass-background: 236 20% 13% / 50%; /* rgba(30, 30, 36, 0.5) */
-			--glass-border: 0 0% 100% / 6%; /* rgba(255, 255, 255, 0.06) */
-			--glass-blur: 12px;
-		}
-	 }
 }
 
 @layer base {

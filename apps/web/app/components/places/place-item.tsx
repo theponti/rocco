@@ -19,7 +19,7 @@ import { Sheet, SheetContent } from "~/components/ui/sheet";
 import { useRemoveListItem } from "~/lib/places";
 import type { ListPlace } from "~/lib/types";
 
-const PlaceCard = styled.button`
+const PlaceCard = styled.a`
   all: unset;
   display: block;
   position: relative;
@@ -103,14 +103,6 @@ const ListItem = ({
 		onError,
 	});
 
-	const handlePlaceNavigation = (
-		e: MouseEvent<HTMLButtonElement> | ReactKeyboardEvent<HTMLButtonElement>,
-	) => {
-		e.preventDefault();
-		navigator.vibrate?.(10);
-		navigate(href("/places/:id", { id: place.googleMapsId }));
-	};
-
 	const onDeleteMenuItemClick = async (e: MouseEvent<HTMLDivElement>) => {
 		e.stopPropagation();
 		setIsDeleteModalOpen(true);
@@ -138,12 +130,7 @@ const ListItem = ({
 				tabIndex={0}
 				data-testid="place-item"
 				className="flex flex-col w-full h-fit cursor-pointer"
-				onClick={handlePlaceNavigation}
-				onKeyDown={(e) => {
-					if (e.key === "Enter" || e.key === " ") {
-						handlePlaceNavigation(e);
-					}
-				}}
+				href={href("/places/:id", { id: place.googleMapsId })}
 			>
 				<div className="image-container w-full h-[180px] mb-1">
 					<img

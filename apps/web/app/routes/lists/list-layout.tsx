@@ -42,7 +42,7 @@ export default function ListLayout() {
 	}
 
 	return (
-		<div className="w-full">
+		<div className="container mx-auto px-4 md:px-0">
 			{/* List header with navigation */}
 			<div className="mb-6">
 				<div className="flex items-center justify-between mb-4">

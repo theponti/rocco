@@ -13,7 +13,7 @@ export default function Layout() {
 	const isHome = location.pathname === "/";
 
 	return (
-		<div className="h-full w-full flex flex-col items-center bg-[#0d0c22]">
+		<div className="h-full w-full flex flex-col items-center">
 			<Header />
 
 			<main

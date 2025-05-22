@@ -1,5 +1,4 @@
 import { SignInButton, useAuth, useClerk, useUser } from "@clerk/react-router";
-import styled from "@emotion/styled";
 import {
 	Globe,
 	LogOut,
@@ -19,149 +18,13 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { cn } from "~/lib/utils";
 import Button from "./button";
 
 const ACCOUNT = "/account";
 const INVITES = "/invites";
 const LISTS = "/lists";
 const APP_NAME = "rocco";
-
-const StyledHeader = styled.header<{
-	isHome: boolean;
-	scrolled: boolean;
-}>`
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	width: 100%;
-	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-	backdrop-filter: blur(12px);
-	background: ${(props) => (props.isHome && !props.scrolled ? "transparent" : "rgba(30, 30, 36, 0.5)")};
-	border-bottom: 1px solid ${(props) => (props.isHome && !props.scrolled ? "transparent" : "rgba(255, 255, 255, 0.06)")};
-	box-shadow: ${(props) => (props.scrolled ? "0 8px 32px rgba(0, 0, 0, 0.2)" : "none")};
-
-	@media (prefers-reduced-motion) {
-		transition: none;
-	}
-`;
-
-const Logo = styled.div`
-	position: relative;
-	display: flex;
-	align-items: center;
-	gap: 0.65rem;
-	
-	.logo-icon {
-		position: relative;
-		z-index: 1;
-	}
-	
-	.logo-text {
-		position: relative;
-		z-index: 1;
-		font-weight: 800;
-		background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0.75) 100%);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		background-clip: text;
-		text-fill-color: transparent;
-	}
-	
-	&::after {
-		content: '';
-		position: absolute;
-		width: 24px;
-		height: 24px;
-		background: radial-gradient(circle, rgba(99, 102, 241, 0.5) 0%, rgba(99, 102, 241, 0) 70%);
-		border-radius: 50%;
-		z-index: 0;
-		left: 14px;
-		top: 50%;
-		transform: translateY(-50%);
-		filter: blur(8px);
-		opacity: 0.8;
-	}
-`;
-
-const NavLink = styled(AppLink)`
-	position: relative;
-	font-weight: 500;
-	padding: 0.5rem 0.875rem;
-	transition: all 0.2s ease;
-	border-radius: 0.375rem;
-	color: rgba(255, 255, 255, 0.8);
-	font-size: 0.9375rem;
-	
-	&:hover {
-		color: rgba(255, 255, 255, 1);
-		background: rgba(255, 255, 255, 0.08);
-	}
-	
-	&.active {
-		color: white;
-		background: rgba(99, 102, 241, 0.15);
-		
-		&::after {
-			width: 15px;
-			opacity: 1;
-		}
-	}
-	
-	&::after {
-		content: '';
-		position: absolute;
-		bottom: -2px;
-		left: 50%;
-		width: 0;
-		height: 2px;
-		background: linear-gradient(90deg, #6366f1, #8b5cf6);
-		transition: all 0.3s ease;
-		transform: translateX(-50%);
-		opacity: 0;
-		border-radius: 2px;
-	}
-	
-	&:hover::after {
-		width: 15px;
-		opacity: 1;
-	}
-`;
-
-const MobileMenu = styled.div`
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	z-index: 99;
-	display: flex;
-	flex-direction: column;
-	padding: 5rem 1.5rem 2rem;
-	background: linear-gradient(145deg, rgba(13, 12, 34, 0.97), rgba(26, 24, 52, 0.97));
-	backdrop-filter: blur(16px);
-	transform-origin: top;
-	overflow-y: auto;
-`;
-
-const ButtonPrimary = styled(Button)`
-	background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-	border: none;
-	box-shadow: 0 4px 14px rgba(99, 102, 241, 0.39);
-	font-weight: 600;
-	padding: 0.625rem 1.5rem;
-	transition: all 0.3s ease;
-	
-	&:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
-		background: linear-gradient(135deg, #5457ea 0%, #7c50e7 100%);
-	}
-	
-	&:active {
-		transform: translateY(0);
-	}
-`;
 
 function Header() {
 	const { userId } = useAuth();
@@ -205,41 +68,58 @@ function Header() {
 	}, [signOut, navigate]);
 
 	return (
-		<StyledHeader
-			isHome={isHome}
-			scrolled={scrolled}
-			className={`flex items-center justify-between ${
-				isHome && !scrolled
-					? "py-5 md:py-6 px-5 md:px-10 lg:px-20"
-					: "py-3 md:py-4 px-4 md:px-8"
-			} transition-all duration-300`}
+		<header
+			className={cn(
+				"fixed top-0 left-0 right-0 w-full",
+				"transition-all duration-200 ease-in-out",
+				"flex items-center justify-between border-b border-gray-800",
+				{
+					"py-5 md:py-6 px-5 md:px-10 lg:px-20 bg-transparent":
+						isHome && !scrolled,
+					"py-3 md:py-4 px-4 md:px-8 bg-gray-900/80 backdrop-blur-sm":
+						!isHome || scrolled,
+				},
+			)}
 		>
 			{/* Logo */}
-			<Link to="/" className="flex items-center gap-2.5 relative group">
-				<Logo>
-					<Globe className="logo-icon size-7 text-white group-hover:text-indigo-300 transition-colors duration-300" />
-					<span className="logo-text lowercase text-xl md:text-2xl">
+			<Link to="/" className="flex items-center gap-2 text-white">
+				<div className="flex items-center gap-2">
+					<Globe className="size-5 mt-1" />
+					<span className="font-bold text-xl md:text-2xl lowercase">
 						{APP_NAME}
 					</span>
-				</Logo>
+				</div>
 			</Link>
 
 			{/* Desktop Navigation */}
 			<nav
-				className={`hidden md:flex items-center ${userId ? "space-x-1" : "space-x-8"}`}
+				className={cn("hidden md:flex items-center", {
+					"space-x-2": userId,
+					"space-x-6": !userId,
+				})}
 			>
 				{userId ? (
 					<>
-						<NavLink
+						<AppLink
 							to="/dashboard"
-							className={`flex items-center gap-2 ${location.pathname === "/dashboard" ? "active" : ""}`}
+							className={cn(
+								"font-medium py-2 px-3 rounded-md text-white/90 hover:text-white hover:bg-white/10",
+								"flex items-center gap-2",
+								{
+									"bg-white/10 text-white": location.pathname === "/dashboard",
+								},
+							)}
 						>
 							<Search size={16} />
 							<span>Dashboard</span>
-						</NavLink>
-						<NavLink
+						</AppLink>
+						<AppLink
 							to={LISTS}
-							className={`flex items-center gap-2 ${location.pathname.includes(LISTS) ? "active" : ""}`}
+							className={cn(
+								"font-medium py-2 px-3 rounded-md text-white/90 hover:text-white hover:bg-white/10",
+								"flex items-center gap-2",
+								{ "bg-white/10 text-white": location.pathname.includes(LISTS) },
+							)}
 						>
 							<svg
 								width="16"
@@ -258,32 +138,38 @@ function Header() {
 								/>
 							</svg>
 							<span>Lists</span>
-						</NavLink>
-						<NavLink
+						</AppLink>
+						<AppLink
 							to={INVITES}
-							className={`flex items-center gap-2 ${location.pathname.includes(INVITES) ? "active" : ""}`}
+							className={cn(
+								"font-medium py-2 px-3 rounded-md text-white/90 hover:text-white hover:bg-white/10",
+								"flex items-center gap-2",
+								{
+									"bg-white/10 text-white": location.pathname.includes(INVITES),
+								},
+							)}
 						>
 							<Mail size={16} />
 							<span>Invites</span>
-						</NavLink>
+						</AppLink>
 					</>
 				) : (
 					<>
 						<a
 							href="#features"
-							className="text-white/80 hover:text-white font-medium transition-colors"
+							className="text-white/80 hover:text-white font-medium"
 						>
 							Features
 						</a>
 						<a
 							href="#testimonials"
-							className="text-white/80 hover:text-white font-medium transition-colors"
+							className="text-white/80 hover:text-white font-medium"
 						>
 							Testimonials
 						</a>
 						<a
 							href="#pricing"
-							className="text-white/80 hover:text-white font-medium transition-colors"
+							className="text-white/80 hover:text-white font-medium"
 						>
 							Pricing
 						</a>
@@ -300,7 +186,7 @@ function Header() {
 							<DropdownMenuTrigger
 								ref={navMenuRef}
 								data-testid="auth-dropdown-button"
-								className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-200"
+								className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-200 text-white"
 							>
 								{user?.imageUrl ? (
 									<img
@@ -309,7 +195,7 @@ function Header() {
 										className="w-8 h-8 rounded-full object-cover border border-white/10"
 									/>
 								) : (
-									<div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-semibold border border-white/10">
+									<div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white font-semibold border border-white/10">
 										{user?.firstName?.[0] || user?.lastName?.[0] || (
 											<User size={18} className="text-white/90" />
 										)}
@@ -322,9 +208,9 @@ function Header() {
 							<DropdownMenuContent
 								align="end"
 								data-testid="dropdown-content"
-								className="w-64 p-2 bg-zinc-900/95 text-white rounded-xl border border-white/10 shadow-xl backdrop-blur-md"
+								className="w-64 p-2 bg-zinc-800 text-white rounded-lg border border-white/10 shadow-lg"
 							>
-								<div className="px-3 py-3 border-b border-white/5 mb-1.5">
+								<div className="px-3 py-3 border-b border-white/10 mb-1.5">
 									<div className="font-medium">
 										{user?.firstName} {user?.lastName}
 									</div>
@@ -333,7 +219,7 @@ function Header() {
 									</div>
 								</div>
 
-								<DropdownMenuItem className="rounded-lg focus:bg-white/5 my-0.5">
+								<DropdownMenuItem className="rounded-lg focus:bg-white/10 my-0.5 text-white">
 									<Link
 										to={LISTS}
 										className="flex w-full items-center gap-3 py-2 px-1.5"
@@ -358,7 +244,7 @@ function Header() {
 									</Link>
 								</DropdownMenuItem>
 
-								<DropdownMenuItem className="rounded-lg focus:bg-white/5 my-0.5">
+								<DropdownMenuItem className="rounded-lg focus:bg-white/10 my-0.5 text-white">
 									<Link
 										to={INVITES}
 										className="flex w-full items-center gap-3 py-2 px-1.5"
@@ -368,7 +254,7 @@ function Header() {
 									</Link>
 								</DropdownMenuItem>
 
-								<DropdownMenuItem className="rounded-lg focus:bg-white/5 my-0.5">
+								<DropdownMenuItem className="rounded-lg focus:bg-white/10 my-0.5 text-white">
 									<Link
 										to={ACCOUNT}
 										className="flex w-full items-center gap-3 py-2 px-1.5"
@@ -378,9 +264,9 @@ function Header() {
 									</Link>
 								</DropdownMenuItem>
 
-								<div className="h-px bg-white/5 my-1.5" />
+								<div className="h-px bg-white/10 my-1.5" />
 
-								<DropdownMenuItem className="rounded-lg focus:bg-white/5 my-0.5">
+								<DropdownMenuItem className="rounded-lg focus:bg-white/10 my-0.5">
 									<button
 										type="button"
 										className="flex w-full items-center gap-3 py-2 px-1.5 text-red-400 hover:text-red-300"
@@ -396,7 +282,7 @@ function Header() {
 						{/* Mobile Menu Toggle */}
 						<button
 							type="button"
-							className="ml-2 p-1.5 rounded-lg bg-white/5 hover:bg-white/10 focus:outline-none md:hidden border border-white/10 transition-all duration-200"
+							className="ml-2 p-1.5 rounded-lg bg-white/5 hover:bg-white/10 focus:outline-none md:hidden border border-white/10 transition-all duration-200 text-white"
 							aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
 							onClick={toggleMobileMenu}
 						>
@@ -416,15 +302,15 @@ function Header() {
 							Log in
 						</Link>
 						<SignInButton>
-							<ButtonPrimary className="text-white rounded-lg">
+							<Button className="text-white rounded-md bg-indigo-600 hover:bg-indigo-700 font-semibold py-2 px-4 transition-colors duration-200">
 								Get Started
-							</ButtonPrimary>
+							</Button>
 						</SignInButton>
 
 						{/* Mobile Menu Toggle */}
 						<button
 							type="button"
-							className="ml-2 p-1.5 rounded-lg bg-white/5 hover:bg-white/10 focus:outline-none md:hidden border border-white/10 transition-all duration-200"
+							className="ml-2 p-1.5 rounded-lg bg-white/5 hover:bg-white/10 focus:outline-none md:hidden border border-white/10 transition-all duration-200 text-white"
 							aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
 							onClick={toggleMobileMenu}
 						>
@@ -440,13 +326,13 @@ function Header() {
 
 			{/* Mobile Menu */}
 			{mobileMenuOpen && (
-				<MobileMenu className="animate-in slide-in-from-top duration-300">
-					<div className="flex flex-col space-y-3 mt-4">
+				<div className="fixed inset-0 z-[99] flex flex-col pt-20 px-6 pb-8 bg-neutral-900/95 backdrop-blur-sm origin-top overflow-y-auto animate-in slide-in-from-top duration-200 text-white">
+					<div className="flex flex-col space-y-2 mt-4">
 						{userId ? (
 							<>
 								<AppLink
 									to="/dashboard"
-									className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-all"
+									className="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/5 text-white font-medium hover:bg-white/10 transition-colors"
 									onClick={toggleMobileMenu}
 									onKeyUp={toggleMobileMenu}
 								>
@@ -456,7 +342,7 @@ function Header() {
 
 								<AppLink
 									to={LISTS}
-									className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-all"
+									className="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/5 text-white font-medium hover:bg-white/10 transition-colors"
 									onClick={toggleMobileMenu}
 									onKeyUp={toggleMobileMenu}
 								>
@@ -481,7 +367,7 @@ function Header() {
 
 								<AppLink
 									to={INVITES}
-									className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-all"
+									className="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/5 text-white font-medium hover:bg-white/10 transition-colors"
 									onClick={toggleMobileMenu}
 									onKeyUp={toggleMobileMenu}
 								>
@@ -491,7 +377,7 @@ function Header() {
 
 								<AppLink
 									to={ACCOUNT}
-									className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-all"
+									className="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/5 text-white font-medium hover:bg-white/10 transition-colors"
 									onClick={toggleMobileMenu}
 									onKeyUp={toggleMobileMenu}
 								>
@@ -501,7 +387,7 @@ function Header() {
 
 								<button
 									type="button"
-									className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-red-400 font-medium hover:bg-white/10 hover:text-red-300 transition-all text-left mt-2"
+									className="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/5 text-red-500 font-medium hover:bg-white/10 hover:text-red-400 transition-colors text-left mt-2"
 									onClick={() => {
 										onLogoutClick();
 										toggleMobileMenu();
@@ -515,7 +401,7 @@ function Header() {
 							<>
 								<Link
 									to="/login"
-									className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-all"
+									className="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/5 text-white font-medium hover:bg-white/10 transition-colors"
 									onClick={toggleMobileMenu}
 								>
 									Log in
@@ -523,7 +409,7 @@ function Header() {
 
 								<Link
 									to="#features"
-									className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-all"
+									className="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/5 text-white font-medium hover:bg-white/10 transition-colors"
 									onClick={toggleMobileMenu}
 								>
 									Features
@@ -531,7 +417,7 @@ function Header() {
 
 								<Link
 									to="#testimonials"
-									className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-all"
+									className="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/5 text-white font-medium hover:bg-white/10 transition-colors"
 									onClick={toggleMobileMenu}
 								>
 									Testimonials
@@ -539,29 +425,29 @@ function Header() {
 
 								<Link
 									to="#pricing"
-									className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-all"
+									className="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/5 text-white font-medium hover:bg-white/10 transition-colors"
 									onClick={toggleMobileMenu}
 								>
 									Pricing
 								</Link>
 
 								<SignInButton>
-									<ButtonPrimary className="w-full justify-center py-3 mt-2">
+									<Button className="w-full justify-center py-3 mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition-colors duration-200">
 										Get Started
-									</ButtonPrimary>
+									</Button>
 								</SignInButton>
 							</>
 						)}
 					</div>
 
-					<div className="mt-auto pt-8 text-center text-xs text-gray-500">
+					<div className="mt-auto pt-8 text-center text-xs text-gray-400">
 						<p>
 							© {new Date().getFullYear()} {APP_NAME}. All rights reserved.
 						</p>
 					</div>
-				</MobileMenu>
+				</div>
 			)}
-		</StyledHeader>
+		</header>
 	);
 }
 

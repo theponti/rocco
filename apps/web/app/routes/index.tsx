@@ -52,7 +52,7 @@ export async function loader(loaderArgs: Route.LoaderArgs) {
 
 export default function LandingPage() {
 	return (
-		<div className="flex flex-col items-center justify-center w-full bg-[#0d0c22] text-white overflow-hidden">
+		<div className="flex flex-col items-center justify-center w-full overflow-hidden">
 			<div className={styles.heroGradient} />
 
 			{/* Hero Section */}
