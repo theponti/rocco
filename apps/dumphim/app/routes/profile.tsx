@@ -11,17 +11,17 @@ import { supabase } from "~/lib/supabaseClient";
 interface FetchedTracker {
 	id: string;
 	name: string;
-	hp: string;
-	card_type: string;
-	description: string;
-	attacks: Array<{ name: string; damage: number }>;
+	hp: string | null;
+	card_type: string | null;
+	description: string | null;
+	attacks: Array<{ name: string; damage: number }> | null;
 	strengths: string[];
 	flaws: string[];
-	commitment_level: string;
-	color_theme: string;
+	commitment_level: string | null;
+	color_theme: string | null;
 	photo_url: string | null;
-	image_scale: number;
-	image_position: { x: number; y: number };
+	image_scale: number | null;
+	image_position: { x: number; y: number } | null;
 	user_id: string;
 	created_at: string;
 }
@@ -114,13 +114,15 @@ export function ProfilePage() {
 						{createdTrackers.map((tracker) => {
 							const cardData = {
 								name: tracker.name,
-								hp: tracker.hp,
-								cardType: tracker.card_type,
-								description: tracker.description,
-								attacks: tracker.attacks,
-								flaws: tracker.flaws,
-								strengths: tracker.strengths,
-								commitmentLevel: tracker.commitment_level,
+								hp: tracker.hp ?? undefined,
+								cardType: tracker.card_type ?? undefined,
+								description: tracker.description ?? undefined,
+								attacks: tracker.attacks ?? [],
+								flaws: Array.isArray(tracker.flaws) ? tracker.flaws : [],
+								strengths: Array.isArray(tracker.strengths)
+									? tracker.strengths
+									: [],
+								commitmentLevel: tracker.commitment_level ?? undefined,
 							};
 							const selectedTheme =
 								COLOR_THEMES.find(

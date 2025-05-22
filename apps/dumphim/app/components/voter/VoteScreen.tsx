@@ -2,24 +2,26 @@ import { AlertTriangle, Heart, ThumbsDown, ThumbsUp, User } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { useAuth } from "~/components/AuthProvider";
+import type { Tracker, Vote } from "~/db/schema";
 import { supabase } from "~/lib/supabaseClient";
-import type { Tracker, Vote } from "~/lib/voter.types";
 import { generateFingerprint } from "~/lib/voter.utils";
 import VoteChart from "./VoteChart";
 
 interface VoteScreenProps {
 	tracker: Tracker;
+	votes: Vote[];
 	onBack: () => void;
 	onVoteCasted: (trackerId: string, updatedVotes: Vote[]) => void;
 }
 
 const VoteScreen: React.FC<VoteScreenProps> = ({
 	tracker,
+	votes,
 	onBack,
 	onVoteCasted,
 }) => {
 	const { user } = useAuth();
-	const [currentVotes, setCurrentVotes] = useState<Vote[]>(tracker.votes || []);
+	const [currentVotes, setCurrentVotes] = useState<Vote[]>(votes);
 	const [hasVoted, setHasVoted] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -29,17 +31,17 @@ const VoteScreen: React.FC<VoteScreenProps> = ({
 		let userHasVotedThisSession = false;
 		if (user) {
 			userHasVotedThisSession = currentVotes.some(
-				(vote) => vote.user_id === user.id,
+				(vote) => vote.userId === user.id,
 			);
 		} else {
 			userHasVotedThisSession = currentVotes.some(
-				(vote) => vote.fingerprint === fingerprint && !vote.user_id,
+				(vote) => vote.fingerprint === fingerprint && !vote.userId,
 			);
 		}
 		setHasVoted(userHasVotedThisSession);
 	}, [currentVotes, user]);
 
-	const handleVote = async (value: "stay" | "go") => {
+	const handleVote = async (value: "stay" | "dump") => {
 		if (hasVoted || isSubmitting) return;
 
 		setIsSubmitting(true);
@@ -47,20 +49,19 @@ const VoteScreen: React.FC<VoteScreenProps> = ({
 		const fingerprint = generateFingerprint();
 		const userId = user?.id;
 
-		const newVotePayload: Omit<Vote, "id" | "created_at" | "timestamp"> & {
-			timestamp?: number;
-		} = {
+		const newVotePayload: Omit<Vote, "id" | "createdAt"> = {
 			value,
 			fingerprint,
-			user_id: userId,
-			tracker_id: tracker.id,
+			userId: userId ?? null,
+			trackerId: tracker.id,
+			raterName: "Anonymous", // or get from user if available
+			comment: null,
 		};
 
 		const optimisticVote: Vote = {
 			...newVotePayload,
 			id: `temp-${Date.now()}`,
-			created_at: new Date().toISOString(),
-			timestamp: Date.now(),
+			createdAt: new Date(),
 		};
 		const newVotesArray = [...currentVotes, optimisticVote];
 		setCurrentVotes(newVotesArray);
@@ -69,7 +70,10 @@ const VoteScreen: React.FC<VoteScreenProps> = ({
 		try {
 			const { data: insertedVote, error: insertError } = await supabase
 				.from("votes")
-				.insert(newVotePayload)
+				.insert({
+					...newVotePayload,
+					createdAt: new Date(),
+				})
 				.select()
 				.single();
 
@@ -96,8 +100,8 @@ const VoteScreen: React.FC<VoteScreenProps> = ({
 			setHasVoted(
 				currentVotes.some((vote) =>
 					user
-						? vote.user_id === user.id
-						: vote.fingerprint === fingerprint && !vote.user_id,
+						? vote.userId === user.id
+						: vote.fingerprint === fingerprint && !vote.userId,
 				),
 			);
 		} finally {
@@ -117,9 +121,9 @@ const VoteScreen: React.FC<VoteScreenProps> = ({
 			</button>
 
 			<div className="text-center space-y-4">
-				{tracker.photo_url ? (
+				{tracker.photoUrl ? (
 					<img
-						src={tracker.photo_url}
+						src={tracker.photoUrl}
 						alt={tracker.name}
 						className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover mx-auto shadow-lg border-4 border-white dark:border-gray-700"
 					/>
@@ -182,7 +186,7 @@ const VoteScreen: React.FC<VoteScreenProps> = ({
 				</button>
 				<button
 					type="button"
-					onClick={() => handleVote("go")}
+					onClick={() => handleVote("dump")}
 					disabled={hasVoted || isSubmitting}
 					className="w-full flex items-center justify-center gap-2 px-6 py-3 text-lg font-semibold text-white bg-red-500 hover:bg-red-600 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
 				>

@@ -1,12 +1,9 @@
 import * as d3 from "d3";
 import type React from "react";
 import { useEffect, useRef } from "react";
+import type { Vote } from "~/db/schema";
 
-interface Vote {
-	value: "stay" | "go";
-	fingerprint: string;
-	timestamp: number;
-}
+// Use the canonical Vote type from the updated schema
 
 interface VoteChartProps {
 	votes: Vote[];
@@ -41,7 +38,7 @@ const VoteChart: React.FC<VoteChartProps> = ({ votes }) => {
 
 		const data = [
 			{ label: "Stay", value: votes.filter((v) => v.value === "stay").length },
-			{ label: "Go", value: votes.filter((v) => v.value === "go").length },
+			{ label: "Go", value: votes.filter((v) => v.value === "dump").length },
 		];
 
 		// Using hardcoded hex color values for simplicity

@@ -1,14 +1,4 @@
-export interface Tracker {
-	id: string;
-	created_at: string;
-	name: string;
-	description?: string;
-	pros?: string[];
-	cons?: string[];
-	photo_url?: string | null;
-	user_id: string;
-	votes: Vote[];
-}
+import type { Tracker } from "~/db/schema";
 
 // Utility types for parsed pros/cons
 export interface TrackerWithParsedArrays
@@ -19,54 +9,45 @@ export interface TrackerWithParsedArrays
 
 // Helper functions to work with pros/cons
 export function getParsedPros(tracker: Tracker): string[] {
-	if (tracker.pros) {
+	// strengths is now a JSON array in the DB schema
+	if (Array.isArray(tracker.strengths)) {
+		return tracker.strengths;
+	}
+	// fallback: try to parse if it's a string (legacy/SSR)
+	if (typeof tracker.strengths === "string") {
 		try {
-			return JSON.parse(tracker.pros);
+			return JSON.parse(tracker.strengths);
 		} catch (e) {
-			console.error("Error parsing pros JSON:", e);
+			console.error("Error parsing strengths JSON:", e);
 		}
 	}
-	// Fallback to legacy fields
-	return [tracker.pro1, tracker.pro2, tracker.pro3].filter(
-		(item): item is string => !!item,
-	);
+	return [];
 }
 
-export function getParsedCons(tracker: Tracker): string[] {
-	if (tracker.cons) {
+export function getParsedWeaknesses(tracker: Tracker): string[] {
+	// flaws is now a JSON array in the DB schema
+	if (Array.isArray(tracker.flaws)) {
+		return tracker.flaws;
+	}
+	if (typeof tracker.flaws === "string") {
 		try {
-			return JSON.parse(tracker.cons);
+			return JSON.parse(tracker.flaws);
 		} catch (e) {
-			console.error("Error parsing cons JSON:", e);
+			console.error("Error parsing flaws JSON:", e);
 		}
 	}
-	// Fallback to legacy fields
-	return [tracker.con1, tracker.con2, tracker.con3].filter(
-		(item): item is string => !!item,
-	);
+	return [];
 }
 
 export function convertToTrackerWithParsedArrays(
 	tracker: Tracker,
 ): TrackerWithParsedArrays {
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const { pros, cons, ...rest } = tracker;
+	// strengths and flaws are required for TrackerWithParsedArrays
 	return {
-		...rest,
+		...tracker,
 		parsedPros: getParsedPros(tracker),
-		parsedCons: getParsedCons(tracker),
+		parsedCons: getParsedWeaknesses(tracker),
 	};
-}
-
-// Corresponds to the 'votes' table in Supabase
-export interface Vote {
-	id?: string; // Optional UUID from Supabase, if fetched directly
-	created_at?: string; // Optional timestampz from Supabase
-	tracker_id: string; // Foreign key to Tracker
-	user_id?: string | null; // UUID of the user who voted (if logged in)
-	fingerprint: string; // Browser fingerprint for anonymous voting
-	value: "stay" | "go";
-	timestamp: number; // JS timestamp for client-side use, might be redundant if created_at is used
 }
 
 // For creating a new tracker, before it has an ID from Supabase

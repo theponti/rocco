@@ -64,6 +64,8 @@ export const votes = pgTable("votes", {
 	value: text("value", { enum: ["stay", "dump"] }).notNull(), // Updated enum
 	comment: text("comment"), // Added comment
 });
+export type Vote = typeof votes.$inferSelect;
+export type VoteInsert = typeof votes.$inferInsert;
 
 export const votesRelations = relations(votes, ({ one }) => ({
 	// tracker: one(trackers, {

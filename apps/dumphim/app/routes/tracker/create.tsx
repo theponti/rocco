@@ -21,12 +21,12 @@ import { FlawsPicker } from "~/components/voter/flaws-picker";
 import { ImageAdjustmentDialog } from "~/components/voter/image-adjustment-dialog";
 import { PersonCardDisplay } from "~/components/voter/person-card-display";
 import { ShareDialog } from "~/components/voter/share-dialog";
-import { useAuth } from "../components/AuthProvider";
+import { useAuth } from "../../components/AuthProvider";
 import {
 	PERSONALITY_TYPES,
 	PersonalityTypePicker,
-} from "../components/voter/personality-type-picker";
-import { supabase } from "../lib/supabaseClient";
+} from "../../components/voter/personality-type-picker";
+import { supabase } from "../../lib/supabaseClient";
 
 // Mock data for friend ratings
 type Rating = {

@@ -31,8 +31,6 @@ export default [
 
 		// Lists section with nested hierarchy
 		...prefix("lists", [
-			index("./routes/lists/index.tsx"),
-			// List detail route with its own context
 			layout("./routes/lists/list-layout.tsx", [
 				route(":id", "./routes/lists/list/index.tsx"),
 				route(":id/invites", "./routes/lists/list/invites/index.tsx"),

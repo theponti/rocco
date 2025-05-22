@@ -1,4 +1,4 @@
-import type { Tracker, Vote } from "./voter.types";
+import type { Tracker, Vote } from "~/db/schema";
 
 // Define maximum HP value
 export const MAX_HP = 150;
@@ -12,23 +12,23 @@ export function calculateHP(tracker: Tracker): {
 	maxHp: number;
 	percentage: number;
 } {
-	// If there are no votes, start with a neutral HP value
-	if (!tracker.votes || tracker.votes.length === 0) {
+	// Accepts tracker.votes as Vote[] | undefined
+	const votes: Vote[] = (tracker as any).votes || [];
+	if (!votes || votes.length === 0) {
 		return { hp: MAX_HP / 2, maxHp: MAX_HP, percentage: 50 };
 	}
 
 	// Start with base HP (could be adjusted based on description positivity analysis in the future)
 	const baseHP = MAX_HP * 0.4; // Start with 40% of max HP as base
 
-	// Calculate vote impact: more "stay" votes increase HP, more "go" votes decrease it
-	const stayVotes = tracker.votes.filter(
-		(vote) => vote.value === "stay",
-	).length;
-	const goVotes = tracker.votes.filter((vote) => vote.value === "go").length;
-	const totalVotes = stayVotes + goVotes;
+	// Calculate vote impact: more "stay" votes increase HP, more "dump" votes decrease it
+	const stayVotes = votes.filter((vote) => vote.value === "stay").length;
+	const dumpVotes = votes.filter((vote) => vote.value === "dump").length;
+	const totalVotes = stayVotes + dumpVotes;
 
 	// Vote ratio impact (up to 60% of max HP)
-	const voteRatioImpact = (stayVotes / totalVotes) * (MAX_HP * 0.6);
+	const voteRatioImpact =
+		totalVotes > 0 ? (stayVotes / totalVotes) * (MAX_HP * 0.6) : 0;
 
 	// Calculate total HP
 	let hp = Math.floor(baseHP + voteRatioImpact);
@@ -47,20 +47,19 @@ export function calculateHP(tracker: Tracker): {
  */
 export function determineEnergyTypes(tracker: Tracker): string[] {
 	const energyTypes: string[] = [];
+	const votes: Vote[] = (tracker as any).votes || [];
 
-	if (!tracker.votes || tracker.votes.length === 0) {
+	if (!votes || votes.length === 0) {
 		// New or no votes yet
 		return ["electric", "normal"]; // Default energies for new trackers
 	}
 
-	const stayVotes = tracker.votes.filter(
-		(vote) => vote.value === "stay",
-	).length;
-	const goVotes = tracker.votes.filter((vote) => vote.value === "go").length;
-	const totalVotes = stayVotes + goVotes;
+	const stayVotes = votes.filter((vote) => vote.value === "stay").length;
+	const dumpVotes = votes.filter((vote) => vote.value === "dump").length;
+	const totalVotes = stayVotes + dumpVotes;
 
 	// Stay ratio determines the primary energy type
-	const stayRatio = stayVotes / totalVotes;
+	const stayRatio = totalVotes > 0 ? stayVotes / totalVotes : 0;
 
 	if (stayRatio >= 0.8) {
 		// Great relationship - Grass type (growth, nurturing)
@@ -93,7 +92,8 @@ export function determineEnergyTypes(tracker: Tracker): string[] {
  * Generate a Pokemon-style description for the relationship
  */
 export function generateRelationshipDescription(tracker: Tracker): string {
-	if (!tracker.votes || tracker.votes.length === 0) {
+	const votes: Vote[] = (tracker as any).votes || [];
+	if (!votes || votes.length === 0) {
 		return "A mysterious new relationship. Gather votes to learn more!";
 	}
 
