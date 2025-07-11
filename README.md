@@ -23,7 +23,7 @@ This monorepo holds the services for Rocco.
    - Set `COOKIE_SALT` with helper function
    - Set `COOKIE_SECRET` with helper function
    - Set `SEGMENT_KEY` with helper function
-1. Install dependencies: `yarn install`
-1. Build all apps and packages: `yarn build`
+1. Install dependencies: `pnpm install`
+1. Build all apps and packages: `pnpm build`
 1. Start postgres and redis: `docker-compose up -d`
-1. Start dev services: `yarn dev`
+1. Start dev services: `pnpm dev`

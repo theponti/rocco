@@ -1,6 +1,6 @@
 import { MessageSquare, Share2, Users } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { Button } from "~/components/ui/button";
 import { Progress } from "~/components/ui/progress";
 import { AddRatingDialog } from "~/components/voter/add-rating-dialog";
@@ -18,10 +18,25 @@ interface Rating {
 }
 
 export function CardRatingsPage() {
-	const location = useLocation();
-	const navigate = useNavigate();
-	// Safely access cardName, providing a default if not passed
-	const cardName = location.state?.cardName || "Partner";
+  const { id: trackerId } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  // Tracker name fetched from DB
+  const [cardName, setCardName] = useState<string>("Partner");
+  // Fetch the tracker name when the ID changes
+  useEffect(() => {
+    if (!trackerId) return;
+    const fetchTracker = async () => {
+      const { data, error } = await supabase
+        .from("trackers")
+        .select("name")
+        .eq("id", trackerId)
+        .single();
+      if (!error && data?.name) {
+        setCardName(data.name);
+      }
+    };
+    fetchTracker();
+  }, [trackerId]);
 
 	const [ratings, setRatings] = useState<Rating[]>([
 		{
@@ -58,7 +73,7 @@ export function CardRatingsPage() {
 	const [ratingDialogOpen, setRatingDialogOpen] = useState(false);
 	const [shareDialogOpen, setShareDialogOpen] = useState(false);
 
-	const [stayCountFetched, setStayCountFetched] = useState(0);
+  const [stayCountFetched, setStayCountFetched] = useState(0);
 	const [dumpCountFetched, setDumpCountFetched] = useState(0);
 	const [totalRatingsFetched, setTotalRatingsFetched] = useState(0);
 	const [stayPercentageFetched, setStayPercentageFetched] = useState(0);
@@ -66,7 +81,6 @@ export function CardRatingsPage() {
 	const [errorResults, setErrorResults] = useState<string | null>(null);
 
 	useEffect(() => {
-		const trackerId = cardName;
 
 		if (!trackerId) {
 			setStayCountFetched(0);
@@ -120,7 +134,7 @@ export function CardRatingsPage() {
 		};
 
 		fetchResults();
-	}, [cardName]);
+}, [trackerId]);
 
 	const handleNewRatingChange = (field: string, value: string) => {
 		setNewRating((prev) => ({
@@ -150,10 +164,10 @@ export function CardRatingsPage() {
 	};
 
 	const copyShareLink = () => {
-		navigator.clipboard.writeText(
-			`https://partner-cards.example.com/share/${cardName.toLowerCase().replace(/\s+/g, "-")}-${Date.now().toString(36)}`,
-		);
-		alert("Share link copied to clipboard!");
+		if (!trackerId) return;
+		const link = `${window.location.origin}/tracker/${trackerId}`;
+		navigator.clipboard.writeText(link);
+		alert(`Share link copied to clipboard: ${link}`);
 	};
 
 	return (

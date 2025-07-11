@@ -50,7 +50,8 @@ clean:
 	find . -type d -name ".turbo" -exec rm -rf {} +
 	find . -type d -name ".react-router" -exec rm -rf {} +
 	find . -name "bun.lock" -exec rm -rf {} +
-	find . -name "pnpm-lock.yaml" -exec rm -rf {} +
+	find . -name "yarn.lock" -exec rm -rf {} +
+	find . -name "package-lock.json" -exec rm -rf {} +
 
 # Stop Docker containers
 docker-down:

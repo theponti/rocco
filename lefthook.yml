@@ -17,12 +17,19 @@ commit-msg:
     lint:
       glob: "*"
       run: npx commitlint --config commitlint.config.js --edit $1
+
 pre-commit:
   parallel: true
   commands:
-    # lint:
-    #   tags: lint
-    #   run: yarn lint
+    format:
+      tags: format
+      run: yarn format
+    lint:
+      tags: lint
+      run: yarn lint
+
+pre-push:
+  commands:
     test:
       tags: test
       run: yarn test

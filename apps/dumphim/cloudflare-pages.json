@@ -1,7 +1,7 @@
 {
 	"build": {
 		"output_dir": "build",
-		"command": "cd ../.. && yarn turbo run build --filter=dumphim",
+		"command": "cd ../.. && pnpm turbo run build --filter=dumphim",
 		"environment": {
 			"NODE_VERSION": "20"
 		}

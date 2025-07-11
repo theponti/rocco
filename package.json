@@ -1,16 +1,17 @@
 {
-	"name": "@hackefeller/apps",
-	"version": "1.8.0",
+	"name": "@pontistudios/toys",
+	"version": "0.0.0",
 	"private": true,
-	"workspaces": ["apps/*", "packages/*"],
 	"scripts": {
 		"build": "turbo run build",
-		"commitlint": "commitlint --edit",
 		"dev": "turbo run dev",
+		"dev:dumphim": "turbo run dev --filter=dumphim",
+		"dev:playground": "turbo run dev --filter=playground",
+		"dev:rocco": "turbo run dev --filter=@pontistudios/rocco",
 		"lint": "turbo run lint typecheck",
-		"precommit": "npm run format && npm run lint",
-		"prepush": "npm run test",
-		"prerelease": "npm run test",
+		"precommit": "pnpm format && pnpm lint",
+		"prepush": "pnpm test",
+		"prerelease": "pnpm test",
 		"test": "turbo run test",
 		"test:e2e:ci": "turbo run test:e2e:ci",
 		"test:update": "turbo run test:update",
@@ -33,5 +34,5 @@
 		"workbox-build": "^7.1.1",
 		"workbox-window": "^7.1.0"
 	},
-	"packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
+	"packageManager": "pnpm@9.15.4"
 }
