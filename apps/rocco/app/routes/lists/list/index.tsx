@@ -1,7 +1,7 @@
-import { useAuth } from "@clerk/react-router";
 import { PlusCircle, Share } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Link, href, redirect, useLoaderData, useNavigate } from "react-router";
+import { useAuth } from "~/lib/auth-provider";
 
 import ErrorBoundary from "~/components/ErrorBoundary";
 import Alert from "~/components/alert";
@@ -38,7 +38,7 @@ export function HydrateFallback() {
 }
 
 export default function ListPage() {
-	const { userId } = useAuth();
+	const { user } = useAuth();
 	const { currentLocation } = useGeolocation();
 	const navigate = useNavigate();
 	const [deleteError, setDeleteError] = useState<string | null>(null);
@@ -76,7 +76,7 @@ export default function ListPage() {
 						<h1 className="text-3xl font-semibold">{data.name}</h1>
 						<div className="flex gap-4">
 							{/* Only list owners can invite others. */}
-							{data.userId === userId && !isAddToListOpen && (
+							{data.userId === user?.id && !isAddToListOpen && (
 								<button
 									type="button"
 									data-testid="add-to-list-button"
@@ -87,7 +87,7 @@ export default function ListPage() {
 								</button>
 							)}
 							{/* Only list owners can share with others. */}
-							{data.userId === userId && (
+							{data.userId === user?.id && (
 								<Link
 									to={`/lists/${data.id}/invites`}
 									className="flex gap-2 text-black hover:bg-opacity-80 focus:bg-opacity-80"
@@ -95,7 +95,7 @@ export default function ListPage() {
 									<Share className="hover:cursor-pointer" />
 								</Link>
 							)}
-							<ListMenu list={data} isOwnList={data.userId === userId} />
+							<ListMenu list={data} isOwnList={data.userId === user?.id} />
 						</div>
 					</div>
 					{(data?.places?.length === 0 || isAddToListOpen) && (

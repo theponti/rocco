@@ -1,4 +1,3 @@
-import { getAuth } from "@clerk/react-router/ssr.server";
 import { motion } from "framer-motion";
 import {
 	Check,
@@ -10,6 +9,7 @@ import {
 	Users,
 } from "lucide-react";
 import { Link, redirect } from "react-router";
+import { requireGuest } from "~/routes/guards";
 import type { Route } from "./+types";
 import styles from "./index.module.css";
 import { testimonials } from "./testimonials";
@@ -42,12 +42,7 @@ const fadeInStagger = {
 };
 
 export async function loader(loaderArgs: Route.LoaderArgs) {
-	const { userId } = await getAuth(loaderArgs);
-
-	if (userId) {
-		return redirect("/dashboard");
-	}
-
+	await requireGuest(loaderArgs.request);
 	return null;
 }
 

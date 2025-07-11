@@ -1,13 +1,13 @@
 import { UserCircle } from "lucide-react";
 import { redirect, useLoaderData, useNavigate } from "react-router";
 
-import { useUser } from "@clerk/react-router";
 import { useMutation } from "@tanstack/react-query";
 import { useCallback } from "react";
 import Alert from "~/components/alert";
 import { LoadingScreen } from "~/components/loading";
 import { Button } from "~/components/ui/button";
 import { api, baseURL } from "~/lib/api/base";
+import { useUser } from "~/lib/auth-provider";
 import type { User } from "~/lib/types";
 
 export async function loader() {
@@ -87,9 +87,9 @@ export default function Account() {
 				<h1 className="text-2xl font-semibold mb-4">Account</h1>
 				<div className="card shadow-md md:max-w-sm">
 					<div className="card-body bg-slate-100 rounded-lg bg-gradient-to-br from-[#d7e9ff] to-[#ff94b7]">
-						{user.avatar ? (
+						{user.image || user.photoUrl ? (
 							<img
-								src={user.avatar}
+								src={user.image || user.photoUrl || ""}
 								alt="user avatar"
 								className="rounded-circle img-fluid profile-picture mb-3 mb-md-0"
 							/>

@@ -1,7 +1,7 @@
-import { useUser } from "@clerk/react-router";
 import type { MapMouseEvent } from "@vis.gl/react-google-maps";
 import { useCallback, useEffect, useState } from "react";
 import { href, useLoaderData, useNavigate } from "react-router";
+import { useUser } from "~/lib/auth-provider";
 
 import Lists from "~/components/lists-components/lists";
 import LazyMap from "~/components/map.lazy";
@@ -88,23 +88,30 @@ function Dashboard() {
 	const onSelectedChanged = useCallback((info: GooglePlacePrediction) => {
 		// Convert GooglePlacePrediction to Place type
 		if (info.location) {
-			// Map the GooglePlacePrediction to a Place object
-			const placeData: Place = {
-				id: info.place_id,
-				googleMapsId: info.place_id,
-				name: info.structured_formatting.main_text,
-				address: info.structured_formatting.secondary_text,
-				latitude: info.location.latitude,
-				longitude: info.location.longitude,
-				// Default values for required Place properties
-				imageUrl: "",
-				phoneNumber: "",
-				photos: [],
-				price_level: info.priceLevel ? Number.parseInt(info.priceLevel, 10) : 0,
-				rating: 0,
-				types: [], // Default to empty array
-				websiteUri: "",
-			};
+					// Map the GooglePlacePrediction to a Place object
+		const placeData: Place = {
+			id: info.place_id,
+			googleMapsId: info.place_id || null,
+			name: info.structured_formatting.main_text,
+			address: info.structured_formatting.secondary_text || null,
+			latitude: info.location.latitude,
+			longitude: info.location.longitude,
+			// Default values for required Place properties
+			imageUrl: null,
+			phoneNumber: null,
+			rating: null,
+			types: null,
+			websiteUri: null,
+			description: null,
+			createdAt: new Date().toISOString(),
+			updatedAt: new Date().toISOString(),
+			userId: "", // This will be set when the place is actually saved
+			itemId: null,
+			location: [info.location.longitude, info.location.latitude], // PostGIS point format [x, y]
+			bestFor: null,
+			isPublic: false,
+			wifiInfo: null,
+		};
 
 			setCenter(info.location);
 			setSelected(placeData);
@@ -116,7 +123,7 @@ function Dashboard() {
 		if (!selected) {
 			return;
 		}
-		navigate(href("/places/:id", { id: selected.googleMapsId }));
+		navigate(href("/places/:id", { id: selected.googleMapsId || selected.id }));
 	}, [navigate, selected]);
 
 	return (

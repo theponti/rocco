@@ -6,7 +6,6 @@ on:
   pull_request:
 
 env:
-  CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   VITE_API_URL: http://127.0.0.1:4444
   VITE_GOOGLE_API_KEY: ${{ secrets.VITE_GOOGLE_API_KEY }}
@@ -49,27 +48,6 @@ jobs:
       - name: 🧪 Unit tests
         run: pnpm exec turbo run test
 
-      # - name: 🧪 End-to-end tests
-      #   # Uses the official Cypress GitHub action https://github.com/cypress-io/github-action
-      #   uses: cypress-io/github-action@v5
-      #   env:
-      #     CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     VITE_API_URL: http://127.0.0.1:4444
-      #     VITE_GOOGLE_API_KEY: ${{ secrets.VITE_GOOGLE_API_KEY }}
-      #   with:
-      #     build: pnpm exec turbo run build
-      #     # Starts web server for E2E tests - replace with your own server invocation
-      #     # https://docs.cypress.io/guides/continuous-integration/introduction#Boot-your-server
-      #     start: pnpm exec turbo run dev
-      #     command: pnpm exec turbo run test:e2e:ci
-
-      # - name: ⬆️ Upload coverage
-      #   uses: codecov/codecov-action@v3
-      #   with:
-      #     fail_ci_if_error: true
-      #   env:
-      #     CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   analyze:
     name: Analyze
     # Runner size impacts CodeQL analysis time. To learn more, please see:

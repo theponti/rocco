@@ -1,5 +1,5 @@
-import { useAuth } from "@clerk/react-router";
 import { redirect } from "react-router";
+import { useAuth } from "~/lib/auth-provider";
 
 /**
  * Type definitions for loader/action arguments
@@ -29,14 +29,14 @@ export function createProtectedClientLoader<T>(
 	loaderFn: (args: LoaderArgs & { userId: string }) => Promise<T>,
 ) {
 	return async (args: LoaderArgs) => {
-		const { userId } = useAuth();
+		const { user } = useAuth();
 
-		if (!userId) {
+		if (!user?.id) {
 			throw redirect("/login");
 		}
 
 		try {
-			return await loaderFn({ ...args, userId });
+			return await loaderFn({ ...args, userId: user.id });
 		} catch (error) {
 			if (error instanceof LoaderError) {
 				throw new Response(error.message, { status: error.status });

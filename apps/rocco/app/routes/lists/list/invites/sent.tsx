@@ -1,7 +1,7 @@
-import { useAuth } from "@clerk/react-router";
 import { useNavigate } from "react-router";
 import AppLink from "~/components/app-link";
 import { useGetOutboundInvites } from "~/lib/api";
+import { useAuth } from "~/lib/auth-provider";
 
 export async function clientLoader() {
 	const response = await fetch("/api/invites/outbound");
@@ -13,10 +13,10 @@ const ListSentInvites = ({
 	loaderData,
 }: { loaderData: { outboundInvites: any[] } }) => {
 	const navigate = useNavigate();
-	const { userId } = useAuth();
+	const { user } = useAuth();
 	const { outboundInvites: data } = loaderData;
 
-	if (userId) {
+	if (user?.id) {
 		navigate("/");
 	}
 
