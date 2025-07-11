@@ -1,6 +1,5 @@
 .DS_Store
 /node_modules/
-.yarn-cache
 
 # React Router
 /.react-router/

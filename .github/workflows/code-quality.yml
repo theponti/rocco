@@ -41,13 +41,13 @@ jobs:
           node-version: "20"
 
       - name: 📦 Install dependencies
-        run: yarn install
+        run: pnpm install
 
       - name: 🔬 Lint & Type check
-        run: yarn turbo run lint typecheck
+        run: pnpm exec turbo run lint typecheck
 
       - name: 🧪 Unit tests
-        run: yarn turbo run test
+        run: pnpm exec turbo run test
 
       # - name: 🧪 End-to-end tests
       #   # Uses the official Cypress GitHub action https://github.com/cypress-io/github-action
@@ -58,11 +58,11 @@ jobs:
       #     VITE_API_URL: http://127.0.0.1:4444
       #     VITE_GOOGLE_API_KEY: ${{ secrets.VITE_GOOGLE_API_KEY }}
       #   with:
-      #     build: yarn turbo run build
+      #     build: pnpm exec turbo run build
       #     # Starts web server for E2E tests - replace with your own server invocation
       #     # https://docs.cypress.io/guides/continuous-integration/introduction#Boot-your-server
-      #     start: yarn turbo run dev
-      #     command: yarn turbo run test:e2e:ci
+      #     start: pnpm exec turbo run dev
+      #     command: pnpm exec turbo run test:e2e:ci
 
       # - name: ⬆️ Upload coverage
       #   uses: codecov/codecov-action@v3
