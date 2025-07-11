@@ -4,7 +4,7 @@ import { type RenderOptions, render, screen } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import type { ReactElement, ReactNode } from "react";
 import { Provider } from "react-redux";
-import { Outlet, createRoutesStub } from "react-router";
+import { RouterProvider, createMemoryRouter } from "react-router";
 import { vi } from "vitest";
 import { baseURL } from "~/lib/api/base";
 import { rootReducer } from "~/lib/store";
@@ -179,13 +179,20 @@ export function renderWithProviders(
 }
 
 export function renderWithRouter(
-	ui: ReactElement,
+	config: {
+		routes: Array<{
+			path: string;
+			Component: React.ComponentType<any>;
+			loader?: () => any;
+			ErrorBoundary?: React.ComponentType<any>;
+		}>;
+		isAuth?: boolean;
+		initialEntries?: string[];
+	},
 	{
-		route = "/",
 		preloadedState = {},
 		queryClient = createTestQueryClient(),
 	}: {
-		route?: string;
 		preloadedState?: any;
 		queryClient?: QueryClient;
 	} = {},
@@ -193,10 +200,15 @@ export function renderWithRouter(
 	// Create store with the provided state
 	const store = createTestStore(preloadedState);
 
+	// Create router with the provided routes
+	const router = createMemoryRouter(config.routes, {
+		initialEntries: config.initialEntries || ["/"],
+	});
+
 	return render(
 		<Provider store={store}>
 			<QueryClientProvider client={queryClient}>
-				{ui}
+				<RouterProvider router={router} />
 			</QueryClientProvider>
 		</Provider>,
 	);

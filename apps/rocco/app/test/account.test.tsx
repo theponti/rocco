@@ -17,7 +17,7 @@ describe("Account", () => {
 				{
 					path: "/account",
 					Component: Account,
-					loader: () => ({ user: { ...MOCK_USER, avatar: null } }),
+					loader: () => ({ user: { ...MOCK_USER, image: null, photoUrl: null } }),
 				},
 			],
 			isAuth: true,
@@ -26,7 +26,7 @@ describe("Account", () => {
 
 		await waitFor(() => {
 			// Check that user information is displayed
-			expect(screen.getByText(MOCK_USER.name)).toBeInTheDocument();
+			expect(screen.getByText(MOCK_USER.name!)).toBeInTheDocument();
 			expect(screen.getByText(MOCK_USER.email)).toBeInTheDocument();
 
 			// Check for membership duration text

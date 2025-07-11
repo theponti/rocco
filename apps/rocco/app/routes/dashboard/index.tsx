@@ -1,7 +1,6 @@
 import type { MapMouseEvent } from "@vis.gl/react-google-maps";
 import { useCallback, useEffect, useState } from "react";
 import { href, useLoaderData, useNavigate } from "react-router";
-import { useUser } from "~/lib/auth-provider";
 
 import Lists from "~/components/lists-components/lists";
 import LazyMap from "~/components/map.lazy";
@@ -10,7 +9,7 @@ import PlacesAutocomplete from "~/components/places/places-autocomplete";
 import { useGeolocation } from "~/hooks/useGeolocation";
 import type { GooglePlacePrediction } from "~/hooks/useGooglePlacesAutocomplete";
 import { api, baseURL } from "~/lib/api/base";
-import type { List, Place, PlaceLocation } from "~/lib/types";
+import type { GooglePlaceData, List, Place, PlaceLocation } from "~/lib/types";
 import { requireAuth } from "~/routes/guards";
 import type { Route } from "./+types";
 
@@ -60,7 +59,7 @@ export const ZOOM_LEVELS = {
 function Dashboard() {
 	const { lists } = useLoaderData() as { lists: List[] };
 	const { currentLocation, isLoading: isLoadingLocation } = useGeolocation();
-	const [selected, setSelected] = useState<Place | null>(null);
+	const [selected, setSelected] = useState<Place | GooglePlaceData | null>(null);
 	const [isPlaceDrawerOpen, setIsPlaceDrawerOpen] = useState(false);
 	// Initialize center state with currentLocation or default
 	const [center, setCenter] = useState<PlaceLocation>(
@@ -86,32 +85,25 @@ function Dashboard() {
 	);
 
 	const onSelectedChanged = useCallback((info: GooglePlacePrediction) => {
-		// Convert GooglePlacePrediction to Place type
+		// Convert GooglePlacePrediction to GooglePlaceData type
 		if (info.location) {
-					// Map the GooglePlacePrediction to a Place object
-		const placeData: Place = {
-			id: info.place_id,
-			googleMapsId: info.place_id || null,
-			name: info.structured_formatting.main_text,
-			address: info.structured_formatting.secondary_text || null,
-			latitude: info.location.latitude,
-			longitude: info.location.longitude,
-			// Default values for required Place properties
-			imageUrl: null,
-			phoneNumber: null,
-			rating: null,
-			types: null,
-			websiteUri: null,
-			description: null,
-			createdAt: new Date().toISOString(),
-			updatedAt: new Date().toISOString(),
-			userId: "", // This will be set when the place is actually saved
-			itemId: null,
-			location: [info.location.longitude, info.location.latitude], // PostGIS point format [x, y]
-			bestFor: null,
-			isPublic: false,
-			wifiInfo: null,
-		};
+			// Map the GooglePlacePrediction to a GooglePlaceData object
+			const placeData: GooglePlaceData = {
+				id: info.place_id,
+				googleMapsId: info.place_id,
+				name: info.structured_formatting.main_text,
+				address: info.structured_formatting.secondary_text || null,
+				latitude: info.location.latitude,
+				longitude: info.location.longitude,
+				description: null,
+				types: null,
+				imageUrl: null,
+				phoneNumber: null,
+				rating: null,
+				websiteUri: null,
+				bestFor: null,
+				wifiInfo: null,
+			};
 
 			setCenter(info.location);
 			setSelected(placeData);
@@ -120,10 +112,9 @@ function Dashboard() {
 	}, []);
 
 	const onMarkerClick = useCallback(() => {
-		if (!selected) {
-			return;
-		}
-		navigate(href("/places/:id", { id: selected.googleMapsId || selected.id }));
+		if (!selected) return;
+		const placeId = selected.googleMapsId ?? selected.id;
+		navigate(href("/places/:id", { id: placeId }));
 	}, [navigate, selected]);
 
 	return (

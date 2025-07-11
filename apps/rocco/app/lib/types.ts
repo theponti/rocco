@@ -1,18 +1,12 @@
 // Import database types from the schema
 import type {
-	account,
 	item,
 	list,
 	listInvite,
 	place,
-	placeTags,
-	placeVisits,
-	session,
-	spatialRefSys,
 	tags,
 	userLists,
-	users,
-	verificationToken
+	users
 } from "../db/schema";
 
 // Export all the types
@@ -48,6 +42,24 @@ export type SearchPlace = {
 export type PlaceLocation = {
 	latitude: number;
 	longitude: number;
+};
+
+// Type for temporary place data from Google Places API
+export type GooglePlaceData = {
+	id: string;
+	googleMapsId: string;
+	name: string;
+	address: string | null;
+	latitude: number;
+	longitude: number;
+	description: string | null;
+	types: string[] | null;
+	imageUrl: string | null;
+	phoneNumber: string | null;
+	rating: number | null;
+	websiteUri: string | null;
+	bestFor: string | null;
+	wifiInfo: string | null;
 };
 
 // Extended types for frontend use

@@ -6,10 +6,10 @@ import { Button } from "~/components/ui/button";
 import { Sheet, SheetContent, SheetHeader } from "~/components/ui/sheet";
 import { useToast } from "~/components/use-toast";
 import { useAddPlaceToList } from "~/lib/places";
-import type { List, Place } from "~/lib/types";
+import type { GooglePlaceData, List, Place } from "~/lib/types";
 
 interface PlaceDrawerProps {
-	place: Place | null;
+	place: Place | GooglePlaceData | null;
 	isOpen: boolean;
 	onOpenChange: (open: boolean) => void;
 	lists: List[];
@@ -42,9 +42,20 @@ const PlaceDrawer = ({
 		(listId: string) => {
 			if (!place) return;
 
+			// Convert GooglePlaceData to Place if needed
+			const placeToSave = 'userId' in place ? place : {
+				...place,
+				userId: "", // Will be set by the server
+				createdAt: new Date().toISOString(),
+				updatedAt: new Date().toISOString(),
+				itemId: null,
+				location: [place.longitude, place.latitude], // PostGIS point format [x, y]
+				isPublic: false,
+			} as Place;
+
 			addToList({
 				listIds: [listId],
-				place,
+				place: placeToSave,
 			});
 
 			// Don't close the drawer - keep it open to show feedback
@@ -68,9 +79,20 @@ const PlaceDrawer = ({
 
 			// Add the current place to the newly created list
 			if (place) {
+				// Convert GooglePlaceData to Place if needed
+				const placeToSave = 'userId' in place ? place : {
+					...place,
+					userId: "", // Will be set by the server
+					createdAt: new Date().toISOString(),
+					updatedAt: new Date().toISOString(),
+					itemId: null,
+					location: [place.longitude, place.latitude], // PostGIS point format [x, y]
+					isPublic: false,
+				} as Place;
+
 				addToList({
 					listIds: [newList.id],
-					place,
+					place: placeToSave,
 				});
 
 				// Show success message
@@ -105,7 +127,7 @@ const PlaceDrawer = ({
 				</SheetHeader>
 
 				<div className="space-y-6">
-					{/* Rating and Price Level */}
+					{/* Rating */}
 					<div className="flex items-center gap-4">
 						{formattedRating && (
 							<div className="flex items-center gap-2">
@@ -115,17 +137,12 @@ const PlaceDrawer = ({
 								</span>
 							</div>
 						)}
-						{place.price_level > 0 && (
-							<div className="text-gray-600">
-								{"$".repeat(place.price_level)}
-							</div>
-						)}
 					</div>
 
 					{/* Place Types */}
 					<div>
 						<h3 className="text-sm font-medium text-gray-700 mb-2">Categories</h3>
-						<PlaceTypes types={place.types} />
+						<PlaceTypes types={place.types || []} />
 					</div>
 
 					{/* Actions */}

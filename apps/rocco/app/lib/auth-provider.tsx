@@ -100,9 +100,4 @@ export const useUser = () => {
 	};
 };
 
-export const useClerk = () => {
-	const { signOut } = useAuth();
-	return {
-		signOut: () => signOut(),
-	};
-};
+

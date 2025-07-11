@@ -1,8 +1,4 @@
-// ============================================================================
-// CONSTANTS & TEST DATA
-// ============================================================================
-
-import type { List, ListPlace, User } from "~/lib/types";
+import type { List, Place, User } from "~/lib/types";
 
 export * from "./place";
 
@@ -12,50 +8,73 @@ export const TEST_USER_NAME = "Test User";
 
 export const TEST_USER: User = {
 	id: USER_ID,
-	avatar: "https://example.com/avatar.jpg",
-	isAdmin: "false",
+	image: "https://example.com/avatar.jpg",
+	isAdmin: false,
 	name: TEST_USER_NAME,
 	email: TEST_USER_EMAIL,
 	createdAt: new Date().toISOString(),
 	updatedAt: new Date().toISOString(),
+	supabaseId: null,
+	emailVerified: null,
+	photoUrl: null,
+	birthday: null,
 };
 
 export const getMockUser = (): User => ({
 	id: USER_ID,
-	avatar: "https://example.com/avatar.jpg",
+	image: "https://example.com/avatar.jpg",
 	email: TEST_USER_EMAIL,
 	createdAt: "2021-01-01T00:00:00.000Z",
 	updatedAt: "2021-01-01T00:00:00.000Z",
-	isAdmin: "false",
+	isAdmin: false,
 	name: TEST_USER_NAME,
+	supabaseId: null,
+	emailVerified: null,
+	photoUrl: null,
+	birthday: null,
 });
 
-export const getMockPlace = (): ListPlace => ({
-	imageUrl: "https://example.com/image.jpg",
-	googleMapsId: "123",
-	name: "Place Name",
-	types: ["type1", "type2"],
+export const getMockPlace = (): Place => ({
 	id: "123",
-	itemId: "123",
+	name: "Place Name",
 	description: "Description",
+	address: "123 Test St",
+	createdAt: "2021-01-01T00:00:00.000Z",
+	updatedAt: "2021-01-01T00:00:00.000Z",
+	userId: USER_ID,
+	itemId: "123",
+	googleMapsId: "123",
+	types: ["type1", "type2"],
+	imageUrl: "https://example.com/image.jpg",
+	phoneNumber: null,
+	rating: 4.5,
+	websiteUri: null,
+	latitude: 37.7749,
+	longitude: -122.4194,
+	location: [37.7749, -122.4194], // PostGIS point format [x, y]
+	bestFor: null,
+	isPublic: false,
+	wifiInfo: null,
 });
 
 export const getMockLists = () => [
 	{
 		id: "1",
 		name: "List 1",
+		description: "Test list 1",
+		userId: USER_ID,
+		isPublic: false,
 		createdAt: "2021-01-01T00:00:00.000Z",
 		updatedAt: "2021-01-01T00:00:00.000Z",
-		createdBy: getMockUser(),
-		places: [getMockPlace()],
 	},
 	{
 		id: "2",
 		name: "List 2",
+		description: "Test list 2",
+		userId: USER_ID,
+		isPublic: false,
 		createdAt: "2021-01-01T00:00:00.000Z",
 		updatedAt: "2021-01-01T00:00:00.000Z",
-		createdBy: getMockUser(),
-		places: [getMockPlace()],
 	},
 ];
 
@@ -63,12 +82,10 @@ export const MOCK_LIST: List = {
 	id: "list-1",
 	name: "Coffee Spots",
 	description: "Great places for coffee",
-	userId: "test-user-id",
-	places: [],
-	isOwnList: true,
+	userId: USER_ID,
+	isPublic: false,
 	createdAt: new Date().toISOString(),
 	updatedAt: new Date().toISOString(),
-	createdBy: TEST_USER,
 };
 
 export const MOCK_LISTS: List[] = [
@@ -77,11 +94,9 @@ export const MOCK_LISTS: List[] = [
 		id: "list-2",
 		name: "Weekend Getaways",
 		description: "Places to visit on weekends",
-		places: [],
-		userId: "test-user-id",
-		isOwnList: true,
+		userId: USER_ID,
+		isPublic: false,
 		createdAt: new Date().toISOString(),
 		updatedAt: new Date().toISOString(),
-		createdBy: TEST_USER,
 	},
 ];
