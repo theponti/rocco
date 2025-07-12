@@ -54,7 +54,12 @@
 		font-family: inherit;
 	}
 
-	h1, h2, h3, h4, h5, h6 {
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
 		color: hsl(var(--primary));
 	}
 
@@ -86,7 +91,7 @@
 	.text-primary {
 		color: var(--color-primary);
 	}
-	
+
 	.input {
 		background-color: hsl(var(--input-background));
 		color: hsl(var(--foreground));

@@ -1,5 +1,5 @@
-import { createClient } from '@supabase/supabase-js';
-import { initTRPC, TRPCError } from "@trpc/server";
+import { createClient } from "@supabase/supabase-js";
+import { TRPCError, initTRPC } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import { db } from "../../db";
 import { users } from "../../db/schema";
@@ -26,30 +26,31 @@ const TOKEN_CACHE_TTL = 1 * 60; // 1 minute
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-const supabase = supabaseUrl && supabaseServiceKey 
-	? createClient(supabaseUrl, supabaseServiceKey)
-	: null;
+const supabase =
+	supabaseUrl && supabaseServiceKey
+		? createClient(supabaseUrl, supabaseServiceKey)
+		: null;
 
 // Get user from cache or database
 async function getUserFromCacheOrDB(supabaseId: string) {
 	// Try to get from cache first
 	const cacheKey = cacheKeys.user(supabaseId);
 	const cachedUser = await cacheUtils.get<any>(cacheKey);
-	
+
 	if (cachedUser) {
 		return cachedUser;
 	}
-	
+
 	// Fetch from database
 	const user = await db.query.users.findFirst({
 		where: eq(users.supabaseId, supabaseId),
 	});
-	
+
 	if (user) {
 		// Cache the user data
 		await cacheUtils.set(cacheKey, user, USER_CACHE_TTL);
 	}
-	
+
 	return user;
 }
 
@@ -58,67 +59,74 @@ async function validateTokenWithCache(token: string) {
 	// Try to get from cache first
 	const cacheKey = cacheKeys.token(token);
 	const cachedToken = await cacheUtils.get<any>(cacheKey);
-	
+
 	if (cachedToken) {
 		return cachedToken;
 	}
-	
+
 	if (!supabase) {
 		return null;
 	}
-	
+
 	try {
-		const { data: { user }, error } = await supabase.auth.getUser(token);
-		
+		const {
+			data: { user },
+			error,
+		} = await supabase.auth.getUser(token);
+
 		if (error || !user) {
 			return null;
 		}
-		
+
 		// Cache the token validation result
 		await cacheUtils.set(cacheKey, user, TOKEN_CACHE_TTL);
-		
+
 		return user;
 	} catch (error) {
-		console.error('Error validating token:', error);
+		console.error("Error validating token:", error);
 		return null;
 	}
 }
 
 // Performance-optimized context creation
 export const createContext = async (request?: Request): Promise<Context> => {
-	const authHeader = request?.headers.get('authorization');
-	
+	const authHeader = request?.headers.get("authorization");
+
 	if (!authHeader) {
 		return { db };
 	}
 
 	try {
-		const token = authHeader.replace('Bearer ', '');
-		
+		const token = authHeader.replace("Bearer ", "");
+
 		// Validate token with caching
 		const supabaseUser = await validateTokenWithCache(token);
-		
+
 		if (!supabaseUser) {
 			return { db };
 		}
 
 		// Get local user data from cache or database
 		const localUser = await getUserFromCacheOrDB(supabaseUser.id);
-		
+
 		// Return context with user information
 		return {
 			db,
 			user: {
 				id: localUser?.id || supabaseUser.id,
-				email: localUser?.email || supabaseUser.email || '',
-				name: localUser?.name || supabaseUser.user_metadata?.name || supabaseUser.user_metadata?.full_name,
+				email: localUser?.email || supabaseUser.email || "",
+				name:
+					localUser?.name ||
+					supabaseUser.user_metadata?.name ||
+					supabaseUser.user_metadata?.full_name,
 				avatar: localUser?.photoUrl || supabaseUser.user_metadata?.avatar_url,
-				isAdmin: localUser?.isAdmin || supabaseUser.user_metadata?.isAdmin || false,
+				isAdmin:
+					localUser?.isAdmin || supabaseUser.user_metadata?.isAdmin || false,
 				supabaseId: supabaseUser.id,
 			},
 		};
 	} catch (error) {
-		console.error('Error verifying auth token:', error);
+		console.error("Error verifying auth token:", error);
 		return { db };
 	}
 };
@@ -180,7 +188,7 @@ export const userProcedure = protectedProcedure.query(async ({ ctx }) => {
 			message: "User not found in context",
 		});
 	}
-	
+
 	return {
 		id: ctx.user.id,
 		email: ctx.user.email,
@@ -198,7 +206,7 @@ export const clearUserCache = async (supabaseId?: string) => {
 	} else {
 		// Clear all user cache keys (use with caution)
 		// In production, you might want to use Redis SCAN to find and delete specific patterns
-		console.warn('Clearing all user cache - this is expensive in production');
+		console.warn("Clearing all user cache - this is expensive in production");
 	}
 };
 
@@ -207,11 +215,11 @@ export const clearTokenCache = async (token?: string) => {
 		await cacheUtils.del(cacheKeys.token(token));
 	} else {
 		// Clear all token cache keys (use with caution)
-		console.warn('Clearing all token cache - this is expensive in production');
+		console.warn("Clearing all token cache - this is expensive in production");
 	}
 };
 
 // Cache statistics utility
 export const getCacheStats = async () => {
 	return await cacheUtils.getStats();
-}; 
+};

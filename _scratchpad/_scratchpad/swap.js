@@ -7,10 +7,10 @@
  * @returns {any[]}
  */
 function brokenSwap(array, firstIndex, secondIndex) {
-  array[firstIndex] = array[secondIndex]
-  array[secondIndex] = array[firstIndex]
+	array[firstIndex] = array[secondIndex];
+	array[secondIndex] = array[firstIndex];
 
-  return array
+	return array;
 }
 
 /**
@@ -22,10 +22,10 @@ function brokenSwap(array, firstIndex, secondIndex) {
  * @returns {any[]}
  */
 function swap(array, firstIndex, secondIndex) {
-  const temp = array[firstIndex]
-  array[firstIndex] = array[secondIndex]
-  array[secondIndex] = temp
-  return array
+	const temp = array[firstIndex];
+	array[firstIndex] = array[secondIndex];
+	array[secondIndex] = temp;
+	return array;
 }
 
 /**
@@ -39,16 +39,16 @@ function swap(array, firstIndex, secondIndex) {
  * @returns {any[]}
  */
 function functionalSwap(array, firstIndex, secondIndex) {
-  return array.reduce((a, b, i) => {
-    if (i === firstIndex) a.push(array[secondIndex])
-    else if (i === secondIndex) a.push(array[firstIndex])
-    else a.push(b)
-    return a
-  }, [])
+	return array.reduce((a, b, i) => {
+		if (i === firstIndex) a.push(array[secondIndex]);
+		else if (i === secondIndex) a.push(array[firstIndex]);
+		else a.push(b);
+		return a;
+	}, []);
 }
 
 module.exports = {
-  swap,
-  functionalSwap,
-  brokenSwap,
-}
+	swap,
+	functionalSwap,
+	brokenSwap,
+};

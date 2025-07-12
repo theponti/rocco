@@ -20,4 +20,4 @@ export const db = drizzle(client, { schema });
 export { client };
 
 // Export schema for use in other parts of the app
-    export * from "./schema";
+export * from "./schema";

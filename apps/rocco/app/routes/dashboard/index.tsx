@@ -59,7 +59,9 @@ export const ZOOM_LEVELS = {
 function Dashboard() {
 	const { lists } = useLoaderData() as { lists: List[] };
 	const { currentLocation, isLoading: isLoadingLocation } = useGeolocation();
-	const [selected, setSelected] = useState<Place | GooglePlaceData | null>(null);
+	const [selected, setSelected] = useState<Place | GooglePlaceData | null>(
+		null,
+	);
 	const [isPlaceDrawerOpen, setIsPlaceDrawerOpen] = useState(false);
 	// Initialize center state with currentLocation or default
 	const [center, setCenter] = useState<PlaceLocation>(

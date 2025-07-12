@@ -98,7 +98,11 @@ describe("Dashboard Component Tests", () => {
 		mockLoaderData = { lists: [] };
 		renderWithProviders(<Dashboard />);
 		await waitFor(() => {
-			expect(screen.getByText("Create your first list to start organizing places you love or want to visit.")).toBeInTheDocument();
+			expect(
+				screen.getByText(
+					"Create your first list to start organizing places you love or want to visit.",
+				),
+			).toBeInTheDocument();
 		});
 	});
 

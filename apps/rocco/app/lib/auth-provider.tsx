@@ -1,13 +1,13 @@
-import type { Session, User } from '@supabase/supabase-js';
+import type { Session, User } from "@supabase/supabase-js";
 import React, {
-    createContext,
-    useContext,
-    useEffect,
-    useState,
-    type ReactNode,
-} from 'react';
-import { setTokenProvider } from './api/base';
-import { supabase } from './supabase';
+	createContext,
+	useContext,
+	useEffect,
+	useState,
+	type ReactNode,
+} from "react";
+import { setTokenProvider } from "./api/base";
+import { supabase } from "./supabase";
 
 interface AuthContextType {
 	user: User | null;
@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 	useEffect(() => {
 		setIsLoading(true);
-		
+
 		// Get initial session
 		supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
 			setSession(currentSession);
@@ -54,10 +54,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	// Set up token provider for API requests
 	useEffect(() => {
 		const tokenProvider = async () => {
-			const { data: { session: currentSession } } = await supabase.auth.getSession();
+			const {
+				data: { session: currentSession },
+			} = await supabase.auth.getSession();
 			return currentSession?.access_token || null;
 		};
-		
+
 		setTokenProvider(tokenProvider);
 	}, []);
 
@@ -78,7 +80,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 export const useAuth = () => {
 	const context = useContext(AuthContext);
 	if (context === undefined) {
-		throw new Error('useAuth must be used within an AuthProvider');
+		throw new Error("useAuth must be used within an AuthProvider");
 	}
 	return context;
 };
@@ -87,17 +89,17 @@ export const useAuth = () => {
 export const useUser = () => {
 	const { user, isLoading } = useAuth();
 	return {
-		user: user ? {
-			id: user.id,
-			email: user.email,
-			fullName: user.user_metadata?.full_name || user.user_metadata?.name,
-			firstName: user.user_metadata?.first_name,
-			lastName: user.user_metadata?.last_name,
-			primaryEmailAddress: { emailAddress: user.email },
-			imageUrl: user.user_metadata?.avatar_url,
-		} : null,
+		user: user
+			? {
+					id: user.id,
+					email: user.email,
+					fullName: user.user_metadata?.full_name || user.user_metadata?.name,
+					firstName: user.user_metadata?.first_name,
+					lastName: user.user_metadata?.last_name,
+					primaryEmailAddress: { emailAddress: user.email },
+					imageUrl: user.user_metadata?.avatar_url,
+				}
+			: null,
 		isLoaded: !isLoading,
 	};
 };
-
-

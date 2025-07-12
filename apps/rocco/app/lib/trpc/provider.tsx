@@ -13,24 +13,24 @@ export function TRPCProvider({ children }: { children: React.ReactNode }) {
 					url: "/api/trpc",
 					// Include authentication headers
 					async headers() {
-						const { data: { session } } = await supabase.auth.getSession();
-						
+						const {
+							data: { session },
+						} = await supabase.auth.getSession();
+
 						return {
-							authorization: session?.access_token 
-								? `Bearer ${session.access_token}` 
-								: '',
+							authorization: session?.access_token
+								? `Bearer ${session.access_token}`
+								: "",
 						};
 					},
 				}),
 			],
-		})
+		}),
 	);
 
 	return (
 		<trpc.Provider client={trpcClient} queryClient={queryClient}>
-			<QueryClientProvider client={queryClient}>
-				{children}
-			</QueryClientProvider>
+			<QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 		</trpc.Provider>
 	);
-} 
+}

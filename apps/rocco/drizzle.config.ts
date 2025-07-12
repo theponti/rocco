@@ -15,4 +15,4 @@ export default {
 	verbose: true,
 	strict: true,
 	schemaFilter: ["public"],
-} satisfies Config; 
+} satisfies Config;

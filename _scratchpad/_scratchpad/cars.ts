@@ -5,46 +5,64 @@ import fetch from "node-fetch";
 import yargs from "yargs";
 
 const argv = yargs
-  .option("make", { type: "string", demandOption: true, describe: "Car make (e.g. Porsche)" })
-  .option("model", { type: "string", demandOption: true, describe: "Car model (e.g. Taycan)" })
-  .help()
-  .argv as any;
+	.option("make", {
+		type: "string",
+		demandOption: true,
+		describe: "Car make (e.g. Porsche)",
+	})
+	.option("model", {
+		type: "string",
+		demandOption: true,
+		describe: "Car model (e.g. Taycan)",
+	})
+	.help().argv as any;
 
 async function getMakeId(make: string): Promise<string | null> {
-  const res = await fetch("https://www.cargurus.com/api/vehicle-discovery-service/v1/makes?searchType=USED&locale=en_US");
-  const data = await res.json();
-  const found = data.makes?.find((m: any) => m.name.toLowerCase() === make.toLowerCase());
-  return found ? found.id : null;
+	const res = await fetch(
+		"https://www.cargurus.com/api/vehicle-discovery-service/v1/makes?searchType=USED&locale=en_US",
+	);
+	const data = await res.json();
+	const found = data.makes?.find(
+		(m: any) => m.name.toLowerCase() === make.toLowerCase(),
+	);
+	return found ? found.id : null;
 }
 
-async function getModelId(makeId: string, model: string): Promise<string | null> {
-  const res = await fetch(`https://www.cargurus.com/api/vehicle-discovery-service/v1/makes/${makeId}/models?searchType=USED&locale=en_US`);
-  const data = await res.json();
-  const found = data.models?.find((m: any) => m.name.toLowerCase() === model.toLowerCase());
-  return found ? found.id : null;
+async function getModelId(
+	makeId: string,
+	model: string,
+): Promise<string | null> {
+	const res = await fetch(
+		`https://www.cargurus.com/api/vehicle-discovery-service/v1/makes/${makeId}/models?searchType=USED&locale=en_US`,
+	);
+	const data = await res.json();
+	const found = data.models?.find(
+		(m: any) => m.name.toLowerCase() === model.toLowerCase(),
+	);
+	return found ? found.id : null;
 }
 
 async function getListings(modelId: string) {
-  // This is a simplified example. CarGurus API may require more params or cookies for real data.
-  const url = `https://www.cargurus.com/Cars/searchPage.action?makeModelTrimPaths=m${modelId}&distance=50&zip=90065&searchType=USED&locale=en_US`;
-  const res = await fetch(url);
-  const text = await res.text();
-  // For demo: just print the first 500 chars of HTML
-  console.log(text.slice(0, 500));
+	// This is a simplified example. CarGurus API may require more params or cookies for real data.
+	const url = `https://www.cargurus.com/Cars/searchPage.action?makeModelTrimPaths=m${modelId}&distance=50&zip=90065&searchType=USED&locale=en_US`;
+	const res = await fetch(url);
+	const text = await res.text();
+	// For demo: just print the first 500 chars of HTML
+	console.log(text.slice(0, 500));
 }
 
 (async () => {
-  const makeId = await getMakeId(argv.make);
-  if (!makeId) {
-    console.error(`Make not found: ${argv.make}`);
-    process.exit(1);
-  }
-  const modelId = await getModelId(makeId, argv.model);
-  if (!modelId) {
-    console.error(`Model not found: ${argv.model}`);
-    process.exit(1);
-  }
-  await getListings(modelId);
+	const makeId = await getMakeId(argv.make);
+	if (!makeId) {
+		console.error(`Make not found: ${argv.make}`);
+		process.exit(1);
+	}
+	const modelId = await getModelId(makeId, argv.model);
+	if (!modelId) {
+		console.error(`Model not found: ${argv.model}`);
+		process.exit(1);
+	}
+	await getListings(modelId);
 })();
 
 // fetch("https://www.cargurus.com/api/vehicle-discovery-service/v1/makes?searchType=USED&locale=en_US", {

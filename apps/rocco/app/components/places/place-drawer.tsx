@@ -43,15 +43,18 @@ const PlaceDrawer = ({
 			if (!place) return;
 
 			// Convert GooglePlaceData to Place if needed
-			const placeToSave = 'userId' in place ? place : {
-				...place,
-				userId: "", // Will be set by the server
-				createdAt: new Date().toISOString(),
-				updatedAt: new Date().toISOString(),
-				itemId: null,
-				location: [place.longitude, place.latitude], // PostGIS point format [x, y]
-				isPublic: false,
-			} as Place;
+			const placeToSave =
+				"userId" in place
+					? place
+					: ({
+							...place,
+							userId: "", // Will be set by the server
+							createdAt: new Date().toISOString(),
+							updatedAt: new Date().toISOString(),
+							itemId: null,
+							location: [place.longitude, place.latitude], // PostGIS point format [x, y]
+							isPublic: false,
+						} as Place);
 
 			addToList({
 				listIds: [listId],
@@ -80,15 +83,18 @@ const PlaceDrawer = ({
 			// Add the current place to the newly created list
 			if (place) {
 				// Convert GooglePlaceData to Place if needed
-				const placeToSave = 'userId' in place ? place : {
-					...place,
-					userId: "", // Will be set by the server
-					createdAt: new Date().toISOString(),
-					updatedAt: new Date().toISOString(),
-					itemId: null,
-					location: [place.longitude, place.latitude], // PostGIS point format [x, y]
-					isPublic: false,
-				} as Place;
+				const placeToSave =
+					"userId" in place
+						? place
+						: ({
+								...place,
+								userId: "", // Will be set by the server
+								createdAt: new Date().toISOString(),
+								updatedAt: new Date().toISOString(),
+								itemId: null,
+								location: [place.longitude, place.latitude], // PostGIS point format [x, y]
+								isPublic: false,
+							} as Place);
 
 				addToList({
 					listIds: [newList.id],
@@ -141,7 +147,9 @@ const PlaceDrawer = ({
 
 					{/* Place Types */}
 					<div>
-						<h3 className="text-sm font-medium text-gray-700 mb-2">Categories</h3>
+						<h3 className="text-sm font-medium text-gray-700 mb-2">
+							Categories
+						</h3>
 						<PlaceTypes types={place.types || []} />
 					</div>
 
@@ -157,7 +165,9 @@ const PlaceDrawer = ({
 					</div>
 
 					<div className="mt-8">
-						<h3 className="text-lg font-semibold mb-3 text-gray-900">Save to List</h3>
+						<h3 className="text-lg font-semibold mb-3 text-gray-900">
+							Save to List
+						</h3>
 
 						{showCreateListForm ? (
 							<ListForm

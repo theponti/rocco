@@ -29,7 +29,7 @@ export default function ListForm({ onCreate, onCancel }: ListFormProps) {
 	return (
 		<div className="space-y-4">
 			<h3 className="text-lg font-semibold text-gray-900">Create New List</h3>
-			
+
 			<form onSubmit={handleSubmit} className="space-y-4">
 				<Input
 					label="List Name"
@@ -39,7 +39,7 @@ export default function ListForm({ onCreate, onCancel }: ListFormProps) {
 					required
 					className="w-full bg-white border-gray-300 focus:border-indigo-500 rounded-lg text-gray-900"
 				/>
-				
+
 				<Input
 					label="Description (optional)"
 					placeholder="Enter description..."

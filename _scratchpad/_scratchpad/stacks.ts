@@ -78,7 +78,7 @@ export function isPalindrome(word: string) {
 	const letters = new Stack(word.split(""));
 
 	for (let i = 0; i < word.length; i++) {
-		let letter = letters.pop();
+		const letter = letters.pop();
 		test += letter;
 	}
 

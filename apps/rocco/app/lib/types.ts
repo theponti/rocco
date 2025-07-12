@@ -6,7 +6,7 @@ import type {
 	place,
 	tags,
 	userLists,
-	users
+	users,
 } from "../db/schema";
 
 // Export all the types

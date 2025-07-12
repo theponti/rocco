@@ -1,5 +1,5 @@
 import { AlertCircle } from "lucide-react";
-import { forwardRef, type SyntheticEvent } from "react";
+import { type SyntheticEvent, forwardRef } from "react";
 import { cn } from "~/lib/utils";
 import styles from "./input.module.css";
 
@@ -41,7 +41,9 @@ const Input = forwardRef<HTMLInputElement, Props>(
 		return (
 			<div className={styles.container} onClick={handleClick}>
 				{label && !hideLabel && (
-					<label htmlFor={inputId} className={styles.label}>{label}</label>
+					<label htmlFor={inputId} className={styles.label}>
+						{label}
+					</label>
 				)}
 
 				<div className={styles.inputWrapper}>
@@ -70,7 +72,9 @@ const Input = forwardRef<HTMLInputElement, Props>(
 					)}
 				</div>
 
-				{helperText && !hasError && <p className={styles.helperText}>{helperText}</p>}
+				{helperText && !hasError && (
+					<p className={styles.helperText}>{helperText}</p>
+				)}
 
 				{hasError && (
 					<p className={styles.errorMessage}>

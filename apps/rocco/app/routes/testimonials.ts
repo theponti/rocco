@@ -26,4 +26,4 @@ export const testimonials = [
 		stars: 5,
 		starsArray: [0, 1, 2, 3, 4],
 	},
-] as const; 
+] as const;

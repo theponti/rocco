@@ -9,7 +9,9 @@ import { supabase } from "../lib/supabase";
  */
 export async function requireAuth(loaderArgs: any) {
 	// Get the session from the request
-	const { data: { session } } = await supabase.auth.getSession();
+	const {
+		data: { session },
+	} = await supabase.auth.getSession();
 
 	if (!session?.user) {
 		const url = new URL(loaderArgs.request.url);

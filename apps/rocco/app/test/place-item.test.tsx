@@ -54,7 +54,7 @@ describe("PlaceItem", () => {
 		await waitFor(() => {
 			expect(screen.getByText(place.name)).toBeInTheDocument();
 		});
-		
+
 		// Check that place types are rendered
 		const placeTypes = screen.getAllByTestId("place-type");
 		if (place.types && place.types.length >= 2) {
@@ -81,19 +81,19 @@ describe("PlaceItem", () => {
 			],
 			initialEntries: ["/"],
 		});
-		
+
 		// Find the dropdown trigger button (MoreVertical icon)
-		const moreButton = screen.getByRole("button", { 
-			expanded: false 
+		const moreButton = screen.getByRole("button", {
+			expanded: false,
 		});
-		
+
 		// Click the dropdown button and prevent event bubbling
 		await user.click(moreButton);
-		
+
 		// Find and click the "Remove from list" option
 		const removeButton = screen.getByText("Remove from list");
 		await user.click(removeButton);
-		
+
 		// Check that the delete modal appears
 		const deleteModal = await screen.findByTestId("place-delete-modal");
 		expect(deleteModal).toBeInTheDocument();
@@ -121,23 +121,23 @@ describe("PlaceItem", () => {
 			],
 			initialEntries: ["/"],
 		});
-		
+
 		// Find the dropdown trigger button
-		const moreButton = screen.getByRole("button", { 
-			expanded: false 
+		const moreButton = screen.getByRole("button", {
+			expanded: false,
 		});
 		await user.click(moreButton);
-		
+
 		// Find and click the "Remove from list" option
 		const removeButton = screen.getByText("Remove from list");
 		await user.click(removeButton);
-		
+
 		// Click the confirm delete button
 		const confirmButton = await screen.findByTestId(
 			"place-delete-confirm-button",
 		);
 		await user.click(confirmButton);
-		
+
 		// Wait for the onRemove callback to be called
 		await waitFor(() => {
 			expect(onRemove).toHaveBeenCalled();

@@ -158,7 +158,9 @@ export default function LandingPage() {
 							<div className="w-12 h-12 rounded-full bg-indigo-500/10 flex items-center justify-center mb-4">
 								<MapIcon className="text-indigo-500" />
 							</div>
-							<h3 className="text-xl font-semibold mb-2 text-gray-900">Place Tracking</h3>
+							<h3 className="text-xl font-semibold mb-2 text-gray-900">
+								Place Tracking
+							</h3>
 							<p className="text-gray-600">
 								Save all the restaurants, cafes, museums, and destinations you
 								love or want to visit.
@@ -171,7 +173,9 @@ export default function LandingPage() {
 							<div className="w-12 h-12 rounded-full bg-indigo-500/10 flex items-center justify-center mb-4">
 								<List className="text-indigo-500" />
 							</div>
-							<h3 className="text-xl font-semibold mb-2 text-gray-900">Custom Lists</h3>
+							<h3 className="text-xl font-semibold mb-2 text-gray-900">
+								Custom Lists
+							</h3>
 							<p className="text-gray-600">
 								Create beautiful, organized lists for different trips, cities,
 								or categories of places.
@@ -184,7 +188,9 @@ export default function LandingPage() {
 							<div className="w-12 h-12 rounded-full bg-indigo-500/10 flex items-center justify-center mb-4">
 								<Users className="text-indigo-500" />
 							</div>
-							<h3 className="text-xl font-semibold mb-2 text-gray-900">Invite Friends</h3>
+							<h3 className="text-xl font-semibold mb-2 text-gray-900">
+								Invite Friends
+							</h3>
 							<p className="text-gray-600">
 								Collaborate on lists with friends and family to plan trips
 								together.
@@ -243,7 +249,9 @@ export default function LandingPage() {
 										{testimonial.name[0]}
 									</div>
 									<div>
-										<div className="font-medium text-gray-900">{testimonial.name}</div>
+										<div className="font-medium text-gray-900">
+											{testimonial.name}
+										</div>
 										<div className="text-sm text-gray-500">
 											{testimonial.role}
 										</div>

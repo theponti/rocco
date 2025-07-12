@@ -3,7 +3,7 @@ import { trpc } from "../lib/trpc/client";
 export function TRPCExample() {
 	const { data: lists, isLoading: listsLoading } = trpc.lists.getAll.useQuery();
 	const { data: ideas, isLoading: ideasLoading } = trpc.ideas.getAll.useQuery();
-	
+
 	const createList = trpc.lists.create.useMutation();
 	const createIdea = trpc.ideas.create.useMutation();
 
@@ -28,7 +28,7 @@ export function TRPCExample() {
 	return (
 		<div className="p-4">
 			<h2 className="text-2xl font-bold mb-4">tRPC Example</h2>
-			
+
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 				<div>
 					<h3 className="text-lg font-semibold mb-2">Lists</h3>
@@ -40,7 +40,7 @@ export function TRPCExample() {
 						{createList.isPending ? "Creating..." : "Create List"}
 					</button>
 					<ul className="space-y-2">
-						{lists?.map(list => (
+						{lists?.map((list) => (
 							<li key={list.id} className="p-2 border rounded">
 								<strong>{list.name}</strong>
 								<p className="text-sm text-gray-600">{list.description}</p>
@@ -59,7 +59,7 @@ export function TRPCExample() {
 						{createIdea.isPending ? "Creating..." : "Create Idea"}
 					</button>
 					<ul className="space-y-2">
-						{ideas?.map(idea => (
+						{ideas?.map((idea) => (
 							<li key={idea.id} className="p-2 border rounded">
 								<p>{idea.description}</p>
 							</li>
@@ -69,4 +69,4 @@ export function TRPCExample() {
 			</div>
 		</div>
 	);
-} 
+}

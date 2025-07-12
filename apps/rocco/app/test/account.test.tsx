@@ -17,7 +17,9 @@ describe("Account", () => {
 				{
 					path: "/account",
 					Component: Account,
-					loader: () => ({ user: { ...MOCK_USER, image: null, photoUrl: null } }),
+					loader: () => ({
+						user: { ...MOCK_USER, image: null, photoUrl: null },
+					}),
 				},
 			],
 			isAuth: true,

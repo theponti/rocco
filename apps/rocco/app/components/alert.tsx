@@ -1,9 +1,4 @@
-import {
-    AlertCircle,
-    CheckCircle,
-    Info,
-    XCircle,
-} from "lucide-react";
+import { AlertCircle, CheckCircle, Info, XCircle } from "lucide-react";
 import { useState } from "react";
 import styles from "./alert.module.css";
 
@@ -48,14 +43,11 @@ const Alert = ({
 		}
 	};
 
-	const alertClasses = [
-		styles.container,
-		styles[type]
-	].join(" ");
+	const alertClasses = [styles.container, styles[type]].join(" ");
 
 	const iconClasses = [
 		styles.iconWrapper,
-		styles[`icon${type.charAt(0).toUpperCase() + type.slice(1)}`]
+		styles[`icon${type.charAt(0).toUpperCase() + type.slice(1)}`],
 	].join(" ");
 
 	return (
@@ -63,9 +55,9 @@ const Alert = ({
 			<div className={iconClasses}>{getIcon()}</div>
 			<div className={styles.content}>{children}</div>
 			{dismissible && (
-				<button 
-					className={styles.dismissButton} 
-					onClick={handleDismiss} 
+				<button
+					className={styles.dismissButton}
+					onClick={handleDismiss}
 					aria-label="Dismiss alert"
 				>
 					<XCircle size={16} />

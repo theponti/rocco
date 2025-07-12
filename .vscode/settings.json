@@ -27,11 +27,5 @@
 	},
 	"typescript.enablePromptUseWorkspaceTsdk": true,
 	"typescript.tsdk": "node_modules/typescript/lib",
-	"cSpell.words": [
-		"clsx",
-		"Formik",
-		"lucide",
-		"tanstack",
-		"testid"
-	]
+	"cSpell.words": ["clsx", "Formik", "lucide", "tanstack", "testid"]
 }

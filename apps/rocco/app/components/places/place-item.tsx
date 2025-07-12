@@ -126,7 +126,9 @@ const ListItem = ({ place, listId, onRemove, onError }: PlaceItemProps) => {
 
 				<div className="flex w-full max-w-full p-3">
 					<div className="flex flex-col flex-1 h-full justify-between text-wrap break-words">
-						<p className={`${styles.placeName} font-semibold text-start text-gray-900 mb-1 group-hover:text-indigo-600 transition-colors`}>
+						<p
+							className={`${styles.placeName} font-semibold text-start text-gray-900 mb-1 group-hover:text-indigo-600 transition-colors`}
+						>
 							{place.name}
 						</p>
 						<div className="flex items-center mt-1">
@@ -155,8 +157,8 @@ const ListItem = ({ place, listId, onRemove, onError }: PlaceItemProps) => {
 						<h2 className="text-2xl font-semibold">Delete place</h2>
 						<p className="text-gray-600">
 							Are you sure you want to delete{" "}
-							<span className="font-medium text-gray-900">{place.name}</span> from
-							your list?
+							<span className="font-medium text-gray-900">{place.name}</span>{" "}
+							from your list?
 						</p>
 						<div className="mt-6 flex gap-4 justify-end">
 							<Button

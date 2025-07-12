@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { type RenderOptions, render, screen } from "@testing-library/react";
-import { HttpResponse, http } from "msw";
+import { http, HttpResponse } from "msw";
 import type { ReactElement, ReactNode } from "react";
 import { Provider } from "react-redux";
 import { RouterProvider, createMemoryRouter } from "react-router";
@@ -170,9 +170,7 @@ export function renderWithProviders(
 
 	return render(
 		<Provider store={store}>
-			<QueryClientProvider client={queryClient}>
-				{ui}
-			</QueryClientProvider>
+			<QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>
 		</Provider>,
 		options,
 	);

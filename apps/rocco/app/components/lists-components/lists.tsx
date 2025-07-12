@@ -29,9 +29,12 @@ export default function Lists({ lists, status, error }: ListsProps) {
 	if (lists.length === 0) {
 		return (
 			<div className="text-center py-8">
-				<h3 className="text-xl font-semibold mb-3 text-gray-900">No Lists Yet</h3>
+				<h3 className="text-xl font-semibold mb-3 text-gray-900">
+					No Lists Yet
+				</h3>
 				<p className="text-gray-600 max-w-md mb-6">
-					Create your first list to start organizing places you love or want to visit.
+					Create your first list to start organizing places you love or want to
+					visit.
 				</p>
 				<Link
 					to="/lists/create"

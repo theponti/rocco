@@ -6,7 +6,7 @@ import { trackers, votes } from "~/db/schema";
 import type { Route } from "../../../+types/root";
 
 export const loader = async (loaderData: Route.LoaderArgs) => {
- 	const trackerId = loaderData.params.id;
+	const trackerId = loaderData.params.id;
 	if (!trackerId) throw new Response("Missing trackerId", { status: 400 });
 
 	const tracker = await db.query.trackers.findFirst({
@@ -22,8 +22,8 @@ export const loader = async (loaderData: Route.LoaderArgs) => {
 };
 
 export default function TrackerVoteRoute() {
- 	const { tracker, votes } = useLoaderData<typeof loader>();
- 	const navigate = useNavigate();
+	const { tracker, votes } = useLoaderData<typeof loader>();
+	const navigate = useNavigate();
 
 	return (
 		<VoteScreen

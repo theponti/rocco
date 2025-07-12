@@ -1,9 +1,9 @@
 .wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
 }
 
 .wrap > * {
-  flex: 1;
-} 
+	flex: 1;
+}

@@ -8,7 +8,7 @@
  * @param {Number} n
  */
 function summation(n) {
-  return (n / 2) * (n + 1)
+	return (n / 2) * (n + 1);
 }
 
-console.log(summation(130))
+console.log(summation(130));

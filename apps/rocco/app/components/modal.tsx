@@ -1,10 +1,10 @@
 import { X } from "lucide-react";
 import {
-    type KeyboardEvent,
-    type PropsWithChildren,
-    useCallback,
-    useEffect,
-    useRef,
+	type KeyboardEvent,
+	type PropsWithChildren,
+	useCallback,
+	useEffect,
+	useRef,
 } from "react";
 import styles from "./modal.module.css";
 

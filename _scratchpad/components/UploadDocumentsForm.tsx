@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { type FormEvent, useState } from "react";
 
 import { Loader } from "lucide-react";
 import { Button } from "./ui/button";
 
 export function UploadDocumentsForm() {
 	const [isPending, setIsPending] = useState(false);
-	const [document, setDocument] = useState('');
+	const [document, setDocument] = useState("");
 	const ingest = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		setIsPending(true);
