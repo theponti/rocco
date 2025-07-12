@@ -5,7 +5,7 @@ import {
 	useQueryClient,
 } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
-import { CACHE_TIME, URLS, api, queryKeys } from "./api/base";
+import { trpc } from "./trpc/client";
 import type { Place, PlaceLocation } from "./types";
 
 type AddPlaceToListOptions = {
@@ -22,6 +22,7 @@ export const useRemoveListItem = (
 	>,
 ) => {
 	const queryClient = useQueryClient();
+	const removeFromListMutation = trpc.items.removeFromList.useMutation();
 
 	return useMutation<
 		unknown,
@@ -31,22 +32,23 @@ export const useRemoveListItem = (
 	>({
 		mutationKey: ["deleteListItem"],
 		mutationFn: ({ listId, placeId }) => {
-			return api.delete(`${URLS.lists}/${listId}/items/${placeId}`);
+			return removeFromListMutation.mutateAsync({
+				listId,
+				itemId: placeId,
+			});
 		},
 		onMutate: async ({ listId, placeId }) => {
 			// Cancel any outgoing refetches
 			await queryClient.cancelQueries({
-				queryKey: queryKeys.lists.detail(listId),
+				queryKey: ["lists", listId],
 			});
 
 			// Snapshot the previous value
-			const previousList: any = queryClient.getQueryData(
-				queryKeys.lists.detail(listId),
-			);
+			const previousList: any = queryClient.getQueryData(["lists", listId]);
 
 			// Optimistically update to the new value
 			if (previousList) {
-				queryClient.setQueryData(queryKeys.lists.detail(listId), (old: any) => {
+				queryClient.setQueryData(["lists", listId], (old: any) => {
 					if (!old || !old.items) return old;
 					return {
 						...old,
@@ -61,18 +63,15 @@ export const useRemoveListItem = (
 		// If the mutation fails, use the context returned from onMutate to roll back
 		onError: (err, { listId }, context) => {
 			if (context?.previousList) {
-				queryClient.setQueryData(
-					queryKeys.lists.detail(listId),
-					context.previousList,
-				);
+				queryClient.setQueryData(["lists", listId], context.previousList);
 			}
 		},
 		// Always refetch after error or success
 		onSettled: (_, __, { listId }) => {
 			queryClient.invalidateQueries({
-				queryKey: queryKeys.lists.detail(listId),
+				queryKey: ["lists", listId],
 			});
-			queryClient.invalidateQueries({ queryKey: queryKeys.lists.all });
+			queryClient.invalidateQueries({ queryKey: ["lists"] });
 		},
 		...options,
 	});
@@ -82,74 +81,83 @@ export const useAddPlaceToList = (
 	options: UseMutationOptions<unknown, AxiosError, AddPlaceToListOptions>,
 ) => {
 	const queryClient = useQueryClient();
+	const createPlaceMutation = trpc.places.create.useMutation();
+	const addToListMutation = trpc.items.addToList.useMutation();
 
 	return useMutation<unknown, AxiosError, AddPlaceToListOptions>({
 		mutationKey: ["addPlaceToList"],
-		mutationFn: ({ listIds, place }) => {
-			return api.post(`${URLS.lists}/place`, {
-				listIds,
-				place: {
-					name: place.name,
-					address: place.address,
-					latitude: place.latitude,
-					longitude: place.longitude,
-					imageUrl: place.imageUrl,
-					googleMapsId: place.googleMapsId,
-					rating: place.rating,
-					price_level: place.price_level,
-					types: place.types,
-					websiteUri: place.websiteUri,
-					phoneNumber: place.phoneNumber,
-				},
+		mutationFn: async ({ listIds, place }) => {
+			// First create the place if it doesn't exist
+			const createdPlace = await createPlaceMutation.mutateAsync({
+				name: place.name,
+				address: place.address || undefined,
+				latitude: place.latitude || undefined,
+				longitude: place.longitude || undefined,
+				imageUrl: place.imageUrl || undefined,
+				googleMapsId: place.googleMapsId || undefined,
+				rating: place.rating || undefined,
+				types: place.types || undefined,
+				websiteUri: place.websiteUri || undefined,
+				phoneNumber: place.phoneNumber || undefined,
 			});
+
+			// Then add the place to all specified lists
+			const promises = listIds.map((listId) =>
+				addToListMutation.mutateAsync({
+					listId,
+					itemId: createdPlace.id,
+					itemType: "PLACE",
+				}),
+			);
+
+			await Promise.all(promises);
+			return createdPlace;
 		},
 		// Prefetch related data after successful mutation
 		onSuccess: (_, { listIds }) => {
 			// Invalidate lists and place queries that are affected
 			for (const listId of listIds) {
 				queryClient.invalidateQueries({
-					queryKey: queryKeys.lists.detail(listId),
+					queryKey: ["lists", listId],
 				});
 			}
 
-			queryClient.invalidateQueries({ queryKey: queryKeys.lists.all });
+			queryClient.invalidateQueries({ queryKey: ["lists"] });
 		},
 		...options,
 	});
 };
 
 export const useGetPlace = (id: string) => {
-	return useQuery<Place, AxiosError>({
-		queryKey: queryKeys.places.detail(id),
-		queryFn: async () =>
-			api.get(`${URLS.places}/${id}`).then((res) => res.data),
-		staleTime: CACHE_TIME.MEDIUM, // Less frequent updates for place details
-		retry: 2, // Retry twice on failure
-		// Enable prefetching of place data
-		select: (data) => {
-			// Process data if needed before returning to components
-			return data;
+	return trpc.places.getById.useQuery(
+		{ id },
+		{
+			staleTime: 5 * 60 * 1000, // 5 minutes
+			retry: 2,
 		},
-	});
+	);
 };
 
 export const useGetPlaceLists = ({ placeId }: { placeId: string }) => {
-	return useQuery<{ id: string; name: string }[], AxiosError>({
-		queryKey: ["placeLists", placeId],
-		queryFn: async () => {
-			return api.get(`${URLS.places}/${placeId}/lists`).then((res) => res.data);
+	return trpc.places.getWithLists.useQuery(
+		{ id: placeId },
+		{
+			staleTime: 2 * 60 * 1000, // 2 minutes
+			select: (data) => data.lists,
 		},
-		staleTime: CACHE_TIME.SHORT, // Shorter stale time for lists as they change more often
-	});
+	);
 };
 
 // Add a prefetching function for places
 export const prefetchPlace = async (queryClient: any, id: string) => {
 	return queryClient.prefetchQuery({
-		queryKey: queryKeys.places.detail(id),
-		queryFn: async () =>
-			api.get(`${URLS.places}/${id}`).then((res) => res.data),
-		staleTime: CACHE_TIME.SHORT,
+		queryKey: ["places", id],
+		queryFn: async () => {
+			// This would need to be implemented with tRPC client
+			// For now, we'll use the hook approach
+			return null;
+		},
+		staleTime: 2 * 60 * 1000,
 	});
 };
 
@@ -161,6 +169,8 @@ export type TextSearchQuery = {
 };
 
 export const getPlace = async ({ googleMapsId }: { googleMapsId: string }) => {
-	const response = await api.get<Place>(`/places/${googleMapsId}`);
-	return response.data;
+	// This function would need to be updated to use tRPC
+	// For now, we'll need to find the place by googleMapsId
+	// This might require adding a new tRPC procedure
+	throw new Error("getPlace function needs to be updated to use tRPC");
 };

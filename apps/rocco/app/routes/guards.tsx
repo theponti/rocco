@@ -53,7 +53,7 @@ export function AuthRequired({ children }: { children: React.ReactNode }) {
 export async function requireGuest(request: Request) {
 	const auth = useAuth();
 
-	if (auth.userId) {
+	if (auth.user) {
 		return redirect("/dashboard");
 	}
 

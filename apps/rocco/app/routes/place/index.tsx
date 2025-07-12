@@ -1,6 +1,6 @@
 import { ListPlus } from "lucide-react";
 import { useCallback } from "react";
-import { Link, href, redirect, useLoaderData } from "react-router";
+import { useParams } from "react-router";
 import AddPlaceToList from "~/components/places/AddPlaceToList";
 import PlaceAddress from "~/components/places/PlaceAddress";
 import PlacePhotos from "~/components/places/PlacePhotos";
@@ -8,27 +8,31 @@ import PlaceTypes from "~/components/places/PlaceTypes";
 import PlaceWebsite from "~/components/places/PlaceWebsite";
 import { Button } from "~/components/ui/button";
 import { useToast } from "~/components/use-toast";
-import { api } from "~/lib/api/base";
-import type { Place } from "~/lib/types";
+import { trpc } from "~/lib/trpc/client";
 import type { Route } from "./+types";
 import { usePlaceContext } from "./place-context";
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
-	const place = (await api.get(`/places/${params.id}/lists`)) as {
-		data: Place;
-	};
-
-	if (!place) {
-		throw redirect("/404");
-	}
-
-	return { place: place.data };
+	// For now, return empty data and let the client fetch with tRPC
+	return { place: null };
 }
 
 export default function PlacePage() {
-	const { place } = useLoaderData<{ place: Place }>();
+	const { id } = useParams();
+	const { data: placeData, isLoading } = trpc.places.getWithLists.useQuery({ 
+		id: id || "" 
+	});
+	const place = placeData?.place;
 	const { openToast } = useToast();
 	const { openSaveSheet, isSaveSheetOpen } = usePlaceContext();
+
+	if (isLoading) {
+		return <div>Loading...</div>;
+	}
+
+	if (!place) {
+		return <div>Place not found</div>;
+	}
 
 	const onAddToListSuccess = useCallback(() => {
 		openToast({
@@ -47,14 +51,14 @@ export default function PlacePage() {
 			<div className="rounded-box bg-slate-100 mt-4 px-4 py-6">
 				<div className="mb-4">
 					<p className="font-bold text-xl mb-2">{place.name}</p>
-					<PlaceTypes types={place.types} />
+					<PlaceTypes types={place.types || []} />
 				</div>
 				{place.address && (
 					<div className="flex mt-2">
 						<PlaceAddress
 							address={place.address}
 							name={place.name}
-							place_id={place.googleMapsId}
+							place_id={place.googleMapsId || ""}
 						/>
 					</div>
 				)}
@@ -63,22 +67,7 @@ export default function PlacePage() {
 						<PlaceWebsite website={place.websiteUri} />
 					</div>
 				)}
-				{place.lists && place.lists.length > 0 && (
-					<div className="gap-2 mt-4">
-						<p className="font-bold text-sm">Saved your lists:</p>
-						<div className="flex flex-wrap gap-2 mt-2">
-							{place.lists.map((list) => (
-								<Link
-									className="rounded-lg px-2 py-1 border border-blue-500 text-blue-500 text-sm hover:bg-blue-500 hover:text-white transition-colors duration-200 ease-in-out"
-									key={list.id}
-									to={href("/lists/:id", { id: list.id })}
-								>
-									{list.name}
-								</Link>
-							))}
-						</div>
-					</div>
-				)}
+				{/* TODO: Add lists property to Place type when implementing list-place relationships */}
 			</div>
 			<div className="modal-action">
 				<Button className="flex gap-2" onClick={onSaveClick} disabled={false}>

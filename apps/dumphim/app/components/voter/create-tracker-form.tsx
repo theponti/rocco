@@ -2,23 +2,23 @@ import { useMutation } from "@tanstack/react-query";
 import { Plus, ThumbsDown, ThumbsUp, Trash2, User } from "lucide-react";
 import type React from "react";
 import { useRef, useState } from "react";
-import { TRACKER_PHOTO_BUCKET } from "~/lib/consts";
-import { supabase } from "~/lib/supabaseClient";
-import { useIsMobile } from "~/lib/use-is-mobile";
 import {
 	Dialog,
 	DialogContent,
 	DialogDescription,
 	DialogHeader,
 	DialogTitle,
-} from "../ui/dialog";
+} from "~/components/ui/dialog";
 import {
 	Drawer,
 	DrawerContent,
 	DrawerDescription,
 	DrawerHeader,
 	DrawerTitle,
-} from "../ui/drawer";
+} from "~/components/ui/drawer";
+import { TRACKER_PHOTO_BUCKET } from "~/lib/consts";
+import { supabase } from "~/lib/supabaseClient";
+import { useIsMobile } from "~/lib/use-is-mobile";
 import "../voter/pokemon-card.css";
 
 function usePhotoUpload() {

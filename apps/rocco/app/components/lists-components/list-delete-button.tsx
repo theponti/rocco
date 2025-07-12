@@ -1,5 +1,5 @@
 import { Trash } from "lucide-react";
-import { useDeleteList } from "~/lib/api";
+import { useDeleteList } from "~/lib/trpc/api";
 
 const ListDeleteButton = ({
 	listId,
@@ -19,12 +19,12 @@ const ListDeleteButton = ({
 			return;
 		}
 
-		await mutateAsync(listId);
+		await mutateAsync({ id: listId });
 	};
 
 	const onDeleteKeyDown = async (e: React.KeyboardEvent) => {
 		if (e.key === "Enter") {
-			await mutateAsync(listId);
+			await mutateAsync({ id: listId });
 		}
 	};
 

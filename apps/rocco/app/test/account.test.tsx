@@ -28,7 +28,7 @@ describe("Account", () => {
 
 		await waitFor(() => {
 			// Check that user information is displayed
-			expect(screen.getByText(MOCK_USER.name!)).toBeInTheDocument();
+			expect(screen.getByText(MOCK_USER.name || "")).toBeInTheDocument();
 			expect(screen.getByText(MOCK_USER.email)).toBeInTheDocument();
 
 			// Check for membership duration text

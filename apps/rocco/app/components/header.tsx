@@ -1,14 +1,5 @@
-import {
-	Globe,
-	LogOut,
-	Mail,
-	Menu,
-	Search,
-	Settings,
-	User,
-	X,
-} from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Globe2Icon, LogOut, Menu, Settings, User, X } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import AppLink from "~/components/app-link";
 import { Button } from "~/components/ui/button";
@@ -18,8 +9,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { useAuth, useUser } from "~/lib/auth-provider";
-import { cn } from "~/lib/utils";
+import { useAuth } from "~/lib/auth-provider";
 
 const ACCOUNT = "/account";
 const INVITES = "/invites";
@@ -27,25 +17,11 @@ const LISTS = "/lists";
 const APP_NAME = "rocco";
 
 function Header() {
-	const { user, isSignedIn } = useAuth();
-	const { user: userData } = useUser();
-	const { signOut } = useAuth();
-	const navMenuRef = useRef(null);
+	const { isSignedIn, signOut, signInWithOAuth } = useAuth();
 	const navigate = useNavigate();
 	const location = useLocation();
-	const [scrolled, setScrolled] = useState(false);
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const isHome = location.pathname === "/";
-
-	// Handle scroll effect
-	useEffect(() => {
-		const handleScroll = () => {
-			setScrolled(window.scrollY > 10);
-		};
-
-		window.addEventListener("scroll", handleScroll);
-		return () => window.removeEventListener("scroll", handleScroll);
-	}, []);
 
 	// Prevent body scroll when mobile menu is open
 	useEffect(() => {
@@ -70,10 +46,21 @@ function Header() {
 	const SignInButton = () => (
 		<Button
 			variant="outline"
-			onClick={() => navigate("/login")}
-			className="hidden sm:flex"
+			onClick={async () => {
+				try {
+					await signInWithOAuth({
+						provider: "google",
+						options: {
+							redirectTo: `${window.location.origin}/dashboard`,
+						},
+					});
+				} catch (error) {
+					console.error("Error signing in with Google:", error);
+				}
+			}}
+			className="flex"
 		>
-			Sign In
+			Sign In with Google
 		</Button>
 	);
 
@@ -100,45 +87,34 @@ function Header() {
 	);
 
 	return (
-		<header
-			className={cn(
-				"fixed top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
-				scrolled && "shadow-sm",
-			)}
-		>
-			<div className="container flex h-14 items-center">
-				<div className="mr-4 hidden md:flex">
-					<Link to="/" className="mr-6 flex items-center space-x-2">
-						<span className="hidden font-bold sm:inline-block">{APP_NAME}</span>
+		<header className="fixed top-0 z-50 w-full shadow-sm">
+			<div className="max-w-5xl mx-auto flex py-4 items-center">
+				<div className="flex items-center justify-between w-full px-4">
+					<Link to="/" className="flex items-center space-x-2">
+						<Globe2Icon className="size-6" />
+						<span className="font-bold">{APP_NAME}</span>
 					</Link>
-					<nav className="flex items-center space-x-6 text-sm font-medium">
-						{isSignedIn && (
+					<div className="flex items-center space-x-2">
+						{isSignedIn ? (
 							<>
-								<AppLink to={LISTS}>Lists</AppLink>
-								<AppLink to={INVITES}>Invites</AppLink>
+								<UserMenu />
+								<Button
+									variant="ghost"
+									className="px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
+									onClick={toggleMobileMenu}
+								>
+									{mobileMenuOpen ? (
+										<X className="size-6" />
+									) : (
+										<Menu className="size-6" />
+									)}
+									<span className="sr-only">Toggle menu</span>
+								</Button>
 							</>
+						) : (
+							<SignInButton />
 						)}
-					</nav>
-				</div>
-				<Button
-					variant="ghost"
-					className="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
-					onClick={toggleMobileMenu}
-				>
-					{mobileMenuOpen ? (
-						<X className="h-6 w-6" />
-					) : (
-						<Menu className="h-6 w-6" />
-					)}
-					<span className="sr-only">Toggle menu</span>
-				</Button>
-				<div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-					<div className="w-full flex-1 md:w-auto md:flex-none">
-						{/* Search functionality can be added here */}
 					</div>
-					<nav className="flex items-center">
-						{isSignedIn ? <UserMenu /> : <SignInButton />}
-					</nav>
 				</div>
 			</div>
 			{/* Mobile menu */}

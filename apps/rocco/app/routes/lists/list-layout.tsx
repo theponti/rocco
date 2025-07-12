@@ -1,14 +1,14 @@
 import { Suspense } from "react";
 import {
-	NavLink,
-	Outlet,
-	redirect,
-	useLoaderData,
-	useParams,
+    NavLink,
+    Outlet,
+    redirect,
+    useLoaderData,
+    useParams,
 } from "react-router";
 import Alert from "~/components/alert";
 import { LoadingScreen } from "~/components/loading";
-import { api } from "~/lib/api/base";
+import { trpc } from "~/lib/trpc/client";
 import type { List } from "~/lib/types";
 
 // Types for the loader data
@@ -18,15 +18,8 @@ type LoaderData = {
 
 // Loader function to fetch shared list data for all nested routes
 export async function loader({ params }: { params: { id: string } }) {
-	// Auth check should be done in each child route
-	try {
-		const response = await api.get(`/lists/${params.id}`);
-		return { list: response.data };
-	} catch (error) {
-		// Handle errors like 404s or unauthorized
-		console.error("Error loading list:", error);
-		throw redirect("/lists");
-	}
+	// For now, return empty data and let the client fetch with tRPC
+	return { list: null };
 }
 
 /**
@@ -34,8 +27,14 @@ export async function loader({ params }: { params: { id: string } }) {
  * Provides common UI elements and context for all routes under a specific list
  */
 export default function ListLayout() {
-	const { list } = useLoaderData() as LoaderData;
 	const params = useParams<{ id: string }>();
+	const { data: list, isLoading } = trpc.lists.getById.useQuery({ 
+		id: params.id || "" 
+	});
+
+	if (isLoading) {
+		return <LoadingScreen />;
+	}
 
 	if (!list) {
 		return <Alert type="error">List not found</Alert>;

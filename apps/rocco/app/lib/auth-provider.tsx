@@ -1,10 +1,10 @@
 import type { Session, User } from "@supabase/supabase-js";
-import React, {
+import {
+	type ReactNode,
 	createContext,
 	useContext,
 	useEffect,
 	useState,
-	type ReactNode,
 } from "react";
 import { setTokenProvider } from "./api/base";
 import { supabase } from "./supabase";

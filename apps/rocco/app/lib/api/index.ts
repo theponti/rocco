@@ -1,13 +1,13 @@
 import {
-	type QueryKey,
-	type UseMutationOptions,
-	type UseQueryOptions,
-	useMutation,
-	useQuery,
-	useQueryClient,
+    type QueryKey,
+    type UseMutationOptions,
+    type UseQueryOptions,
+    useMutation,
+    useQuery,
+    useQueryClient,
 } from "@tanstack/react-query";
 
-import type { List, ListInvite, User } from "~/lib/types";
+import type { ExtendedList, List, ListInvite, User } from "~/lib/types";
 
 import { api, baseURL } from "./base";
 
@@ -85,7 +85,7 @@ export const useGetLists = ({
 	});
 };
 
-export type GetListResponse = List;
+export type GetListResponse = ExtendedList;
 export const getList = async (id: string) => {
 	const res = await api.get<List>(`${baseURL}/lists/${id}`);
 	return res.data;

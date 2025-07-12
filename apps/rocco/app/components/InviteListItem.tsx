@@ -2,11 +2,11 @@ import { Link2 } from "lucide-react";
 import { useCallback } from "react";
 import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
-import { useAcceptInviteMutation } from "~/lib/api";
-import type { ListInvite } from "~/lib/types";
+import { useAcceptInviteMutation } from "~/lib/trpc/api";
+import type { ExtendedListInvite } from "~/lib/types";
 
 type InviteListItemProps = {
-	listInvite: ListInvite;
+	listInvite: ExtendedListInvite;
 	onAccept: () => void;
 };
 const InviteListItem = ({ listInvite, onAccept }: InviteListItemProps) => {
@@ -16,15 +16,18 @@ const InviteListItem = ({ listInvite, onAccept }: InviteListItemProps) => {
 	});
 
 	const onAcceptClick = useCallback(() => {
-		mutate(listInvite.listId);
-	}, [listInvite.listId, mutate]);
+		mutate({
+			listId: listInvite.listId,
+			invitedUserEmail: listInvite.invitedUserEmail,
+		});
+	}, [listInvite.listId, listInvite.invitedUserEmail, mutate]);
 
 	return (
 		<li className="card p-4 text-lg flex flex-row items-center justify-between border min-h-[82px]">
-			<p className="text-lg font-semibold">{list.name}</p>
+			<p className="text-lg font-semibold">{list?.name || "Unknown List"}</p>
 			{accepted ? (
 				<Link
-					to={`/list/${list.id}`}
+					to={`/list/${list?.id || listInvite.listId}`}
 					className="flex items-center gap-2 text-md normal-case font-medium btn btn-outline"
 				>
 					View list

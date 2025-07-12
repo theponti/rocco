@@ -1,8 +1,9 @@
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { createContext } from "../../lib/trpc/context";
 import { appRouter } from "../../lib/trpc/router";
+import type { Route } from "./+types/trpc";
 
-const handler = (request: Request) => {
+export const loader = ({ request }: Route.LoaderArgs) => {
 	return fetchRequestHandler({
 		endpoint: "/api/trpc",
 		req: request,
@@ -18,5 +19,3 @@ const handler = (request: Request) => {
 				: undefined,
 	});
 };
-
-export { handler as GET, handler as POST };

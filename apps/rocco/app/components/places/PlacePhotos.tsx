@@ -4,7 +4,7 @@ import type { Place } from "~/lib/types";
 
 type Props = {
 	alt: string;
-	photos: Pick<Place, "photos">["photos"];
+	photos: string[] | null | undefined;
 };
 
 // Helper function to get appropriate image size based on viewport

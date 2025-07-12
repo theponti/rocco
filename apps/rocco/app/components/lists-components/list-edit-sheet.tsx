@@ -8,14 +8,14 @@ import {
 	SheetDescription,
 	SheetTitle,
 } from "~/components/ui/sheet";
-import { useUpdateList } from "~/lib/api";
+import { useUpdateList } from "~/lib/trpc/api";
 import type { List } from "~/lib/types";
 import { useListMenu } from "./list-menu";
 
 export default function ListEditSheet({ list }: { list: List }) {
 	const { isEditSheetOpen, setIsEditSheetOpen } = useListMenu();
 	const [name, setName] = useState(list.name);
-	const [description, setDescription] = useState(list.description);
+	const [description, setDescription] = useState(list.description || "");
 
 	const updateList = useUpdateList({
 		onSuccess: () => {
@@ -71,7 +71,7 @@ export default function ListEditSheet({ list }: { list: List }) {
 							id="description"
 							placeholder="Enter list description"
 							className="border-2 rounded-lg p-2 h-24 w-full"
-							value={description}
+							value={description || ""}
 							onChange={(e) => setDescription(e.target.value)}
 						/>
 					</div>

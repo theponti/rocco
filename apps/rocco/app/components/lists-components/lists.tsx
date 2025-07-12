@@ -1,16 +1,14 @@
 import { Plus } from "lucide-react";
 import { Link } from "react-router";
-import type { List } from "~/lib/types";
+import { trpc } from "~/lib/trpc/client";
+import type { ExtendedList } from "~/lib/types";
+import { cn } from "~/lib/utils";
 import styles from "./lists.module.css";
 
-interface ListsProps {
-	lists: List[];
-	status: "success" | "error" | "loading";
-	error: string | null;
-}
+export default function Lists() {
+	const { data: lists = [], isLoading, error } = trpc.lists.getAll.useQuery();
 
-export default function Lists({ lists, status, error }: ListsProps) {
-	if (status === "loading") {
+	if (isLoading) {
 		return (
 			<div className="flex items-center justify-center h-32">
 				<div className="loading loading-spinner loading-lg" />
@@ -18,27 +16,29 @@ export default function Lists({ lists, status, error }: ListsProps) {
 		);
 	}
 
-	if (status === "error") {
+	if (error) {
 		return (
 			<div className="text-center py-8">
-				<p className="text-red-600">Error loading lists: {error}</p>
+				<p className="text-red-600">Error loading lists: {error.message}</p>
 			</div>
 		);
 	}
 
 	if (lists.length === 0) {
 		return (
-			<div className="text-center py-8">
+			<div className="flex flex-col items-center text-center w-full mx-auto py-8 border border-gray-300 rounded-lg px-4">
 				<h3 className="text-xl font-semibold mb-3 text-gray-900">
 					No Lists Yet
 				</h3>
-				<p className="text-gray-600 max-w-md mb-6">
-					Create your first list to start organizing places you love or want to
-					visit.
+				<p className="text-gray-600 mb-6">
+					Start organizing places you love or want to visit.
 				</p>
 				<Link
 					to="/lists/create"
-					className={`${styles.createButton} flex items-center gap-2 px-5 py-2.5 rounded-lg text-white font-medium`}
+					className={cn(
+						"flex max-w-md justify-center items-center gap-2 px-5 py-2.5 rounded-lg text-white font-medium",
+						styles.createButton,
+					)}
 				>
 					<Plus size={16} />
 					Create List
@@ -73,7 +73,8 @@ export default function Lists({ lists, status, error }: ListsProps) {
 							</h3>
 						</div>
 						<p className="text-gray-600 text-sm mb-4">
-							{list.itemCount} {list.itemCount === 1 ? "place" : "places"}
+							{list.itemCount || 0}{" "}
+							{(list.itemCount || 0) === 1 ? "place" : "places"}
 						</p>
 						<div className="flex items-center justify-between">
 							<span className="text-xs text-gray-500">

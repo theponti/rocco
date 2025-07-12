@@ -1,12 +1,12 @@
 import { Heart } from "lucide-react";
 
 import { Sheet, SheetContent } from "~/components/ui/sheet";
-import { useGetLists } from "~/lib/api";
 import {
 	useAddPlaceToList,
 	useGetPlaceLists,
 	useRemoveListItem,
 } from "~/lib/places";
+import { useGetLists } from "~/lib/trpc/api";
 import type { Place } from "~/lib/types";
 import { cn } from "~/lib/utils";
 import { usePlaceContext } from "~/routes/place/place-context";

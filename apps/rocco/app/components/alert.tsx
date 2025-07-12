@@ -56,6 +56,7 @@ const Alert = ({
 			<div className={styles.content}>{children}</div>
 			{dismissible && (
 				<button
+					type="button"
 					className={styles.dismissButton}
 					onClick={handleDismiss}
 					aria-label="Dismiss alert"

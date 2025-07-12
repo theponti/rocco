@@ -1,23 +1,14 @@
 import { useLoaderData } from "react-router";
 import InviteListItem from "~/components/InviteListItem";
-import api from "~/lib/api";
+import { trpc } from "~/lib/trpc/client";
 
 export async function loader() {
-	try {
-		const response = await api.get("/invites");
-		return { invites: response.data };
-	} catch (error) {
-		console.error("Failed to fetch invites:", error);
-		throw new Response("Could not load invites.", { status: 500 });
-	}
+	// For now, return empty data and let the client fetch with tRPC
+	return { invites: [] };
 }
 
 const Invites = () => {
-	const { invites } = useLoaderData() as { invites: any[] };
-	const refetch = async () => {
-		// This will trigger a re-render with the client loader
-		window.location.reload();
-	};
+	const { data: invites = [], refetch } = trpc.invites.getAll.useQuery();
 
 	return (
 		<>

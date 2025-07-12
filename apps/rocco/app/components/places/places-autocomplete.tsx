@@ -29,6 +29,7 @@ function PlacesAutocomplete({
 	const DEBOUNCE_TIME_MS = 1000;
 	const [debouncedValue, setDebouncedValue] = useState("");
 	const [inputFocused, setInputFocused] = useState(false);
+	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
 	const onValueChange = useCallback((newValue: string) => {
 		setValue(newValue);
@@ -55,72 +56,83 @@ function PlacesAutocomplete({
 				);
 				setSelected(selected);
 				setInputFocused(false);
+				setIsDropdownOpen(false);
 			}
 		},
 		[data, setSelected],
 	);
 
+	const handleFocus = useCallback(() => {
+		setInputFocused(true);
+		setIsDropdownOpen(true);
+	}, []);
+
+	const handleBlur = useCallback(() => {
+		// Use a shorter timeout to prevent race conditions
+		setTimeout(() => {
+			setInputFocused(false);
+			setIsDropdownOpen(false);
+		}, 50);
+	}, []);
+
+	const hasResults = data && data.length > 0;
+	const shouldShowDropdown =
+		inputFocused && (isLoading || (hasResults && value.length > 0));
+
 	return (
-		<div data-testid="places-autocomplete" className="w-full">
-			<Command className="border rounded-md border-input" shouldFilter={false}>
+		<div
+			data-testid="places-autocomplete"
+			className="relative w-full max-w-3xl"
+		>
+			<Command
+				className="border rounded-md border-gray-300"
+				shouldFilter={false}
+			>
 				<CommandInput
 					data-testid="places-autocomplete-input"
-					className="w-full bg-background px-2 py-1.5"
+					className="w-full bg-background border-none"
 					value={value}
 					onValueChange={onValueChange}
-					onFocus={() => setInputFocused(true)}
-					onBlur={() => setTimeout(() => setInputFocused(false), 100)}
+					onFocus={handleFocus}
+					onBlur={handleBlur}
 					placeholder="Search for places..."
-					aria-expanded={
-						inputFocused && (isLoading || (data && value.length > 0))
-					}
+					aria-expanded={shouldShowDropdown}
 					aria-haspopup="listbox"
+					aria-autocomplete="list"
+					role="combobox"
 				/>
-				<CommandList>
-					{/* Loading state: show skeletons or empty message */}
-					{isLoading && <PlacesAutocompleteLoading show={!!value} />}
+				{shouldShowDropdown && (
+					<CommandList className="max-h-60 border-t">
+						{isLoading && <PlacesAutocompleteLoading show={!!value} />}
 
-					{/* Results: show only if not loading, input is focused, input has value, and there is data */}
-					{!isLoading && inputFocused && value && data && data.length > 0 && (
 						<CommandGroup data-testid="places-autocomplete-results">
-							{data.map((suggestion) => (
+							{data?.map((suggestion) => (
 								<CommandItem
 									key={suggestion.place_id}
 									value={suggestion.place_id}
 									onSelect={() => handleSelect(suggestion.place_id)}
-									className="cursor-pointer focus:bg-accent focus:text-accent-foreground"
+									className={`cursor-pointer ${styles.autocompleteItem}`}
 									data-testid="places-autocomplete-option"
 								>
-									<div className="flex flex-col truncate">
-										<span className="font-medium">
+									<div className="flex flex-col truncate w-full">
+										<span className="font-medium text-sm">
 											{suggestion.structured_formatting.main_text}
 										</span>
-										<span className="text-slate-400 font-light text-sm">
+										<span className="text-muted-foreground font-light text-xs">
 											{suggestion.structured_formatting.secondary_text}
 										</span>
 									</div>
 								</CommandItem>
 							))}
 						</CommandGroup>
-					)}
 
-					{/* Empty state: show if not loading, input has value, and no results */}
-					{!isLoading &&
-						inputFocused &&
-						value &&
-						(!data || data.length === 0) && (
-							<CommandEmpty className="text-center py-4 text-sm text-gray-400">
+						{value && !isLoading && data && data.length === 0 && (
+							<CommandEmpty className="text-center py-4 text-sm text-muted-foreground">
 								No results found.
 							</CommandEmpty>
 						)}
-
-					{/* Initial state: show prompt if not loading, input is focused, no value, and no results */}
-					{!isLoading && inputFocused && !value && (
-						<CommandEmpty className="text-center py-4 text-sm text-gray-400">
-							Start typing to search for places...
-						</CommandEmpty>
-					)}
-				</CommandList>
+					</CommandList>
+				)}
 			</Command>
 			{error && <Alert type="error">{error.message}</Alert>}
 		</div>
@@ -135,29 +147,21 @@ const PlacesAutocompleteLoading = (
 			display: "flex",
 			flexDirection: "column",
 			width: "100%",
-			gap: 8,
+			gap: 4,
 			padding: "8px 0",
 		}}
 		{...props}
 	>
-		{!props.show ? (
-			<CommandEmpty className="text-center py-4 text-sm text-gray-400">
-				Start typing to search for places...
-			</CommandEmpty>
-		) : (
-			<>
-				<LoadingItem />
-				<LoadingItem />
-				<LoadingItem />
-			</>
-		)}
+		<LoadingItem />
+		<LoadingItem />
+		<LoadingItem />
 	</div>
 );
 
 const LoadingItem = (props: React.ComponentProps<"div">) => (
 	<div className={styles.loadingItem} {...props}>
-		<div className="w-3/4 h-4 bg-primary/10 rounded mb-2" />
-		<div className="w-1/2 h-3 bg-primary/5 rounded" />
+		<div className="w-3/4 h-3 bg-muted rounded mb-1" />
+		<div className="w-1/2 h-2 bg-muted/50 rounded" />
 	</div>
 );
 

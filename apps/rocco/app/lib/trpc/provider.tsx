@@ -11,7 +11,6 @@ export function TRPCProvider({ children }: { children: React.ReactNode }) {
 			links: [
 				httpBatchLink({
 					url: "/api/trpc",
-					// Include authentication headers
 					async headers() {
 						const {
 							data: { session },

@@ -51,25 +51,28 @@ const ListItem = ({ place, listId, onRemove, onError }: PlaceItemProps) => {
 	};
 
 	const onDeleteClick = () => {
-		removeListItem({ listId, placeId: place.googleMapsId });
+		if (place.googleMapsId) {
+			removeListItem({ listId, placeId: place.googleMapsId });
+		}
 	};
 
 	const handleCardClick = () => {
-		navigate(href("/places/:id", { id: place.googleMapsId }));
+		if (place.googleMapsId) {
+			navigate(href("/places/:id", { id: place.googleMapsId }));
+		}
 	};
 
 	return (
 		<>
-			<a
+			<button
+				type="button"
 				onClick={handleCardClick}
-				onKeyDown={(e: ReactKeyboardEvent<HTMLAnchorElement>) => {
+				onKeyDown={(e: ReactKeyboardEvent<HTMLButtonElement>) => {
 					if (e.key === "Enter" || e.key === " ") {
 						e.preventDefault();
 						handleCardClick();
 					}
 				}}
-				tabIndex={0}
-				role="button"
 				aria-label={`View details for ${place.name}`}
 				className={`${styles.placeCard} group`}
 			>
@@ -132,7 +135,7 @@ const ListItem = ({ place, listId, onRemove, onError }: PlaceItemProps) => {
 							{place.name}
 						</p>
 						<div className="flex items-center mt-1">
-							<PlaceTypes limit={2} types={place.types} />
+							<PlaceTypes limit={2} types={place.types || []} />
 						</div>
 					</div>
 					<Button
@@ -146,7 +149,7 @@ const ListItem = ({ place, listId, onRemove, onError }: PlaceItemProps) => {
 						<ExternalLink size={14} className="text-indigo-600" />
 					</Button>
 				</div>
-			</a>
+			</button>
 
 			<Sheet open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
 				<SheetContent

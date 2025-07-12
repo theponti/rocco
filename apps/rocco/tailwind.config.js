@@ -2,7 +2,10 @@
 module.exports = {
 	darkMode: ["class"],
 	// Updated content paths for better purging of unused styles
-	content: ["./app/**/*.{ts,tsx,js,jsx}"],
+	content: [
+		"./app/**/*.{ts,tsx,js,jsx}",
+		"../../packages/ui/src/**/*.{ts,tsx,js,jsx}"
+	],
 	// Enable just-in-time mode for faster builds and smaller CSS
 	future: {
 		hoverOnlyWhenSupported: true,
@@ -24,7 +27,7 @@ module.exports = {
 				background: "hsl(var(--background))",
 				foreground: "hsl(var(--foreground))",
 				primary: {
-					DEFAULT: "var(--primary)",
+					DEFAULT: "hsl(var(--primary))",
 					foreground: "hsl(var(--primary-foreground))",
 				},
 				secondary: {

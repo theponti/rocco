@@ -1,12 +1,11 @@
 import { useNavigate } from "react-router";
 import AppLink from "~/components/app-link";
-import { useGetOutboundInvites } from "~/lib/api";
 import { useAuth } from "~/lib/auth-provider";
+import { trpc } from "~/lib/trpc/client";
 
 export async function clientLoader() {
-	const response = await fetch("/api/invites/outbound");
-	const outboundInvites = await response.json();
-	return { outboundInvites };
+	// For now, return empty data and let the client fetch with tRPC
+	return { outboundInvites: [] };
 }
 
 const ListSentInvites = ({
@@ -14,7 +13,9 @@ const ListSentInvites = ({
 }: { loaderData: { outboundInvites: any[] } }) => {
 	const navigate = useNavigate();
 	const { user } = useAuth();
-	const { outboundInvites: data } = loaderData;
+	// TODO: Add outbound invites to tRPC router
+	const { data: outboundInvites = [] } = trpc.invites.getAll.useQuery();
+	const data = outboundInvites;
 
 	if (user?.id) {
 		navigate("/");
@@ -35,8 +36,8 @@ const ListSentInvites = ({
 						{data.map((invite) => (
 							<li key={invite.listId} className="card shadow-md p-4">
 								<p>
-									<span className="font-semibold mr-2">List:</span>
-									{invite.list.name}
+									<span className="font-semibold mr-2">List ID:</span>
+									{invite.listId}
 								</p>
 								<p>
 									<span className="font-semibold mr-2">User:</span>

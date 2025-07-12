@@ -2,10 +2,10 @@ import { and, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { bookmark, item, list, listInvite, place } from "../../db/schema";
 import {
-	protectedProcedure,
-	publicProcedure,
-	router,
-	userProcedure,
+    protectedProcedure,
+    publicProcedure,
+    router,
+    userProcedure,
 } from "./context";
 
 // Note: User management is handled by Supabase Auth
@@ -148,6 +148,33 @@ const placesRouter = router({
 			}
 
 			return foundPlace;
+		}),
+
+	getWithLists: publicProcedure
+		.input(z.object({ id: z.string().uuid() }))
+		.query(async ({ ctx, input }) => {
+			const foundPlace = await ctx.db.query.place.findFirst({
+				where: eq(place.id, input.id),
+			});
+
+			if (!foundPlace) {
+				throw new Error("Place not found");
+			}
+
+			// Get all lists that contain this place
+			const listItems = await ctx.db.query.item.findMany({
+				where: eq(item.itemId, input.id),
+				with: {
+					list: true,
+				},
+			});
+
+			const lists = listItems.map((item) => item.list);
+
+			return {
+				place: foundPlace,
+				lists,
+			};
 		}),
 
 	create: protectedProcedure
@@ -294,6 +321,18 @@ const itemsRouter = router({
 
 // Invites router
 const invitesRouter = router({
+	getAll: protectedProcedure.query(async ({ ctx }) => {
+		if (!ctx.user) {
+			throw new Error("User not found in context");
+		}
+
+		const allInvites = await ctx.db.query.listInvite.findMany({
+			where: eq(listInvite.invitedUserEmail, ctx.user.email),
+		});
+
+		return allInvites;
+	}),
+
 	getByList: protectedProcedure
 		.input(z.object({ listId: z.string().uuid() }))
 		.query(async ({ ctx, input }) => {
@@ -520,6 +559,28 @@ const bookmarksRouter = router({
 		}),
 });
 
+// User router
+const userRouter = router({
+	getProfile: protectedProcedure.query(async ({ ctx }) => {
+		if (!ctx.user) {
+			throw new Error("User not found in context");
+		}
+
+		return ctx.user;
+	}),
+
+	deleteAccount: protectedProcedure.mutation(async ({ ctx }) => {
+		if (!ctx.user) {
+			throw new Error("User not found in context");
+		}
+
+		// TODO: Implement account deletion logic
+		// This would typically involve deleting all user data
+		// For now, just return success
+		return { success: true };
+	}),
+});
+
 // Main router
 export const appRouter = router({
 	lists: listsRouter,
@@ -527,7 +588,7 @@ export const appRouter = router({
 	items: itemsRouter,
 	invites: invitesRouter,
 	bookmarks: bookmarksRouter,
-	user: userProcedure,
+	user: userRouter,
 });
 
 export type AppRouter = typeof appRouter;

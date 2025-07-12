@@ -1,13 +1,11 @@
 import { UserCircle } from "lucide-react";
-import { redirect, useLoaderData, useNavigate } from "react-router";
-
-import { useMutation } from "@tanstack/react-query";
 import { useCallback } from "react";
+import { redirect, useLoaderData, useNavigate } from "react-router";
 import Alert from "~/components/alert";
 import { LoadingScreen } from "~/components/loading";
 import { Button } from "~/components/ui/button";
-import { api, baseURL } from "~/lib/api/base";
 import { useUser } from "~/lib/auth-provider";
+import { trpc } from "~/lib/trpc/client";
 import type { User } from "~/lib/types";
 
 export async function loader() {
@@ -16,13 +14,9 @@ export async function loader() {
 		return redirect("/login");
 	}
 
-	try {
-		const res = await api.get<User>(`${baseURL}/user`);
-		return { user: res.data };
-	} catch (error) {
-		console.error("Failed to fetch user data:", error);
-		throw new Response("Could not load account data.", { status: 500 });
-	}
+	// For now, return the user from auth provider
+	// In a real app, you might want to fetch additional user data from the database
+	return { user };
 }
 
 function MemberSince({ createdAt }: { createdAt: string }) {
@@ -38,10 +32,7 @@ function MemberSince({ createdAt }: { createdAt: string }) {
 
 function DeleteAccount() {
 	const navigate = useNavigate();
-	const { isPending, isError, mutate } = useMutation({
-		mutationFn: async () => {
-			await api.delete(`${baseURL}/user`);
-		},
+	const { isPending, isError, mutate } = trpc.user.deleteAccount.useMutation({
 		onSuccess: () => {
 			return navigate("/login");
 		},

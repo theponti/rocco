@@ -26,8 +26,8 @@ const Input = forwardRef<HTMLInputElement, Props>(
 		},
 		ref,
 	) => {
-		function handleClick(e: SyntheticEvent<HTMLDivElement>) {
-			const inputEl = (e.currentTarget as HTMLDivElement).querySelector(
+		function handleClick(e: SyntheticEvent<HTMLButtonElement>) {
+			const inputEl = (e.currentTarget as HTMLButtonElement).querySelector(
 				"input",
 			);
 			inputEl?.focus();
@@ -39,7 +39,17 @@ const Input = forwardRef<HTMLInputElement, Props>(
 		const inputId = rest.id;
 
 		return (
-			<div className={styles.container} onClick={handleClick}>
+			<button 
+				type="button"
+				className={styles.container} 
+				onClick={handleClick}
+				onKeyDown={(e) => {
+					if (e.key === "Enter" || e.key === " ") {
+						handleClick(e as any);
+					}
+				}}
+				aria-label="Click to focus input"
+			>
 				{label && !hideLabel && (
 					<label htmlFor={inputId} className={styles.label}>
 						{label}
@@ -82,7 +92,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
 						{errorMessage}
 					</p>
 				)}
-			</div>
+			</button>
 		);
 	},
 );

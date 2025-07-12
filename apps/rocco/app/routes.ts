@@ -7,6 +7,8 @@ import {
 } from "@react-router/dev/routes";
 
 export default [
+	route("api/trpc/*", "./routes/api/trpc.ts"),
+
 	// Main layout with global UI elements
 	layout("routes/layout.tsx", [
 		// Public routes

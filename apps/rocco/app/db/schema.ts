@@ -1,18 +1,18 @@
 import {
-	boolean,
-	doublePrecision,
-	foreignKey,
-	geometry,
-	index,
-	integer,
-	pgEnum,
-	pgTable,
-	primaryKey,
-	text,
-	timestamp,
-	unique,
-	uniqueIndex,
-	uuid,
+    boolean,
+    doublePrecision,
+    foreignKey,
+    geometry,
+    index,
+    integer,
+    pgEnum,
+    pgTable,
+    primaryKey,
+    text,
+    timestamp,
+    unique,
+    uniqueIndex,
+    uuid,
 } from "drizzle-orm/pg-core";
 
 export const itemType = pgEnum("ItemType", ["FLIGHT", "PLACE"]);
@@ -106,6 +106,8 @@ export const place = pgTable(
 		bestFor: text("best_for"),
 		isPublic: boolean("is_public").default(false).notNull(),
 		wifiInfo: text("wifi_info"),
+		photos: text().array(),
+		priceLevel: integer("price_level"),
 	},
 	(table) => [
 		foreignKey({
@@ -295,5 +297,38 @@ export const listInvite = pgTable(
 			columns: [table.listId, table.invitedUserEmail],
 			name: "list_invite_pkey",
 		}),
+	],
+);
+
+export const bookmark = pgTable(
+	"bookmark",
+	{
+		id: uuid().primaryKey().notNull(),
+		title: text().notNull(),
+		description: text(),
+		url: text().notNull(),
+		image: text(),
+		imageHeight: text(),
+		imageWidth: text(),
+		locationAddress: text(),
+		locationLat: text(),
+		locationLng: text(),
+		siteName: text().notNull(),
+		userId: uuid().notNull(),
+		createdAt: timestamp({ precision: 3, mode: "string" })
+			.defaultNow()
+			.notNull(),
+		updatedAt: timestamp({ precision: 3, mode: "string" })
+			.defaultNow()
+			.notNull(),
+	},
+	(table) => [
+		foreignKey({
+			columns: [table.userId],
+			foreignColumns: [users.id],
+			name: "bookmark_userId_user_id_fk",
+		})
+			.onUpdate("cascade")
+			.onDelete("cascade"),
 	],
 );

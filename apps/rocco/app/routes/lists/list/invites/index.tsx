@@ -3,27 +3,26 @@ import { Link, useParams } from "react-router";
 import Alert from "~/components/alert";
 import ListInviteForm from "~/components/lists-components/list-invite-form";
 import { LoadingScreen } from "~/components/loading";
-import { getList, useGetListInvites } from "~/lib/api";
+import { trpc } from "~/lib/trpc/client";
 import type { Route } from "./+types";
 
 export async function clientLoader({ params }: Route.ClientActionArgs) {
-	const list = await getList(params.id);
-	return { list };
+	// For now, return empty data and let the client fetch with tRPC
+	return { list: null };
 }
 
 export default function ListInvites({ loaderData }: Route.ComponentProps) {
 	const params = useParams();
-	const { list } = loaderData;
-	const listId = list.id;
+	const listId = params.id || "";
+	const { data: list } = trpc.lists.getById.useQuery({ id: listId });
 	const {
-		data: listInvites,
-		status: invitesStatus,
+		data: listInvites = [],
 		refetch: getInvites,
-		...listInvitesQuery
-	} = useGetListInvites(listId);
+		isLoading: isLoadingInvites,
+	} = trpc.invites.getByList.useQuery({ listId });
 	const onInviteSuccess = useCallback(() => getInvites(), [getInvites]);
 
-	if (listInvitesQuery.isPending) {
+	if (isLoadingInvites) {
 		return <LoadingScreen />;
 	}
 

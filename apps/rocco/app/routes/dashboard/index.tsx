@@ -8,8 +8,7 @@ import PlaceDrawer from "~/components/places/place-drawer";
 import PlacesAutocomplete from "~/components/places/places-autocomplete";
 import { useGeolocation } from "~/hooks/useGeolocation";
 import type { GooglePlacePrediction } from "~/hooks/useGooglePlacesAutocomplete";
-import { api, baseURL } from "~/lib/api/base";
-import type { GooglePlaceData, List, Place, PlaceLocation } from "~/lib/types";
+import type { GooglePlaceData, Place, PlaceLocation } from "~/lib/types";
 import { requireAuth } from "~/routes/guards";
 import type { Route } from "./+types";
 
@@ -26,27 +25,10 @@ export async function loader(loaderArgs: Route.ClientLoaderArgs) {
 	const response = await requireAuth(loaderArgs);
 
 	if ("getToken" in response) {
-		const token = await response.getToken();
-
-		try {
-			const res = await api.get<{ lists: List[] }>(
-				`${baseURL}/lists?itemType=PLACE`,
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				},
-			);
-
-			return {
-				lists: res.data.lists.map((list) => ({
-					...list,
-					isOwnList: list.userId === response.userId,
-				})),
-			};
-		} catch (error) {
-			throw new Response("Could not load lists.", { status: 500 });
-		}
+		// For now, return empty data and let the client fetch with tRPC
+		return {
+			lists: [],
+		};
 	}
 }
 
@@ -57,7 +39,6 @@ export const ZOOM_LEVELS = {
 };
 
 function Dashboard() {
-	const { lists } = useLoaderData() as { lists: List[] };
 	const { currentLocation, isLoading: isLoadingLocation } = useGeolocation();
 	const [selected, setSelected] = useState<Place | GooglePlaceData | null>(
 		null,
@@ -124,17 +105,12 @@ function Dashboard() {
 			className="flex flex-col gap-4 w-full h-full pb-8 md:max-w-3xl md:mx-auto"
 			data-testid="dashboard-scene"
 		>
-			<div>
-				{currentLocation ? (
-					<PlacesAutocomplete
-						apiKey={import.meta.env.VITE_GOOGLE_API_KEY}
-						setSelected={onSelectedChanged}
-						center={currentLocation}
-					/>
-				) : (
-					// Optional: Show a loading state or placeholder while location is loading
-					<div>Loading location for search...</div>
-				)}
+			<div className="relative min-h-12 z-10">
+				<PlacesAutocomplete
+					apiKey={import.meta.env.VITE_GOOGLE_API_KEY}
+					setSelected={onSelectedChanged}
+					center={currentLocation}
+				/>
 			</div>
 			<div className="min-h-60 h-60">
 				<LazyMap
@@ -147,14 +123,13 @@ function Dashboard() {
 				/>
 			</div>
 
-			{lists ? <Lists status={"success"} lists={lists} error={null} /> : null}
+			<Lists />
 
 			{/* Place Drawer */}
 			<PlaceDrawer
 				place={selected}
 				isOpen={isPlaceDrawerOpen}
 				onOpenChange={setIsPlaceDrawerOpen}
-				lists={lists || []}
 			/>
 		</div>
 	);

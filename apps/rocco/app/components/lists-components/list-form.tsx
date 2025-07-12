@@ -1,8 +1,9 @@
 import { useState } from "react";
-import Input from "~/components/input";
 import { Button } from "~/components/ui/button";
-import { useCreateList } from "~/lib/api";
+import { Input } from "~/components/ui/input";
+import { useCreateList } from "~/lib/trpc/api";
 import type { List } from "~/lib/types";
+import { Label } from "../ui/label";
 
 interface ListFormProps {
 	onCreate: (list: List) => void;
@@ -22,7 +23,10 @@ export default function ListForm({ onCreate, onCancel }: ListFormProps) {
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 		if (name.trim()) {
-			createList({ name: name.trim() });
+			createList({
+				name: name.trim(),
+				description: description.trim() || "No description",
+			});
 		}
 	};
 
@@ -30,24 +34,25 @@ export default function ListForm({ onCreate, onCancel }: ListFormProps) {
 		<div className="space-y-4">
 			<h3 className="text-lg font-semibold text-gray-900">Create New List</h3>
 
-			<form onSubmit={handleSubmit} className="space-y-4">
-				<Input
-					label="List Name"
-					placeholder="Enter list name..."
-					value={name}
-					onChange={(e) => setName(e.target.value)}
-					required
-					className="w-full bg-white border-gray-300 focus:border-indigo-500 rounded-lg text-gray-900"
-				/>
+			<form onSubmit={handleSubmit} className="flex flex-col gap-4">
+				<fieldset className="flex flex-col gap-2">
+					<Label>List Name</Label>
+					<Input
+						placeholder="Enter list name..."
+						value={name}
+						onChange={(e) => setName(e.target.value)}
+						required
+					/>
+				</fieldset>
 
-				<Input
-					label="Description (optional)"
-					placeholder="Enter description..."
-					value={description}
-					onChange={(e) => setDescription(e.target.value)}
-					className="w-full bg-white border-gray-300 focus:border-indigo-500 rounded-lg text-gray-900"
-				/>
-
+				<fieldset className="flex flex-col gap-2">
+					<Label>Description (optional)</Label>
+					<Input
+						placeholder="Enter description..."
+						value={description}
+						onChange={(e) => setDescription(e.target.value)}
+					/>
+				</fieldset>
 				<div className="flex gap-3 pt-4">
 					<Button
 						type="button"

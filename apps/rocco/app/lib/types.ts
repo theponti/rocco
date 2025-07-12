@@ -1,15 +1,18 @@
 // Import database types from the schema
 import type {
-	item,
-	list,
-	listInvite,
-	place,
-	tags,
-	userLists,
-	users,
+    bookmark,
+    item,
+    list,
+    listInvite,
+    place,
+    tags,
+    userLists,
+    users,
 } from "../db/schema";
 
 // Export all the types
+export type Bookmark = typeof bookmark.$inferSelect;
+export type BookmarkInsert = typeof bookmark.$inferInsert;
 export type List = typeof list.$inferSelect;
 export type ListInsert = typeof list.$inferInsert;
 export type ListInvite = typeof listInvite.$inferSelect;
@@ -47,7 +50,7 @@ export type PlaceLocation = {
 // Type for temporary place data from Google Places API
 export type GooglePlaceData = {
 	id: string;
-	googleMapsId: string;
+	googleMapsId: string | null;
 	name: string;
 	address: string | null;
 	latitude: number;
@@ -60,18 +63,23 @@ export type GooglePlaceData = {
 	websiteUri: string | null;
 	bestFor: string | null;
 	wifiInfo: string | null;
+	photos?: string[] | null;
+	priceLevel?: number | null;
 };
 
 // Extended types for frontend use
 export interface ExtendedList extends List {
-	createdBy: User;
-	isOwnList: boolean;
-	places: Item[];
+	createdBy?: User;
+	isOwnList?: boolean;
+	places?: Item[];
 	users?: User[];
 	itemCount?: number;
 }
 
 export interface ExtendedListInvite extends ListInvite {
-	list: List;
-	user: User;
+	list?: List;
+	user?: User;
 }
+
+// Type for places in lists
+export type ListPlace = GooglePlaceData;

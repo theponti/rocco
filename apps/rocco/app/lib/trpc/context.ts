@@ -88,10 +88,8 @@ async function validateTokenWithCache(token: string) {
 	}
 }
 
-// Performance-optimized context creation
 export const createContext = async (request?: Request): Promise<Context> => {
 	const authHeader = request?.headers.get("authorization");
-
 	if (!authHeader) {
 		return { db };
 	}
