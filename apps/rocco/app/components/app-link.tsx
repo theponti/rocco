@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from "react";
 import { Link, useMatches } from "react-router";
-import { twMerge } from "tailwind-merge";
+import { cn } from "~/lib/utils";
 
 const AppLink = ({
 	btn,
@@ -22,7 +22,7 @@ const AppLink = ({
 		return (
 			<Link to={to} {...props}>
 				<span
-					className={twMerge(
+					className={cn(
 						"btn btn-primary text-white px-4 py-3 hover:cursor-pointer",
 						className,
 					)}
@@ -36,12 +36,12 @@ const AppLink = ({
 	return (
 		<Link
 			to={to}
-			className={twMerge(
-				"text-gray-900",
+			{...props}
+			className={cn(
+				"text-gray-900 cursor-pointer",
 				isActive ? "bg-indigo-100 text-indigo-700" : null,
 				className,
 			)}
-			{...props}
 		>
 			{children}
 		</Link>

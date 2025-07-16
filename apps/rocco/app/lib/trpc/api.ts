@@ -1,9 +1,9 @@
 import {
-    type QueryKey,
-    type UseMutationOptions,
-    type UseQueryOptions,
-    useQuery,
-    useQueryClient,
+	type QueryKey,
+	type UseMutationOptions,
+	type UseQueryOptions,
+	useQuery,
+	useQueryClient,
 } from "@tanstack/react-query";
 
 import type { ExtendedList, List, ListInvite, User } from "~/lib/types";
@@ -36,7 +36,11 @@ export const useGetOutboundInvites = () => {
 };
 
 export function useAcceptInviteMutation(
-	options: UseMutationOptions<ListInvite, unknown, { listId: string; invitedUserEmail: string }> = {},
+	options: UseMutationOptions<
+		ListInvite,
+		unknown,
+		{ listId: string; invitedUserEmail: string }
+	> = {},
 ) {
 	return trpc.invites.accept.useMutation(options);
 }
@@ -69,7 +73,11 @@ export const useGetList = (id: string) => {
 };
 
 export const useCreateList = (
-	options?: UseMutationOptions<List, unknown, { name: string; description: string; isPublic?: boolean }>,
+	options?: UseMutationOptions<
+		List,
+		unknown,
+		{ name: string; description: string; isPublic?: boolean }
+	>,
 ) => {
 	const queryClient = useQueryClient();
 
@@ -131,4 +139,4 @@ export const useDeleteList = (
 		},
 		...options,
 	});
-}; 
+};

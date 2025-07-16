@@ -2,15 +2,7 @@ import type { MapMouseEvent } from "@vis.gl/react-google-maps";
 import { Suspense, lazy } from "react";
 import Loading from "~/components/loading";
 import type { Place, PlaceLocation } from "~/lib/types";
-
-type LazyMapProps = {
-	isLoadingCurrentLocation: boolean;
-	setSelected: (place: Place | null) => void;
-	zoom: number;
-	center: PlaceLocation;
-	onMapClick: (event: MapMouseEvent) => void;
-	onMarkerClick: () => void;
-};
+import type { RoccoMapProps } from "./map";
 
 const MapPlaceholder = () => (
 	<div className="flex flex-1 relative overflow-hidden rounded-lg shadow-md size-full bg-slate-100 animate-pulse">
@@ -20,7 +12,7 @@ const MapPlaceholder = () => (
 	</div>
 );
 
-const LazyMap = (props: LazyMapProps) => {
+const LazyMap = (props: RoccoMapProps) => {
 	// Lazy load the actual Map component
 	const RoccoMap = lazy(() => import("./map"));
 

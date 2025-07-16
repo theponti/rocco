@@ -2,22 +2,24 @@ import type { Session, User } from "@supabase/supabase-js";
 import {
 	type ReactNode,
 	createContext,
+	useCallback,
 	useContext,
 	useEffect,
 	useState,
 } from "react";
-import { setTokenProvider } from "./api/base";
-import { supabase } from "./supabase";
+import { createClient } from "./supabase/client";
 
 interface AuthContextType {
 	user: User | null;
 	session: Session | null;
 	isLoading: boolean;
 	isSignedIn: boolean;
-	signInWithPassword: typeof supabase.auth.signInWithPassword;
-	signUp: typeof supabase.auth.signUp;
-	signOut: typeof supabase.auth.signOut;
-	signInWithOAuth: typeof supabase.auth.signInWithOAuth;
+	signInWithPassword: ReturnType<
+		typeof createClient
+	>["auth"]["signInWithPassword"];
+	signUp: ReturnType<typeof createClient>["auth"]["signUp"];
+	signOut: ReturnType<typeof createClient>["auth"]["signOut"];
+	signInWithOAuth: ReturnType<typeof createClient>["auth"]["signInWithOAuth"];
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -26,12 +28,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const [user, setUser] = useState<User | null>(null);
 	const [session, setSession] = useState<Session | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
+	const supabase = createClient();
+
+	const getSession = useCallback(async () => {
+		const {
+			data: { session: currentSession },
+		} = await supabase.auth.getSession();
+		return currentSession;
+	}, [supabase.auth]);
 
 	useEffect(() => {
 		setIsLoading(true);
 
 		// Get initial session
-		supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+		getSession().then((currentSession) => {
 			setSession(currentSession);
 			setUser(currentSession?.user ?? null);
 			setIsLoading(false);
@@ -49,19 +59,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		return () => {
 			authListener?.subscription.unsubscribe();
 		};
-	}, []);
-
-	// Set up token provider for API requests
-	useEffect(() => {
-		const tokenProvider = async () => {
-			const {
-				data: { session: currentSession },
-			} = await supabase.auth.getSession();
-			return currentSession?.access_token || null;
-		};
-
-		setTokenProvider(tokenProvider);
-	}, []);
+	}, [getSession, supabase.auth]);
 
 	const value = {
 		user,

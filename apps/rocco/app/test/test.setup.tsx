@@ -1,40 +1,12 @@
 import "@testing-library/jest-dom";
 import { cleanup } from "@testing-library/react";
-import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
-import { afterAll, afterEach, beforeAll, vi } from "vitest";
+import { afterEach, vi } from "vitest";
 import "./utils";
-
-import { baseURL } from "../lib/api/base";
-import { AUTH_HANDLERS, MOCK_PLACE, PLACE_HANDLERS } from "./mocks/place";
 
 export const TEST_LIST_ID = "list-id";
 
-const restHandlers = [
-	http.get(`${baseURL}/lists/${TEST_LIST_ID}`, () => {
-		return HttpResponse.json({
-			id: TEST_LIST_ID,
-			name: "test list",
-			items: [MOCK_PLACE],
-		});
-	}),
-	...PLACE_HANDLERS,
-	...AUTH_HANDLERS,
-];
-
-export const testServer = setupServer(...restHandlers);
-
-// Start server before all tests
-beforeAll(() => {
-	testServer.listen({ onUnhandledRequest: "error" });
-});
-
-//  Close server after all tests
-afterAll(() => testServer.close());
-
-// Reset handlers after each test `important for test isolation`
+// Reset mocks after each test for test isolation
 afterEach(() => {
-	testServer.resetHandlers();
 	vi.resetAllMocks();
 	cleanup();
 });

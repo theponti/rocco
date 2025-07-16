@@ -1,8 +1,6 @@
-import { http, HttpResponse } from "msw";
 import { createElement } from "react";
 import { vi } from "vitest";
 
-import { baseURL } from "~/lib/api/base";
 import type { ListPlace, Place } from "~/lib/types";
 
 vi.mock("@vis.gl/react-google-maps", async (importOriginal) => {
@@ -69,25 +67,4 @@ export const MOCK_PLACE_SEARCH = [
 		latitude: 456,
 		longitude: 678,
 	},
-];
-
-export const AUTH_HANDLERS = [
-	http.get(`${baseURL}/me`, () => {
-		return HttpResponse.json({
-			email: "test@test.com",
-			id: "test-id",
-		});
-	}),
-];
-
-export const PLACE_HANDLERS = [
-	http.get(`${baseURL}/places/123`, () => {
-		return HttpResponse.json(MOCK_PLACE);
-	}),
-	http.delete(`${baseURL}/lists/:listId/place/:placeId`, () => {
-		return HttpResponse.json({ success: true });
-	}),
-	http.get(`${baseURL}/places/search`, () => {
-		return HttpResponse.json(MOCK_PLACE_SEARCH);
-	}),
 ];

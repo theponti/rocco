@@ -9,11 +9,7 @@ import {
 	useSelector,
 } from "react-redux";
 
-import { toastSlice } from "../components/use-toast";
-
-export const rootReducer = {
-	toast: toastSlice.reducer,
-};
+export const rootReducer = {};
 
 export const store = configureStore({
 	reducer: rootReducer,

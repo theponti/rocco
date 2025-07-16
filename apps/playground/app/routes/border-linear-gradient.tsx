@@ -9,12 +9,7 @@ import {
   OpacityControls,
   PositionControls,
 } from '~/components/gradient-controls';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@hominem/ui';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@hominem/ui';
 import { Button } from '@hominem/ui';
 import { Card } from '@hominem/ui';
 import {

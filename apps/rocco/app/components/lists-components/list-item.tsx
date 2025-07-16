@@ -38,7 +38,8 @@ function ListItem({ list, isOwnList, "aria-label": ariaLabel }: ListItemProps) {
 						<span>{list.name}</span>
 						<span className="text-gray-400 text-sm flex items-center gap-1">
 							<BookmarkPlus size={15} />
-							{list.itemCount || 0} {(list.itemCount || 0) === 1 ? "place" : "places"}
+							{list.itemCount || 0}{" "}
+							{(list.itemCount || 0) === 1 ? "place" : "places"}
 						</span>
 					</h3>
 				</div>

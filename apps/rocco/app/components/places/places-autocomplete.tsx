@@ -1,5 +1,7 @@
+import { Check, ChevronsUpDown } from "lucide-react";
 import { memo, useCallback, useRef, useState } from "react";
 import Alert from "~/components/alert";
+import { Button } from "~/components/ui/button";
 import {
 	Command,
 	CommandEmpty,
@@ -9,10 +11,16 @@ import {
 	CommandList,
 } from "~/components/ui/command";
 import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "~/components/ui/popover";
+import {
 	type GooglePlacePrediction,
 	useGooglePlacesAutocomplete,
 } from "~/hooks/useGooglePlacesAutocomplete";
 import type { PlaceLocation } from "~/lib/types";
+import { cn } from "~/lib/utils";
 import styles from "./places-autocomplete.module.css";
 
 function PlacesAutocomplete({
@@ -24,12 +32,11 @@ function PlacesAutocomplete({
 	setSelected: (place: GooglePlacePrediction) => void;
 	apiKey: string;
 }) {
+	const [open, setOpen] = useState(false);
 	const [value, setValue] = useState("");
 	const timeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const DEBOUNCE_TIME_MS = 1000;
 	const [debouncedValue, setDebouncedValue] = useState("");
-	const [inputFocused, setInputFocused] = useState(false);
-	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
 	const onValueChange = useCallback((newValue: string) => {
 		setValue(newValue);
@@ -47,93 +54,82 @@ function PlacesAutocomplete({
 	});
 
 	const handleSelect = useCallback(
-		(placeId: string) => {
-			if (!data) return;
-			const selected = data.find((p) => p.place_id === placeId);
-			if (selected) {
-				setValue(
-					`${selected.structured_formatting.main_text}, ${selected.structured_formatting.secondary_text}`,
-				);
-				setSelected(selected);
-				setInputFocused(false);
-				setIsDropdownOpen(false);
-			}
+		(place: GooglePlacePrediction) => {
+			setValue(
+				`${place.structured_formatting.main_text}, ${place.structured_formatting.secondary_text}`,
+			);
+			setSelected(place);
+			setOpen(false);
 		},
-		[data, setSelected],
+		[setSelected],
 	);
 
-	const handleFocus = useCallback(() => {
-		setInputFocused(true);
-		setIsDropdownOpen(true);
-	}, []);
-
-	const handleBlur = useCallback(() => {
-		// Use a shorter timeout to prevent race conditions
-		setTimeout(() => {
-			setInputFocused(false);
-			setIsDropdownOpen(false);
-		}, 50);
-	}, []);
-
 	const hasResults = data && data.length > 0;
-	const shouldShowDropdown =
-		inputFocused && (isLoading || (hasResults && value.length > 0));
+	const shouldShowResults = isLoading || (hasResults && value.length > 0);
 
 	return (
 		<div
 			data-testid="places-autocomplete"
 			className="relative w-full max-w-3xl"
 		>
-			<Command
-				className="border rounded-md border-gray-300"
-				shouldFilter={false}
-			>
-				<CommandInput
-					data-testid="places-autocomplete-input"
-					className="w-full bg-background border-none"
-					value={value}
-					onValueChange={onValueChange}
-					onFocus={handleFocus}
-					onBlur={handleBlur}
-					placeholder="Search for places..."
-					aria-expanded={shouldShowDropdown}
-					aria-haspopup="listbox"
-					aria-autocomplete="list"
-					role="combobox"
-				/>
-				{shouldShowDropdown && (
-					<CommandList className="max-h-60 border-t">
-						{isLoading && <PlacesAutocompleteLoading show={!!value} />}
-
-						<CommandGroup data-testid="places-autocomplete-results">
-							{data?.map((suggestion) => (
-								<CommandItem
-									key={suggestion.place_id}
-									value={suggestion.place_id}
-									onSelect={() => handleSelect(suggestion.place_id)}
-									className={`cursor-pointer ${styles.autocompleteItem}`}
-									data-testid="places-autocomplete-option"
-								>
-									<div className="flex flex-col truncate w-full">
-										<span className="font-medium text-sm">
-											{suggestion.structured_formatting.main_text}
-										</span>
-										<span className="text-muted-foreground font-light text-xs">
-											{suggestion.structured_formatting.secondary_text}
-										</span>
-									</div>
-								</CommandItem>
-							))}
-						</CommandGroup>
-
-						{value && !isLoading && data && data.length === 0 && (
-							<CommandEmpty className="text-center py-4 text-sm text-muted-foreground">
-								No results found.
-							</CommandEmpty>
+			<Popover open={open} onOpenChange={setOpen}>
+				<PopoverTrigger asChild>
+					<Button
+						variant="outline"
+						aria-expanded={open}
+						className={cn(
+							"w-full justify-between",
+							!value && "text-muted-foreground",
 						)}
-					</CommandList>
-				)}
-			</Command>
+						data-testid="places-autocomplete-input"
+					>
+						{value || "Search for places..."}
+						<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+					</Button>
+				</PopoverTrigger>
+				<PopoverContent className="w-full p-0" align="start">
+					<Command shouldFilter={false}>
+						<CommandInput
+							placeholder="Search for places..."
+							value={value}
+							onValueChange={onValueChange}
+							className="h-9"
+						/>
+						<CommandList>
+							{isLoading && <PlacesAutocompleteLoading show={!!value} />}
+
+							<CommandGroup data-testid="places-autocomplete-results">
+								{data?.map((suggestion) => (
+									<CommandItem
+										key={suggestion.place_id}
+										value={suggestion.place_id}
+										onSelect={() => handleSelect(suggestion)}
+										className={`cursor-pointer ${styles.autocompleteItem}`}
+										data-testid="places-autocomplete-option"
+									>
+										<div className="flex flex-col truncate w-full">
+											<span className="font-medium text-sm">
+												{suggestion.structured_formatting.main_text}
+											</span>
+											<span className="text-muted-foreground font-light text-xs">
+												{suggestion.structured_formatting.secondary_text}
+											</span>
+										</div>
+										<Check className="ml-auto h-4 w-4 opacity-0" />
+									</CommandItem>
+								))}
+							</CommandGroup>
+
+							{value && !isLoading && data && data.length === 0 && (
+								<CommandEmpty className="text-center py-4 text-sm text-muted-foreground">
+									No results found.
+								</CommandEmpty>
+							)}
+						</CommandList>
+					</Command>
+				</PopoverContent>
+			</Popover>
+
 			{error && <Alert type="error">{error.message}</Alert>}
 		</div>
 	);

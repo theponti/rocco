@@ -1,21 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { type RenderOptions, render, screen } from "@testing-library/react";
-import { http, HttpResponse } from "msw";
 import type { ReactElement, ReactNode } from "react";
 import { Provider } from "react-redux";
 import { RouterProvider, createMemoryRouter } from "react-router";
 import { vi } from "vitest";
-import { baseURL } from "~/lib/api/base";
 import { rootReducer } from "~/lib/store";
-import { TEST_USER_EMAIL, TEST_USER_NAME, USER_ID, getMockUser } from "./mocks";
-import { testServer } from "./test.setup";
+import { TEST_USER_EMAIL, TEST_USER_NAME, USER_ID } from "./mocks";
 
-// ============================================================================
-// MOCKS
-// ============================================================================
-
-// Mock Supabase auth for testing
 const mockSupabaseUser = {
 	id: USER_ID,
 	email: TEST_USER_EMAIL,
@@ -41,7 +33,6 @@ const mockSession = {
 	user: mockSupabaseUser,
 };
 
-// Mock Supabase client
 vi.mock("~/lib/supabase", () => ({
 	supabase: {
 		auth: {
@@ -58,7 +49,6 @@ vi.mock("~/lib/supabase", () => ({
 	},
 }));
 
-// Mock auth provider hooks
 vi.mock("~/lib/auth-provider", () => ({
 	useAuth: () => ({
 		user: mockSupabaseUser,
@@ -87,10 +77,6 @@ vi.mock("~/lib/auth-provider", () => ({
 	}),
 }));
 
-// ============================================================================
-// TEST UTILITIES
-// ============================================================================
-
 export function createTestStore(preloadedState = {}) {
 	return configureStore({
 		reducer: rootReducer,
@@ -111,48 +97,86 @@ export function createTestQueryClient() {
 	});
 }
 
-// ============================================================================
-// MSW HANDLERS
-// ============================================================================
+const mockTrpcClient = {
+	lists: {
+		getAll: {
+			useQuery: vi.fn(),
+		},
+		getById: {
+			useQuery: vi.fn(),
+		},
+		update: {
+			useMutation: vi.fn(),
+		},
+		delete: {
+			useMutation: vi.fn(),
+		},
+	},
+	places: {
+		getAll: {
+			useQuery: vi.fn(),
+		},
+		getById: {
+			useQuery: vi.fn(),
+		},
+		create: {
+			useMutation: vi.fn(),
+		},
+		update: {
+			useMutation: vi.fn(),
+		},
+		delete: {
+			useMutation: vi.fn(),
+		},
+	},
+	items: {
+		getByListId: {
+			useQuery: vi.fn(),
+		},
+		addToList: {
+			useMutation: vi.fn(),
+		},
+		removeFromList: {
+			useMutation: vi.fn(),
+		},
+	},
+	invites: {
+		getAll: {
+			useQuery: vi.fn(),
+		},
+		create: {
+			useMutation: vi.fn(),
+		},
+		accept: {
+			useMutation: vi.fn(),
+		},
+		decline: {
+			useMutation: vi.fn(),
+		},
+	},
+	user: {
+		getProfile: {
+			useQuery: vi.fn(),
+		},
+		deleteAccount: {
+			useMutation: vi.fn(),
+		},
+	},
+};
 
-export const handlers = [
-	// Mock API endpoints
-	http.get(`${baseURL}/lists`, () => {
-		return HttpResponse.json({
-			lists: [
-				{
-					id: "1",
-					name: "Test List",
-					description: "A test list",
-					userId: USER_ID,
-					createdAt: "2023-01-01T00:00:00Z",
-					updatedAt: "2023-01-01T00:00:00Z",
-					isPublic: false,
-				},
-			],
-		});
-	}),
+vi.mock("~/lib/trpc/client", () => ({
+	trpc: mockTrpcClient,
+}));
 
-	http.get(`${baseURL}/user`, () => {
-		return HttpResponse.json(getMockUser());
-	}),
+const MockTRPCProvider = ({ children }: { children: ReactNode }) => (
+	<>{children}</>
+);
 
-	http.post(`${baseURL}/lists`, () => {
-		return HttpResponse.json({
-			id: "2",
-			name: "New List",
-			description: "A new list",
-			userId: USER_ID,
-			createdAt: "2023-01-01T00:00:00Z",
-			updatedAt: "2023-01-01T00:00:00Z",
-			isPublic: false,
-		});
-	}),
-];
+vi.mock("~/lib/trpc/provider", () => ({
+	TRPCProvider: MockTRPCProvider,
+}));
 
-// ============================================================================
-// RENDER UTILITIES
-// ============================================================================
+export { mockTrpcClient };
 
 export function renderWithProviders(
 	ui: ReactElement,
@@ -165,7 +189,6 @@ export function renderWithProviders(
 	} = {},
 	options: RenderOptions = {},
 ) {
-	// Create store with the provided state
 	const store = createTestStore(preloadedState);
 
 	return render(
@@ -195,10 +218,8 @@ export function renderWithRouter(
 		queryClient?: QueryClient;
 	} = {},
 ) {
-	// Create store with the provided state
 	const store = createTestStore(preloadedState);
 
-	// Create router with the provided routes
 	const router = createMemoryRouter(config.routes, {
 		initialEntries: config.initialEntries || ["/"],
 	});
@@ -211,10 +232,6 @@ export function renderWithRouter(
 		</Provider>,
 	);
 }
-
-// ============================================================================
-// UTILITY FUNCTIONS
-// ============================================================================
 
 export function waitForLoadingToFinish() {
 	return screen.findByTestId("app-main");
@@ -232,7 +249,6 @@ export function findByTestId(testId: string) {
 	return screen.findByTestId(testId);
 }
 
-// Mock ResizeObserver for test environment
 class ResizeObserver {
 	observe() {}
 	unobserve() {}

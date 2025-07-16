@@ -1,5 +1,4 @@
 import { redirect } from "react-router";
-import { useAuth } from "~/lib/auth-provider";
 
 /**
  * Type definitions for loader/action arguments
@@ -19,31 +18,6 @@ export class LoaderError extends Error {
 		super(message);
 		this.status = status;
 	}
-}
-
-/**
- * Helper to create a clientLoader with auth check
- * @param loaderFn The function to run after auth check
- */
-export function createProtectedClientLoader<T>(
-	loaderFn: (args: LoaderArgs & { userId: string }) => Promise<T>,
-) {
-	return async (args: LoaderArgs) => {
-		const { user } = useAuth();
-
-		if (!user?.id) {
-			throw redirect("/login");
-		}
-
-		try {
-			return await loaderFn({ ...args, userId: user.id });
-		} catch (error) {
-			if (error instanceof LoaderError) {
-				throw new Response(error.message, { status: error.status });
-			}
-			throw new Response("An unexpected error occurred", { status: 500 });
-		}
-	};
 }
 
 /**

@@ -8,7 +8,7 @@ import {
 	Star,
 	Users,
 } from "lucide-react";
-import { Link, redirect } from "react-router";
+import { Link } from "react-router";
 import { requireGuest } from "~/routes/guards";
 import type { Route } from "./+types";
 import styles from "./index.module.css";
@@ -42,17 +42,17 @@ const fadeInStagger = {
 };
 
 export async function loader(loaderArgs: Route.LoaderArgs) {
-	await requireGuest(loaderArgs.request);
+	await requireGuest(loaderArgs);
 	return null;
 }
 
 export default function LandingPage() {
 	return (
-		<div className="flex flex-col items-center justify-center w-full overflow-hidden">
+		<div className="flex flex-col items-center justify-center w-full overflow-hidden max-w-7xl mx-auto">
 			<div className={styles.heroGradient} />
 
 			{/* Hero Section */}
-			<section className="w-full min-h-screen pt-32 pb-20 px-4 md:px-8 max-w-7xl mx-auto">
+			<section className="w-full min-h-screen pt-32 pb-20 px-4 md:px-8">
 				<div className="flex flex-col lg:flex-row items-center justify-between gap-12">
 					<motion.div
 						className="lg:w-1/2 text-center lg:text-left"
@@ -123,12 +123,7 @@ export default function LandingPage() {
 					</motion.div>
 				</div>
 			</section>
-
-			{/* Features Section */}
-			<section
-				id="features"
-				className="w-full py-20 px-4 md:px-8 max-w-7xl mx-auto"
-			>
+			<section id="features" className="w-full py-20 px-4 md:px-8">
 				<motion.div
 					className="text-center mb-16"
 					initial="hidden"
@@ -199,12 +194,7 @@ export default function LandingPage() {
 					</motion.div>
 				</motion.div>
 			</section>
-
-			{/* Testimonials Section */}
-			<section
-				id="testimonials"
-				className="w-full py-20 px-4 md:px-8 max-w-7xl mx-auto"
-			>
+			<section id="testimonials" className="w-full py-20 px-4 md:px-8">
 				<motion.div
 					className="text-center mb-16"
 					initial="hidden"

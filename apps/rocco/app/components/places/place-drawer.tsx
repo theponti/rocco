@@ -5,7 +5,7 @@ import ListForm from "~/components/lists-components/list-form";
 import PlaceTypes from "~/components/places/PlaceTypes";
 import { Button } from "~/components/ui/button";
 import { Sheet, SheetContent, SheetHeader } from "~/components/ui/sheet";
-import { useToast } from "~/components/use-toast";
+import { useToast } from "~/components/ui/use-toast";
 import { useAddPlaceToList } from "~/lib/places";
 import { trpc } from "~/lib/trpc/client";
 import type { GooglePlaceData, List, Place } from "~/lib/types";
@@ -17,7 +17,7 @@ interface PlaceDrawerProps {
 }
 
 const PlaceDrawer = ({ place, isOpen, onOpenChange }: PlaceDrawerProps) => {
-	const { openToast } = useToast();
+	const { toast } = useToast();
 	const [showCreateListForm, setShowCreateListForm] = useState(false);
 	const { data: lists = [] } = trpc.lists.getAll.useQuery();
 
@@ -27,9 +27,9 @@ const PlaceDrawer = ({ place, isOpen, onOpenChange }: PlaceDrawerProps) => {
 				// Find the list name for better user feedback
 				const listName =
 					lists.find((list) => list.id === listIds[0])?.name || "list";
-				openToast({
-					type: "success",
-					text: `${place.name} added to "${listName}"!`,
+				toast({
+					title: `${place.name} added to "${listName}"!`,
+					variant: "default",
 				});
 			}
 		},
@@ -95,13 +95,13 @@ const PlaceDrawer = ({ place, isOpen, onOpenChange }: PlaceDrawerProps) => {
 					place: placeToSave,
 				});
 
-				openToast({
-					type: "success",
-					text: `${place.name} added to "${newList.name}" list!`,
+				toast({
+					title: `${place.name} added to "${newList.name}" list!`,
+					variant: "default",
 				});
 			}
 		},
-		[place, addToList, openToast],
+		[place, addToList, toast],
 	);
 
 	const formattedRating = place?.rating ? place.rating.toFixed(1) : null;

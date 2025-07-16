@@ -1,25 +1,26 @@
 import { screen, waitFor } from "@testing-library/react";
-import { http, HttpResponse } from "msw";
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
-import { baseURL } from "~/lib/api/base";
-import Account from "~/routes/account/index";
+import Account from "~/routes/account";
 import { getMockUser } from "~/test/mocks/index";
-import { testServer } from "~/test/test.setup";
-import { renderWithRouter } from "~/test/utils";
+import { mockTrpcClient, renderWithRouter } from "~/test/utils";
 
 const MOCK_USER = getMockUser();
 
 describe("Account", () => {
 	test("renders account page with user information", async () => {
+		// Mock user profile query
+		vi.mocked(mockTrpcClient.user.getProfile.useQuery).mockReturnValue({
+			data: { ...MOCK_USER, image: null, photoUrl: null },
+			isLoading: false,
+			error: null,
+		} as any);
+
 		renderWithRouter({
 			routes: [
 				{
 					path: "/account",
 					Component: Account,
-					loader: () => ({
-						user: { ...MOCK_USER, image: null, photoUrl: null },
-					}),
 				},
 			],
 			isAuth: true,
@@ -44,12 +45,18 @@ describe("Account", () => {
 	});
 
 	test("shows avatar when user has one", async () => {
+		// Mock user profile query with avatar
+		vi.mocked(mockTrpcClient.user.getProfile.useQuery).mockReturnValue({
+			data: getMockUser(),
+			isLoading: false,
+			error: null,
+		} as any);
+
 		renderWithRouter({
 			routes: [
 				{
 					path: "/account",
 					Component: Account,
-					loader: () => ({ user: getMockUser() }),
 				},
 			],
 			isAuth: true,
@@ -68,13 +75,21 @@ describe("Account", () => {
 	});
 
 	test("shows error alert when deletion has error", async () => {
-		testServer.use(
-			http.delete(`${baseURL}/user`, () => {
-				return HttpResponse.json(
-					{ error: "Failed to delete account" },
-					{ status: 500 },
-				);
-			}),
+		// Mock user profile query
+		vi.mocked(mockTrpcClient.user.getProfile.useQuery).mockReturnValue({
+			data: getMockUser(),
+			isLoading: false,
+			error: null,
+		} as any);
+
+		// Mock delete account mutation to throw error
+		const mockDeleteMutation = {
+			mutate: vi.fn(),
+			isLoading: false,
+			error: { message: "Failed to delete account" },
+		};
+		vi.mocked(mockTrpcClient.user.deleteAccount.useMutation).mockReturnValue(
+			mockDeleteMutation as any,
 		);
 
 		renderWithRouter({
@@ -82,7 +97,6 @@ describe("Account", () => {
 				{
 					path: "/account",
 					Component: Account,
-					loader: () => ({ user: getMockUser() }),
 				},
 			],
 			isAuth: true,

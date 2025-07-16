@@ -1,8 +1,7 @@
-import { createClient } from "@supabase/supabase-js";
 import { TRPCError, initTRPC } from "@trpc/server";
-import { eq } from "drizzle-orm";
 import { db } from "../../db";
-import { users } from "../../db/schema";
+import { createClient } from "../../lib/supabase/server";
+import { logger } from "../logger";
 import { cacheKeys, cacheUtils } from "../redis";
 
 // Define the context shape
@@ -19,43 +18,17 @@ export interface Context {
 }
 
 // Cache TTL constants
-const USER_CACHE_TTL = 5 * 60; // 5 minutes
 const TOKEN_CACHE_TTL = 1 * 60; // 1 minute
 
-// Create Supabase client for server-side auth verification
-const supabaseUrl = process.env.VITE_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-const supabase =
-	supabaseUrl && supabaseServiceKey
-		? createClient(supabaseUrl, supabaseServiceKey)
-		: null;
-
-// Get user from cache or database
-async function getUserFromCacheOrDB(supabaseId: string) {
-	// Try to get from cache first
-	const cacheKey = cacheKeys.user(supabaseId);
-	const cachedUser = await cacheUtils.get<any>(cacheKey);
-
-	if (cachedUser) {
-		return cachedUser;
-	}
-
-	// Fetch from database
-	const user = await db.query.users.findFirst({
-		where: eq(users.supabaseId, supabaseId),
-	});
-
-	if (user) {
-		// Cache the user data
-		await cacheUtils.set(cacheKey, user, USER_CACHE_TTL);
-	}
-
-	return user;
-}
-
 // Optimized token validation with Redis caching
-async function validateTokenWithCache(token: string) {
+async function validateTokenWithCache(request: Request) {
+	const authHeader = request.headers.get("authorization");
+	if (!authHeader) {
+		return null;
+	}
+
+	const token = authHeader.replace("Bearer ", "");
+
 	// Try to get from cache first
 	const cacheKey = cacheKeys.token(token);
 	const cachedToken = await cacheUtils.get<any>(cacheKey);
@@ -64,9 +37,8 @@ async function validateTokenWithCache(token: string) {
 		return cachedToken;
 	}
 
-	if (!supabase) {
-		return null;
-	}
+	// Create Supabase client for server-side auth verification
+	const { supabase } = createClient(request);
 
 	try {
 		const {
@@ -83,48 +55,45 @@ async function validateTokenWithCache(token: string) {
 
 		return user;
 	} catch (error) {
-		console.error("Error validating token:", error);
+		logger.error("Error validating token", { error: error as Error });
 		return null;
 	}
 }
 
 export const createContext = async (request?: Request): Promise<Context> => {
-	const authHeader = request?.headers.get("authorization");
-	if (!authHeader) {
+	if (!request) {
 		return { db };
 	}
 
 	try {
-		const token = authHeader.replace("Bearer ", "");
-
 		// Validate token with caching
-		const supabaseUser = await validateTokenWithCache(token);
+		const supabaseUser = await validateTokenWithCache(request);
 
 		if (!supabaseUser) {
 			return { db };
 		}
 
-		// Get local user data from cache or database
-		const localUser = await getUserFromCacheOrDB(supabaseUser.id);
+		logger.debug("User authenticated", {
+			userId: supabaseUser.id,
+			email: supabaseUser.email,
+		});
 
-		// Return context with user information
+		// Return context with user information from Supabase
 		return {
 			db,
 			user: {
-				id: localUser?.id || supabaseUser.id,
-				email: localUser?.email || supabaseUser.email || "",
+				id: supabaseUser.id,
+				email: supabaseUser.email || "",
 				name:
-					localUser?.name ||
 					supabaseUser.user_metadata?.name ||
 					supabaseUser.user_metadata?.full_name,
-				avatar: localUser?.photoUrl || supabaseUser.user_metadata?.avatar_url,
-				isAdmin:
-					localUser?.isAdmin || supabaseUser.user_metadata?.isAdmin || false,
+				avatar: supabaseUser.user_metadata?.avatar_url,
+				isAdmin: supabaseUser.user_metadata?.isAdmin || false,
 				supabaseId: supabaseUser.id,
 			},
 		};
 	} catch (error) {
-		console.error("Error verifying auth token:", error);
+		logger.error("Error verifying auth token", { error: error as Error });
 		return { db };
 	}
 };
@@ -178,36 +147,7 @@ const isAdmin = t.middleware(({ ctx, next }) => {
 export const protectedProcedure = t.procedure.use(isAuthed);
 export const adminProcedure = t.procedure.use(isAdmin);
 
-// Protected procedure that extracts and returns the user
-export const userProcedure = protectedProcedure.query(async ({ ctx }) => {
-	if (!ctx.user) {
-		throw new TRPCError({
-			code: "UNAUTHORIZED",
-			message: "User not found in context",
-		});
-	}
-
-	return {
-		id: ctx.user.id,
-		email: ctx.user.email,
-		name: ctx.user.name,
-		avatar: ctx.user.avatar,
-		isAdmin: ctx.user.isAdmin,
-		supabaseId: ctx.user.supabaseId,
-	};
-});
-
 // Cache management utilities
-export const clearUserCache = async (supabaseId?: string) => {
-	if (supabaseId) {
-		await cacheUtils.del(cacheKeys.user(supabaseId));
-	} else {
-		// Clear all user cache keys (use with caution)
-		// In production, you might want to use Redis SCAN to find and delete specific patterns
-		console.warn("Clearing all user cache - this is expensive in production");
-	}
-};
-
 export const clearTokenCache = async (token?: string) => {
 	if (token) {
 		await cacheUtils.del(cacheKeys.token(token));

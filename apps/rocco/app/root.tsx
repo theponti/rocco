@@ -2,9 +2,14 @@ import { Provider } from "react-redux";
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import type { Route } from "./+types/root";
 import "./index.css";
-import { AuthProvider } from "./lib/auth-provider";
+import { initProductionLogging } from "./lib/trpc/logger";
 import { store } from "./lib/store";
 import { TRPCProvider } from "./lib/trpc/provider";
+
+// Initialize production logging if in production
+if (process.env.NODE_ENV === "production") {
+	initProductionLogging();
+}
 
 export const links: Route.LinksFunction = () => [
 	{ rel: "icon", href: "/favicons/favicon.ico" },
@@ -33,9 +38,7 @@ export default function App() {
 			<body>
 				<Provider store={store}>
 					<TRPCProvider>
-						<AuthProvider>
-							<Outlet />
-						</AuthProvider>
+						<Outlet />
 					</TRPCProvider>
 				</Provider>
 				<ScrollRestoration />

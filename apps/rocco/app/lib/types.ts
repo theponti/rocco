@@ -1,26 +1,18 @@
-// Import database types from the schema
 import type {
-    bookmark,
-    item,
-    list,
-    listInvite,
-    place,
-    tags,
-    userLists,
-    users,
+	item,
+	list,
+	listInvite,
+	place,
+	tags,
+	userLists,
 } from "../db/schema";
 
-// Export all the types
-export type Bookmark = typeof bookmark.$inferSelect;
-export type BookmarkInsert = typeof bookmark.$inferInsert;
 export type List = typeof list.$inferSelect;
 export type ListInsert = typeof list.$inferInsert;
 export type ListInvite = typeof listInvite.$inferSelect;
 export type ListInviteInsert = typeof listInvite.$inferInsert;
 export type Place = typeof place.$inferSelect;
 export type PlaceInsert = typeof place.$inferInsert;
-export type User = typeof users.$inferSelect;
-export type UserInsert = typeof users.$inferInsert;
 export type Item = typeof item.$inferSelect;
 export type ItemInsert = typeof item.$inferInsert;
 export type Tag = typeof tags.$inferSelect;
@@ -69,16 +61,13 @@ export type GooglePlaceData = {
 
 // Extended types for frontend use
 export interface ExtendedList extends List {
-	createdBy?: User;
 	isOwnList?: boolean;
 	places?: Item[];
-	users?: User[];
 	itemCount?: number;
 }
 
 export interface ExtendedListInvite extends ListInvite {
 	list?: List;
-	user?: User;
 }
 
 // Type for places in lists

@@ -1,17 +1,17 @@
 import { memo } from "react";
-import OptimizedImage from "~/components/image";
-import type { Place } from "~/lib/types";
+import { env } from "~/lib/env";
 
 type Props = {
 	alt: string;
 	photos: string[] | null | undefined;
 };
 
-// Helper function to get appropriate image size based on viewport
 const getImageSize = (photoUrl: string): string => {
-	// Add size parameter to URL if it's from a service that supports it
+	if (photoUrl.includes("places/") && photoUrl.includes("/photos/")) {
+		return `https://places.googleapis.com/v1/${photoUrl}/media?key=${env.VITE_GOOGLE_API_KEY}&maxWidthPx=600&maxHeightPx=400`;
+	}
+
 	if (photoUrl.includes("googleusercontent")) {
-		// Google's image service allows resize params
 		return `${photoUrl}=w600-h400-c`;
 	}
 	return photoUrl;
@@ -23,28 +23,30 @@ const PlacePhotos = ({ alt, photos }: Props) => {
 	}
 
 	return (
-		<div className="carousel p-4 space-x-4 bg-slate-200 rounded-box h-64 pl-4">
-			{photos.map((photoUrl, index) => (
-				<div key={photoUrl} className="carousel-item max-w-[75%]">
-					<OptimizedImage
-						src={getImageSize(photoUrl)}
-						alt={`${alt} image ${index + 1}`}
-						width="600"
-						height="400"
-						priority={index === 0} // Load first image with priority
-						placeholder={index === 0 ? "blur" : "empty"}
-						sizes="(max-width: 768px) 75vw, 600px"
-						className="rounded-box object-cover"
-						onError={(e) => {
-							// Fallback if size param fails
-							(e.target as HTMLImageElement).src = photoUrl;
-						}}
-					/>
-				</div>
-			))}
+		<div className="border-2 border-slate-200 rounded-lg h-64">
+			<div className="flex gap-4 overflow-x-auto h-full p-4 pb-3">
+				{photos.map((photoUrl, index) => (
+					<div
+						key={photoUrl}
+						className="flex-shrink-0 flex items-center justify-center"
+					>
+						<img
+							src={getImageSize(photoUrl)}
+							alt={`${alt} ${index + 1}`}
+							loading={index === 0 ? "eager" : "lazy"}
+							decoding="async"
+							sizes="(max-width: 768px) 75vw, 600px"
+							className="rounded-box object-cover h-full w-auto max-w-none"
+							style={{ maxHeight: "192px" }}
+							onError={(e) => {
+								(e.target as HTMLImageElement).src = photoUrl;
+							}}
+						/>
+					</div>
+				))}
+			</div>
 		</div>
 	);
 };
 
-// Memoize to prevent unnecessary re-renders
 export default memo(PlacePhotos);

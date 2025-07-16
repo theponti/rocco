@@ -1,10 +1,10 @@
 import type { Session, User } from "@supabase/supabase-js";
-import React, {
+import {
+	type ReactNode,
 	createContext,
 	useContext,
 	useEffect,
 	useState,
-	type ReactNode,
 } from "react";
 import { supabase } from "~/lib/supabaseClient";
 
@@ -26,16 +26,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 	useEffect(() => {
 		setIsLoading(true);
-		supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
-			setSession(currentSession);
-			setUser(currentSession?.user ?? null);
+
+		supabase.auth.getUser().then(({ data: { user: currentUser } }) => {
+			setUser(currentUser);
 			setIsLoading(false);
 		});
 
 		const { data: authListener } = supabase.auth.onAuthStateChange(
 			async (_event, newSession) => {
 				setSession(newSession);
-				setUser(newSession?.user ?? null);
+				if (!newSession) {
+					setUser(null);
+				}
 				setIsLoading(false);
 			},
 		);

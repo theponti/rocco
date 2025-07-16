@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import '../types/google-maps';
 
-// Types
 export interface Location {
   lat: number;
   lng: number;
@@ -21,9 +20,7 @@ export interface DirectionsResult {
   }>;
 }
 
-// Utility function to clean HTML from step instructions
 const cleanHtmlFromInstructions = (htmlString: string): string => {
-  // Create a temporary DOM element to parse HTML
   const tempDiv = document.createElement('div');
   tempDiv.innerHTML = htmlString;
 
@@ -33,18 +30,17 @@ const cleanHtmlFromInstructions = (htmlString: string): string => {
   // Clean up common HTML entities and formatting
   text = text
     .replace(/&nbsp;/g, ' ') // Replace non-breaking spaces
-    .replace(/&amp;/g, '&') // Replace ampersands
     .replace(/&lt;/g, '<') // Replace less than
     .replace(/&gt;/g, '>') // Replace greater than
     .replace(/&quot;/g, '"') // Replace quotes
     .replace(/&#39;/g, "'") // Replace apostrophes
+    .replace(/&amp;/g, '&') // Replace ampersands
     .replace(/\s+/g, ' ') // Replace multiple spaces with single space
     .trim(); // Remove leading/trailing whitespace
 
   return text;
 };
 
-// API Functions
 const geocodeLocation = async (address: string): Promise<Location[]> => {
   if (!window.google) {
     throw new Error('Google Maps API not loaded');

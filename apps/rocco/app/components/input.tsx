@@ -39,9 +39,9 @@ const Input = forwardRef<HTMLInputElement, Props>(
 		const inputId = rest.id;
 
 		return (
-			<button 
+			<button
 				type="button"
-				className={styles.container} 
+				className={styles.container}
 				onClick={handleClick}
 				onKeyDown={(e) => {
 					if (e.key === "Enter" || e.key === " ") {

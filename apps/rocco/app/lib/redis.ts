@@ -107,11 +107,9 @@ export const cacheUtils = {
 
 // Cache key generators
 export const cacheKeys = {
-	user: (supabaseId: string) => `user:${supabaseId}`,
 	token: (token: string) => `token:${token}`,
 	list: (listId: string) => `list:${listId}`,
 	place: (placeId: string) => `place:${placeId}`,
-	userLists: (userId: string) => `user_lists:${userId}`,
 };
 
 // Graceful shutdown

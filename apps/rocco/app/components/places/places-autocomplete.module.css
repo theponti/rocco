@@ -43,19 +43,9 @@
 	margin: 2px 4px;
 }
 
-.autocompleteItem:hover {
-	background-color: hsl(var(--accent));
-	color: hsl(var(--accent-foreground));
-}
-
-.autocompleteItem:focus {
-	background-color: hsl(var(--accent));
-	color: hsl(var(--accent-foreground));
-	box-shadow: 0 0 0 2px hsl(var(--accent) / 0.2);
-}
-
+.autocompleteItem:focus,
+.autocompleteItem:hover,
 .autocompleteItem[data-selected="true"] {
-	background-color: hsl(var(--accent));
-	color: hsl(var(--accent-foreground));
-	box-shadow: 0 0 0 2px hsl(var(--accent) / 0.3);
+	background-color: var(--input-background-focus);
+	color: var(--input-text-focus);
 }

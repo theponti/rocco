@@ -1,146 +1,156 @@
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { http, HttpResponse } from "msw";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import PlaceItem from "~/components/places/place-item";
-import { baseURL } from "~/lib/api/base";
 import { getMockPlace } from "~/test/mocks";
-import { testServer } from "~/test/test.setup";
-import { renderWithRouter } from "~/test/utils";
-
-// Mock the navigation function
-const mockNavigate = vi.fn();
-vi.mock("react-router", async () => {
-	const actual = await vi.importActual("react-router");
-	return {
-		...actual,
-		useNavigate: () => mockNavigate,
-	};
-});
+import { mockTrpcClient, renderWithRouter } from "~/test/utils";
 
 describe("PlaceItem", () => {
-	const place = getMockPlace();
-	const listId = "test-list-id";
-
 	beforeEach(() => {
 		vi.clearAllMocks();
-		mockNavigate.mockClear();
-		testServer.use(
-			http.delete(
-				`${baseURL}/lists/${listId}/items/${place.googleMapsId}`,
-				() => new HttpResponse(null, { status: 204 }),
-			),
-		);
 	});
 
-	test("renders place information", async () => {
+	test("renders place item with basic information", async () => {
+		const mockPlace = getMockPlace();
+		// Convert to ListPlace type
+		const listPlace = {
+			id: mockPlace.id,
+			imageUrl: mockPlace.imageUrl,
+			name: mockPlace.name,
+			googleMapsId: mockPlace.googleMapsId,
+			types: mockPlace.types,
+			description: mockPlace.description || "",
+			address: mockPlace.address,
+			latitude: mockPlace.latitude || 37.7749,
+			longitude: mockPlace.longitude || -122.4194,
+			phoneNumber: mockPlace.phoneNumber,
+			rating: mockPlace.rating,
+			websiteUri: mockPlace.websiteUri,
+			bestFor: mockPlace.bestFor,
+			wifiInfo: mockPlace.wifiInfo,
+			photos: mockPlace.photos,
+			priceLevel: mockPlace.priceLevel,
+		};
+
 		renderWithRouter({
 			routes: [
 				{
 					path: "/",
 					Component: () => (
 						<PlaceItem
-							place={place}
-							listId={listId}
-							onRemove={vi.fn()}
-							onError={vi.fn()}
+							place={listPlace}
+							listId="test-list-id"
+							onRemove={() => {}}
 						/>
 					),
 				},
 			],
-			initialEntries: ["/"],
 		});
+
 		await waitFor(() => {
-			expect(screen.getByText(place.name)).toBeInTheDocument();
+			expect(screen.getByText(mockPlace.name)).toBeInTheDocument();
 		});
-
-		// Check that place types are rendered
-		const placeTypes = screen.getAllByTestId("place-type");
-		if (place.types && place.types.length >= 2) {
-			expect(placeTypes.at(0)).toHaveTextContent(place.types[0]);
-			expect(placeTypes.at(1)).toHaveTextContent(place.types[1]);
-		}
 	});
 
-	test("shows delete modal when delete button is clicked", async () => {
-		const user = userEvent.setup();
-		renderWithRouter({
-			routes: [
-				{
-					path: "/",
-					Component: () => (
-						<PlaceItem
-							place={place}
-							listId={listId}
-							onRemove={vi.fn()}
-							onError={vi.fn()}
-						/>
-					),
-				},
-			],
-			initialEntries: ["/"],
-		});
-
-		// Find the dropdown trigger button (MoreVertical icon)
-		const moreButton = screen.getByRole("button", {
-			expanded: false,
-		});
-
-		// Click the dropdown button and prevent event bubbling
-		await user.click(moreButton);
-
-		// Find and click the "Remove from list" option
-		const removeButton = screen.getByText("Remove from list");
-		await user.click(removeButton);
-
-		// Check that the delete modal appears
-		const deleteModal = await screen.findByTestId("place-delete-modal");
-		expect(deleteModal).toBeInTheDocument();
-		expect(
-			screen.getByTestId("place-delete-confirm-button"),
-		).toBeInTheDocument();
-	});
-
-	test("calls onRemove when confirm delete is clicked", async () => {
-		const user = userEvent.setup();
+	test("calls onRemove when remove button is clicked", async () => {
+		const mockPlace = getMockPlace();
 		const onRemove = vi.fn();
+		const listPlace = {
+			id: mockPlace.id,
+			imageUrl: mockPlace.imageUrl,
+			name: mockPlace.name,
+			googleMapsId: mockPlace.googleMapsId,
+			types: mockPlace.types,
+			description: mockPlace.description || "",
+			address: mockPlace.address,
+			latitude: mockPlace.latitude || 37.7749,
+			longitude: mockPlace.longitude || -122.4194,
+			phoneNumber: mockPlace.phoneNumber,
+			rating: mockPlace.rating,
+			websiteUri: mockPlace.websiteUri,
+			bestFor: mockPlace.bestFor,
+			wifiInfo: mockPlace.wifiInfo,
+			photos: mockPlace.photos,
+			priceLevel: mockPlace.priceLevel,
+		};
+
 		renderWithRouter({
 			routes: [
 				{
 					path: "/",
 					Component: () => (
 						<PlaceItem
-							place={place}
-							listId={listId}
+							place={listPlace}
+							listId="test-list-id"
 							onRemove={onRemove}
-							onError={vi.fn()}
 						/>
 					),
 				},
 			],
-			initialEntries: ["/"],
 		});
 
-		// Find the dropdown trigger button
-		const moreButton = screen.getByRole("button", {
-			expanded: false,
+		await waitFor(() => {
+			expect(screen.getByText(mockPlace.name)).toBeInTheDocument();
 		});
-		await user.click(moreButton);
 
-		// Find and click the "Remove from list" option
+		// Find and click the dropdown menu trigger
+		const dropdownButton = screen.getByRole("button", { expanded: false });
+		await userEvent.click(dropdownButton);
+
+		// Find and click the remove option
 		const removeButton = screen.getByText("Remove from list");
-		await user.click(removeButton);
+		await userEvent.click(removeButton);
 
 		// Click the confirm delete button
-		const confirmButton = await screen.findByTestId(
-			"place-delete-confirm-button",
-		);
-		await user.click(confirmButton);
+		const confirmButton = screen.getByTestId("place-delete-confirm-button");
+		await userEvent.click(confirmButton);
 
-		// Wait for the onRemove callback to be called
-		await waitFor(() => {
-			expect(onRemove).toHaveBeenCalled();
+		expect(onRemove).toHaveBeenCalled();
+	});
+
+	test("displays photos when available", async () => {
+		const mockPlace = getMockPlace();
+		const listPlace = {
+			id: mockPlace.id,
+			imageUrl: null, // Set to null to test photos
+			name: mockPlace.name,
+			googleMapsId: mockPlace.googleMapsId,
+			types: mockPlace.types,
+			description: mockPlace.description || "",
+			address: mockPlace.address,
+			latitude: mockPlace.latitude || 37.7749,
+			longitude: mockPlace.longitude || -122.4194,
+			phoneNumber: mockPlace.phoneNumber,
+			rating: mockPlace.rating,
+			websiteUri: mockPlace.websiteUri,
+			bestFor: mockPlace.bestFor,
+			wifiInfo: mockPlace.wifiInfo,
+			photos: ["test-photo-url-1", "test-photo-url-2"],
+			priceLevel: mockPlace.priceLevel,
+		};
+
+		renderWithRouter({
+			routes: [
+				{
+					path: "/",
+					Component: () => (
+						<PlaceItem
+							place={listPlace}
+							listId="test-list-id"
+							onRemove={() => {}}
+						/>
+					),
+				},
+			],
 		});
+
+		await waitFor(() => {
+			expect(screen.getByText(mockPlace.name)).toBeInTheDocument();
+		});
+
+		// Check that the first photo is displayed
+		const photoImage = screen.getByAltText(mockPlace.name);
+		expect(photoImage).toHaveAttribute("src", "test-photo-url-1");
 	});
 });

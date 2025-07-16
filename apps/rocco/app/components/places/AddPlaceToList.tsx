@@ -9,23 +9,30 @@ import {
 import { useGetLists } from "~/lib/trpc/api";
 import type { Place } from "~/lib/types";
 import { cn } from "~/lib/utils";
-import { usePlaceContext } from "~/routes/place/place-context";
 import styles from "./AddPlaceToList.module.css";
+
+interface AddPlaceToListProps {
+	onSuccess: () => void;
+	place: Place | null;
+	isOpen: boolean;
+	onOpenChange: (open: boolean) => void;
+}
 
 const AddPlaceToList = ({
 	onSuccess,
 	place,
-}: {
-	onSuccess: () => void;
-	place: Place | null;
-}) => {
+	isOpen,
+	onOpenChange,
+}: AddPlaceToListProps) => {
 	if (!place) {
 		return null; // Early return if place is null
 	}
-	const { isSaveSheetOpen, setIsSaveSheetOpen } = usePlaceContext();
+
+	// At this point, place is guaranteed to be non-null
+	const placeData = place;
 	const { isLoading, data: lists } = useGetLists();
 	const { data: placeLists, isLoading: isPlaceListLoading } = useGetPlaceLists({
-		placeId: place.id,
+		placeId: placeData.id,
 	});
 	const { mutateAsync: removeFromList } = useRemoveListItem({});
 	const { mutate: addToList } = useAddPlaceToList({
@@ -33,20 +40,20 @@ const AddPlaceToList = ({
 			onSuccess?.();
 		},
 	});
-	const listIds = placeLists?.map((list) => list.id) ?? [];
+	const listIds = placeLists ? placeLists.map((list: any) => list.id) : [];
 
 	const onListSelectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (listIds.includes(e.target.id)) {
-			removeFromList({ listId: e.target.id, placeId: place.id });
+			removeFromList({ listId: e.target.id, placeId: placeData.id });
 			return;
 		}
 
-		addToList({ listIds: [e.target.id], place });
+		addToList({ listIds: [e.target.id], place: placeData });
 	};
 
 	// List of lists displaying their name and a round checkbox that when clicked adds the list to the listIds array
 	return (
-		<Sheet open={isSaveSheetOpen} onOpenChange={setIsSaveSheetOpen}>
+		<Sheet open={isOpen} onOpenChange={onOpenChange}>
 			<SheetContent className="pt-10 px-4">
 				<div className="my-6">
 					<h2 className="text-xl font-bold">Add to lists</h2>

@@ -2,7 +2,6 @@ import {
 	type RouteConfig,
 	index,
 	layout,
-	prefix,
 	route,
 } from "@react-router/dev/routes";
 
@@ -16,34 +15,20 @@ export default [
 
 		// Auth-protected routes
 		// Dashboard section
-		...prefix("dashboard", [
-			layout("./routes/dashboard/layout.tsx", [
-				index("./routes/dashboard/index.tsx"),
-			]),
-		]),
+		route("dashboard", "./routes/dashboard.tsx"),
 
 		// Account management
-		route("account", "./routes/account/index.tsx"),
+		route("account", "./routes/account.tsx"),
 
-		// Invites section with its own sub-routes
-		...prefix("invites", [
-			index("./routes/invites/index.tsx"),
-			// Additional invite routes could be added here
-		]),
+		// Invites section
+		route("invites", "./routes/invites.tsx"),
 
-		// Lists section with nested hierarchy
-		...prefix("lists", [
-			layout("./routes/lists/list-layout.tsx", [
-				route(":id", "./routes/lists/list/index.tsx"),
-				route(":id/invites", "./routes/lists/list/invites/index.tsx"),
-			]),
-		]),
+		route("lists/create", "./routes/lists.create.tsx"),
+		route("lists/:id", "./routes/lists.$id.tsx"),
+		route("lists/:id/invites", "./routes/lists.$id.invites.tsx"),
+		route("lists/:id/invites/sent", "./routes/lists.$id.invites.sent.tsx"),
 
-		// Places section
-		...prefix("places", [
-			layout("./routes/place/layout.tsx", [
-				route(":id", "./routes/place/index.tsx"),
-			]),
-		]),
+		// Places section with dynamic routes
+		route("places/:id", "./routes/places.$id.tsx"),
 	]),
 ] satisfies RouteConfig;

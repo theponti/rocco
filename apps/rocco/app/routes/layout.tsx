@@ -1,33 +1,42 @@
 import { Suspense } from "react";
-import { Outlet, useLocation } from "react-router";
+import { Outlet, useLoaderData, useLocation } from "react-router";
 import Footer from "~/components/footer";
 import Header from "~/components/header";
 import { LoadingScreen } from "~/components/loading";
-import Toast from "~/components/toast";
-import { useAuth } from "~/lib/auth-provider";
+import { Toaster } from "~/components/ui/toaster";
+import { createClient } from "~/lib/supabase/server";
+import type { Route } from "./+types/layout";
+
+export async function loader({ request }: Route.LoaderArgs) {
+	const { supabase } = createClient(request);
+
+	const {
+		data: { user },
+	} = await supabase.auth.getUser();
+
+	return {
+		user: user || null,
+		isAuthenticated: !!user,
+	};
+}
 
 export default function Layout() {
-	const { user, isLoading } = useAuth();
-	const isAuthenticated = !isLoading && user;
+	const { user, isAuthenticated } = useLoaderData<typeof loader>();
 	const location = useLocation();
 	const isHome = location.pathname === "/";
 
 	return (
 		<div className="h-full w-full flex flex-col items-center">
-			<Header />
+			<Header isAuthenticated={isAuthenticated} />
 
 			<main
 				data-testid="app-main"
-				className="w-full lg:container lg:mx-auto mt-26 flex flex-col grow"
+				className="w-full max-w-5xl mx-auto mt-24 flex flex-col px-2 sm:px-0"
 			>
-				{isLoading ? (
-					<LoadingScreen />
-				) : (
-					<Suspense fallback={<LoadingScreen />}>
-						<Outlet />
-					</Suspense>
-				)}
-				<Toast />
+				<Suspense fallback={<LoadingScreen />}>
+					<Outlet />
+				</Suspense>
+				<Toaster />
 			</main>
 
 			{isAuthenticated && !isHome && <Footer />}

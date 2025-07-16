@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import { Button } from "~/components/ui/button";
-import { useAuth } from "~/lib/auth-provider";
+import { createClient } from "~/lib/supabase/client";
 
 export default function Login() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
-	const { signInWithPassword } = useAuth();
+	const supabase = createClient();
 	const navigate = useNavigate();
 	const [searchParams] = useSearchParams();
 	const redirectTo = searchParams.get("redirectTo") || "/dashboard";
@@ -19,7 +19,7 @@ export default function Login() {
 		setError("");
 
 		try {
-			const { error } = await signInWithPassword({
+			const { error } = await supabase.auth.signInWithPassword({
 				email,
 				password,
 			});

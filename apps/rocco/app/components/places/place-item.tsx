@@ -18,6 +18,19 @@ import { useRemoveListItem } from "~/lib/places";
 import type { ListPlace } from "~/lib/types";
 import styles from "./place-item.module.css";
 
+// Helper function to convert Google Places API photo references to URLs
+const getPhotoUrl = (photoUrl: string): string => {
+	// Check if this is a Google Places API photo reference
+	if (photoUrl.includes("places/") && photoUrl.includes("/photos/")) {
+		// This is a Google Places API photo reference
+		// Convert it to a proper image URL with size parameters
+		const photoReference = photoUrl.split("/photos/")[1];
+		const placeId = photoUrl.split("/places/")[1].split("/photos/")[0];
+		return `https://places.googleapis.com/v1/places/${placeId}/photos/${photoReference}/media?key=${import.meta.env.VITE_GOOGLE_API_KEY}&maxWidthPx=300&maxHeightPx=200`;
+	}
+	return photoUrl;
+};
+
 interface PlaceItemProps {
 	place: ListPlace;
 	listId: string;
@@ -51,15 +64,13 @@ const ListItem = ({ place, listId, onRemove, onError }: PlaceItemProps) => {
 	};
 
 	const onDeleteClick = () => {
-		if (place.googleMapsId) {
-			removeListItem({ listId, placeId: place.googleMapsId });
-		}
+		// Use the database ID for removing from list, not the Google Maps ID
+		removeListItem({ listId, placeId: place.id });
 	};
 
 	const handleCardClick = () => {
-		if (place.googleMapsId) {
-			navigate(href("/places/:id", { id: place.googleMapsId }));
-		}
+		// Use the database ID for navigation, not the Google Maps ID
+		navigate(href("/places/:id", { id: place.id }));
 	};
 
 	return (
@@ -77,7 +88,13 @@ const ListItem = ({ place, listId, onRemove, onError }: PlaceItemProps) => {
 				className={`${styles.placeCard} group`}
 			>
 				<div className={styles.imageContainer}>
-					{place.imageUrl ? (
+					{place.photos && place.photos.length > 0 ? (
+						<img
+							src={getPhotoUrl(place.photos[0])}
+							alt={place.name}
+							className="w-full h-32 object-cover"
+						/>
+					) : place.imageUrl ? (
 						<img
 							src={place.imageUrl}
 							alt={place.name}

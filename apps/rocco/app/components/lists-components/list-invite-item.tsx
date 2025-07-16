@@ -25,8 +25,12 @@ function ListInviteItem({ invite, onAcceptInvite }: ListInviteItemProps) {
 					invite.accepted ? "" : " text-gray-400"
 				}`}
 			>
-				<span className="text-lg font-semibold">{invite.list?.name || "Unknown List"}</span>
-				<span className="text-sm text-gray-400">{invite.user?.email || invite.invitedUserEmail}</span>
+				<span className="text-lg font-semibold">
+					{invite.list?.name || "Unknown List"}
+				</span>
+				<span className="text-sm text-gray-400">
+					{invite.user?.email || invite.invitedUserEmail}
+				</span>
 			</p>
 			<div>
 				{invite.accepted ? (

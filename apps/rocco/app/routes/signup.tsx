@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { Button } from "~/components/ui/button";
-import { useAuth } from "~/lib/auth-provider";
+import { createClient } from "~/lib/supabase/client";
 
 export default function Signup() {
 	const [email, setEmail] = useState("");
@@ -10,7 +10,7 @@ export default function Signup() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
 	const [message, setMessage] = useState("");
-	const { signUp } = useAuth();
+	const supabase = createClient();
 	const navigate = useNavigate();
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -26,7 +26,7 @@ export default function Signup() {
 		}
 
 		try {
-			const { error } = await signUp({
+			const { error } = await supabase.auth.signUp({
 				email,
 				password,
 			});

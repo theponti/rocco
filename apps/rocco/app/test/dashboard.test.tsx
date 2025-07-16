@@ -1,11 +1,12 @@
 import { screen, waitFor } from "@testing-library/react";
-import { http, HttpResponse } from "msw";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { baseURL } from "~/lib/api/base";
-import Dashboard, { ErrorBoundary, loader } from "~/routes/dashboard/index";
+import Dashboard, { ErrorBoundary, loader } from "~/routes/dashboard";
 import { MOCK_LISTS } from "~/test/mocks/index";
-import { testServer } from "~/test/test.setup";
-import { renderWithProviders, renderWithRouter } from "~/test/utils";
+import {
+	mockTrpcClient,
+	renderWithProviders,
+	renderWithRouter,
+} from "~/test/utils";
 
 // Import the hook to be mocked
 import { useGeolocation } from "~/hooks/useGeolocation";
@@ -23,7 +24,8 @@ vi.mock("~/components/map.lazy", () => ({
 vi.mock("~/components/places/places-autocomplete", () => ({
 	default: ({ center }: { center: any; setSelected: (place: any) => void }) => (
 		<div data-testid="places-autocomplete">
-			Places Autocomplete (Lat: {center.latitude}, Lng: {center.longitude})
+			Places Autocomplete (Lat: {center?.latitude || "N/A"}, Lng:{" "}
+			{center?.longitude || "N/A"})
 		</div>
 	),
 }));
@@ -34,7 +36,7 @@ vi.mock("~/hooks/useGeolocation", () => ({
 }));
 
 // Flexible mock for useLoaderData and other react-router hooks
-let mockLoaderData: any = { lists: MOCK_LISTS };
+let mockLoaderData: any = { lists: [] };
 const mockNavigate = vi.fn();
 
 vi.mock("react-router", async () => {
@@ -73,7 +75,7 @@ vi.mock("~/components/app-link", () => ({
 describe("Dashboard Component Tests", () => {
 	beforeEach(() => {
 		// Reset to default mock data before each test
-		mockLoaderData = { lists: MOCK_LISTS };
+		mockLoaderData = { lists: [] };
 		vi.clearAllMocks(); // Clear all mocks
 
 		// Reset geolocation mock to default successful state
@@ -82,6 +84,13 @@ describe("Dashboard Component Tests", () => {
 			isLoading: false,
 			error: null, // Added error property
 		});
+
+		// Reset tRPC mock to default successful state
+		vi.mocked(mockTrpcClient.lists.getAll.useQuery).mockReturnValue({
+			data: MOCK_LISTS,
+			isLoading: false,
+			error: null,
+		} as any);
 	});
 
 	test("renders dashboard with all components and lists", async () => {
@@ -95,7 +104,12 @@ describe("Dashboard Component Tests", () => {
 	});
 
 	test("shows empty state when no lists", async () => {
-		mockLoaderData = { lists: [] };
+		vi.mocked(mockTrpcClient.lists.getAll.useQuery).mockReturnValue({
+			data: [],
+			isLoading: false,
+			error: null,
+		} as any);
+
 		renderWithProviders(<Dashboard />);
 		await waitFor(() => {
 			expect(
@@ -122,11 +136,43 @@ describe("Dashboard Component Tests", () => {
 			expect(screen.getByText(MOCK_LISTS[1].name)).toBeInTheDocument();
 		});
 	});
+
+	test("shows loading state when lists are loading", async () => {
+		vi.mocked(mockTrpcClient.lists.getAll.useQuery).mockReturnValue({
+			data: undefined,
+			isLoading: true,
+			error: null,
+		} as any);
+
+		renderWithProviders(<Dashboard />);
+		await waitFor(() => {
+			expect(screen.getByTestId("rocco-map")).toBeInTheDocument();
+			expect(screen.getByTestId("places-autocomplete")).toBeInTheDocument();
+			// Should show loading spinner for lists
+			expect(screen.getByRole("status")).toBeInTheDocument();
+		});
+	});
+
+	test("shows error state when lists fail to load", async () => {
+		vi.mocked(mockTrpcClient.lists.getAll.useQuery).mockReturnValue({
+			data: undefined,
+			isLoading: false,
+			error: { message: "Failed to load lists" },
+		} as any);
+
+		renderWithProviders(<Dashboard />);
+		await waitFor(() => {
+			expect(screen.getByTestId("rocco-map")).toBeInTheDocument();
+			expect(screen.getByTestId("places-autocomplete")).toBeInTheDocument();
+			expect(
+				screen.getByText("Error loading lists: Failed to load lists"),
+			).toBeInTheDocument();
+		});
+	});
 });
 
 describe("Dashboard Route Loader and ErrorBoundary Tests", () => {
 	beforeEach(() => {
-		testServer.resetHandlers();
 		vi.clearAllMocks(); // Clear all mocks
 
 		// Reset geolocation mock
@@ -135,32 +181,25 @@ describe("Dashboard Route Loader and ErrorBoundary Tests", () => {
 			isLoading: false,
 			error: null, // Added error property
 		});
+
+		// Reset tRPC mock
+		vi.mocked(mockTrpcClient.lists.getAll.useQuery).mockReturnValue({
+			data: MOCK_LISTS,
+			isLoading: false,
+			error: null,
+		} as any);
 	});
 
 	test("shows error alert when loader throws", async () => {
-		testServer.use(
-			http.get(`${baseURL}/lists`, ({ request }: any) => {
-				const url = new URL(request.url);
-				const itemType = url.searchParams.get("itemType");
-				if (itemType === "PLACE") {
-					return HttpResponse.json(
-						{ error: "Failed to fetch lists" },
-						{ status: 500 },
-					);
-				}
-				return HttpResponse.json(
-					{ error: "Incorrect request parameters" },
-					{ status: 400 },
-				);
-			}),
-		);
+		// Mock the loader to throw an error
+		const mockLoader = vi.fn().mockRejectedValue(new Error("Loader error"));
 
 		renderWithRouter({
 			routes: [
 				{
 					path: "/dashboard",
 					Component: Dashboard,
-					loader: loader as any,
+					loader: mockLoader as any,
 					ErrorBoundary: ErrorBoundary as React.ComponentType<any>,
 				},
 			],
