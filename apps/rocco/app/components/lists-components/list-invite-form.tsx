@@ -1,11 +1,11 @@
-import { type SyntheticEvent, useCallback } from "react";
+import { type SyntheticEvent, useCallback, useState } from "react";
 import Alert from "~/components/alert";
 import Input from "~/components/input";
 import { Button } from "~/components/ui/button";
 
+import { trpc } from "~/lib/trpc/client";
 import type { ListInvite } from "~/lib/types";
 import styles from "./list-invite-form.module.css";
-import useListInviteForm from "./use-list-invite-form";
 
 type ListInviteFormProps = {
 	listId: string;
@@ -16,24 +16,30 @@ export default function ListInviteForm({
 	listId,
 	onCreate,
 }: ListInviteFormProps) {
-	const { error, mutation, email, createListInvite, onNameChange } =
-		useListInviteForm({
-			onCreate: () => {
-				onCreate({} as ListInvite);
-			},
-		});
+	const [email, setEmail] = useState("");
+
+	const mutation = trpc.invites.create.useMutation({
+		onSuccess: (data) => {
+			setEmail("");
+			onCreate(data);
+		},
+	});
+
+	const onNameChange = useCallback((e: SyntheticEvent<HTMLInputElement>) => {
+		setEmail(e.currentTarget.value);
+	}, []);
 
 	const onFormSubmit = useCallback(
 		async (e: SyntheticEvent<HTMLFormElement>) => {
 			e.preventDefault();
-			await createListInvite({ id: listId, email });
+			await mutation.mutateAsync({ listId, invitedUserEmail: email });
 		},
-		[email, createListInvite, listId],
+		[email, mutation.mutateAsync, listId],
 	);
 
 	return (
 		<div className="mb-4">
-			{error && <Alert type="error">{error}</Alert>}
+			{mutation.error && <Alert type="error">{mutation.error.message}</Alert>}
 			<form className={styles.form} onSubmit={onFormSubmit}>
 				<Input
 					id="email"

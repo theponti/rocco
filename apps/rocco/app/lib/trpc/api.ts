@@ -2,38 +2,10 @@ import {
 	type QueryKey,
 	type UseMutationOptions,
 	type UseQueryOptions,
-	useQuery,
 	useQueryClient,
 } from "@tanstack/react-query";
-
-import type { ExtendedList, List, ListInvite, User } from "~/lib/types";
+import type { ExtendedList, List, ListInvite } from "~/lib/types";
 import { trpc } from "./client";
-
-export type CreateListInvite = {
-	email: string;
-	id: string;
-};
-
-export const createListInvite = async ({ email, id }: CreateListInvite) => {
-	// This will be replaced with tRPC mutation
-	return { success: true };
-};
-
-export const useGetInvites = () => {
-	return trpc.invites.getAll.useQuery();
-};
-
-type OutboundInvitesResponse = (ListInvite & { list: List; user: User })[];
-export const useGetOutboundInvites = () => {
-	// TODO: Add outbound invites to tRPC router
-	return useQuery<OutboundInvitesResponse>({
-		queryKey: ["outboundInvites"],
-		queryFn: async () => {
-			// Placeholder - will be replaced with tRPC
-			return [];
-		},
-	});
-};
 
 export function useAcceptInviteMutation(
 	options: UseMutationOptions<
@@ -42,7 +14,7 @@ export function useAcceptInviteMutation(
 		{ listId: string; invitedUserEmail: string }
 	> = {},
 ) {
-	return trpc.invites.accept.useMutation(options);
+	return;
 }
 
 type ListInvitesResponse = (ListInvite & { list: List })[];

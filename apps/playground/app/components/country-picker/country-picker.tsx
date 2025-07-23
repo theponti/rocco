@@ -1,8 +1,5 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import { Check, ChevronsUpDown, Globe, Search } from 'lucide-react';
-import { type ReactNode, useCallback, useState } from 'react';
 import { Button } from '@hominem/ui';
 import {
   Command,
@@ -13,6 +10,9 @@ import {
   CommandList,
 } from '@hominem/ui';
 import { Popover, PopoverContent, PopoverTrigger } from '@hominem/ui';
+import { useQuery } from '@tanstack/react-query';
+import { Check, ChevronsUpDown, Globe, Search } from 'lucide-react';
+import { type ReactNode, useCallback, useState } from 'react';
 import { cn } from '~/lib/utils';
 
 type Country = {

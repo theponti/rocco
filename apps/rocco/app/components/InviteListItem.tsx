@@ -2,16 +2,16 @@ import { Link2 } from "lucide-react";
 import { useCallback } from "react";
 import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
-import { useAcceptInviteMutation } from "~/lib/trpc/api";
-import type { ExtendedListInvite } from "~/lib/types";
+import type { InviteItem } from "~/lib/component-types";
+import { trpc } from "~/lib/trpc/client";
 
 type InviteListItemProps = {
-	listInvite: ExtendedListInvite;
+	listInvite: InviteItem;
 	onAccept: () => void;
 };
 const InviteListItem = ({ listInvite, onAccept }: InviteListItemProps) => {
 	const { accepted, list } = listInvite;
-	const { mutate, status } = useAcceptInviteMutation({
+	const { mutate, status } = trpc.invites.accept.useMutation({
 		onSuccess: onAccept,
 	});
 

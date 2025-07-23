@@ -1,15 +1,17 @@
 import React, { useCallback } from "react";
 
 import { Button } from "~/components/ui/button";
-import { useAcceptInviteMutation } from "~/lib/trpc/api";
-import type { ExtendedListInvite } from "~/lib/types";
+import type { InviteItem } from "~/lib/component-types";
+import { trpc } from "~/lib/trpc/client";
 
-type ListInviteItemProps = {
-	invite: ExtendedListInvite;
+function ListInviteItem({
+	invite,
+	onAcceptInvite,
+}: {
+	invite: InviteItem;
 	onAcceptInvite: () => void;
-};
-function ListInviteItem({ invite, onAcceptInvite }: ListInviteItemProps) {
-	const mutation = useAcceptInviteMutation();
+}) {
+	const mutation = trpc.invites.accept.useMutation();
 	const acceptInvite = useCallback(async () => {
 		await mutation.mutateAsync({
 			listId: invite.listId,
@@ -28,9 +30,7 @@ function ListInviteItem({ invite, onAcceptInvite }: ListInviteItemProps) {
 				<span className="text-lg font-semibold">
 					{invite.list?.name || "Unknown List"}
 				</span>
-				<span className="text-sm text-gray-400">
-					{invite.user?.email || invite.invitedUserEmail}
-				</span>
+				<span className="text-sm text-gray-400">{invite.invitedUserEmail}</span>
 			</p>
 			<div>
 				{invite.accepted ? (

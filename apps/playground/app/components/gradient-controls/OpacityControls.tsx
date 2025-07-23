@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
 import { Slider } from '@hominem/ui';
+import { useMemo } from 'react';
 
 interface OpacityControlsProps {
   opacities: number[];

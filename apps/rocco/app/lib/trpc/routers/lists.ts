@@ -7,6 +7,47 @@ import { logger } from "../../logger";
 import { protectedProcedure, publicProcedure, router } from "../context";
 
 export const listsRouter = router({
+	getListOptions: protectedProcedure
+		.input(z.object({ googleMapsId: z.string() }))
+		.query(async ({ ctx, input }) => {
+			if (!ctx.user) {
+				throw new TRPCError({
+					code: "UNAUTHORIZED",
+					message: "User not found in context",
+				});
+			}
+
+			// Get all lists for the user
+			const userLists = await ctx.db.query.list.findMany({
+				where: eq(list.userId, ctx.user.id),
+				orderBy: [desc(list.updatedAt)],
+			});
+
+			// For each list, check if the place with googleMapsId is in the list
+			const results = await Promise.all(
+				userLists.map(async (l) => {
+					const placeItems = await ctx.db.query.item.findMany({
+						where: and(eq(item.listId, l.id), eq(item.itemType, "PLACE")),
+					});
+					// Get all places for these items
+					const placeIds = placeItems.map((i) => i.itemId);
+					let isInList = false;
+					if (placeIds.length > 0) {
+						const placesInList = await ctx.db.query.place.findMany({
+							where: inArray(place.id, placeIds),
+						});
+						isInList = placesInList.some(
+							(p) => p.googleMapsId === input.googleMapsId,
+						);
+					}
+					return {
+						...l,
+						isInList,
+					};
+				}),
+			);
+			return results;
+		}),
 	getAll: protectedProcedure.query(async ({ ctx }) => {
 		return safeAsync(
 			async () => {

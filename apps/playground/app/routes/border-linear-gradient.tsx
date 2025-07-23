@@ -1,3 +1,6 @@
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@hominem/ui';
+import { Button } from '@hominem/ui';
+import { Card } from '@hominem/ui';
 import * as React from 'react';
 import { useLoaderData } from 'react-router';
 import {
@@ -9,9 +12,6 @@ import {
   OpacityControls,
   PositionControls,
 } from '~/components/gradient-controls';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@hominem/ui';
-import { Button } from '@hominem/ui';
-import { Card } from '@hominem/ui';
 import {
   type GradientSettings,
   decodeSettings,

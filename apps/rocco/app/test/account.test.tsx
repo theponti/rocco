@@ -5,16 +5,70 @@ import Account from "~/routes/account";
 import { getMockUser } from "~/test/mocks/index";
 import { mockTrpcClient, renderWithRouter } from "~/test/utils";
 
-const MOCK_USER = getMockUser();
+// Create a mock user
+const mockUser = getMockUser();
+
+// Create a user object with the user_metadata structure expected by the component
+const MOCK_USER = {
+	...mockUser,
+	user_metadata: {
+		name: mockUser.name,
+		image: mockUser.image,
+		picture: mockUser.photoUrl,
+	},
+};
+
+// Mock loader data that will be customized by each test
+let mockLoaderData = { user: MOCK_USER };
+
+// Mock React Router's useLoaderData hook
+vi.mock("react-router", async () => {
+	const actual = await vi.importActual("react-router");
+	return {
+		...actual,
+		useLoaderData: () => mockLoaderData,
+	};
+});
 
 describe("Account", () => {
 	test("renders account page with user information", async () => {
+		// For this specific test, create a mock user with no images
+		const userWithoutImage = {
+			...mockUser,
+			image: null,
+			photoUrl: null,
+		};
+
+		const mockUserData = {
+			...userWithoutImage,
+			user_metadata: {
+				name: userWithoutImage.name,
+				image: null,
+				picture: null,
+			},
+		};
+
+		// Update loader data to use user without image
+		mockLoaderData.user = mockUserData;
+
 		// Mock user profile query
 		vi.mocked(mockTrpcClient.user.getProfile.useQuery).mockReturnValue({
-			data: { ...MOCK_USER, image: null, photoUrl: null },
+			data: mockUserData,
 			isLoading: false,
 			error: null,
 		} as any);
+
+		// Mock delete account mutation
+		const mockDeleteMutation = {
+			mutate: vi.fn(),
+			isPending: false,
+			isLoading: false,
+			isError: false,
+			error: null,
+		};
+		vi.mocked(mockTrpcClient.user.deleteAccount.useMutation).mockReturnValue(
+			mockDeleteMutation as any,
+		);
 
 		renderWithRouter({
 			routes: [
@@ -45,12 +99,36 @@ describe("Account", () => {
 	});
 
 	test("shows avatar when user has one", async () => {
+		// Ensure mockLoaderData has the image for this test
+		mockLoaderData = {
+			user: {
+				...MOCK_USER,
+				user_metadata: {
+					...MOCK_USER.user_metadata,
+					image: "https://example.com/avatar.jpg",
+					picture: null,
+				},
+			},
+		};
+
 		// Mock user profile query with avatar
 		vi.mocked(mockTrpcClient.user.getProfile.useQuery).mockReturnValue({
-			data: getMockUser(),
+			data: mockLoaderData.user,
 			isLoading: false,
 			error: null,
 		} as any);
+
+		// Mock delete account mutation
+		const mockDeleteMutation = {
+			mutate: vi.fn(),
+			isPending: false,
+			isLoading: false,
+			isError: false,
+			error: null,
+		};
+		vi.mocked(mockTrpcClient.user.deleteAccount.useMutation).mockReturnValue(
+			mockDeleteMutation as any,
+		);
 
 		renderWithRouter({
 			routes: [
@@ -77,7 +155,7 @@ describe("Account", () => {
 	test("shows error alert when deletion has error", async () => {
 		// Mock user profile query
 		vi.mocked(mockTrpcClient.user.getProfile.useQuery).mockReturnValue({
-			data: getMockUser(),
+			data: MOCK_USER,
 			isLoading: false,
 			error: null,
 		} as any);
@@ -85,7 +163,9 @@ describe("Account", () => {
 		// Mock delete account mutation to throw error
 		const mockDeleteMutation = {
 			mutate: vi.fn(),
-			isLoading: false,
+			isPending: false,
+			isLoading: false, // For backward compatibility
+			isError: true,
 			error: { message: "Failed to delete account" },
 		};
 		vi.mocked(mockTrpcClient.user.deleteAccount.useMutation).mockReturnValue(

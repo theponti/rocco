@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
 	boolean,
 	doublePrecision,
@@ -197,3 +198,15 @@ export const listInvite = pgTable(
 		}),
 	],
 );
+
+// Define relations between tables
+export const listInviteRelations = relations(listInvite, ({ one }) => ({
+	list: one(list, {
+		fields: [listInvite.listId],
+		references: [list.id],
+	}),
+}));
+
+export const listRelations = relations(list, ({ many }) => ({
+	invites: many(listInvite),
+}));

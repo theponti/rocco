@@ -96,8 +96,7 @@ describe("Dashboard Component Tests", () => {
 	test("renders dashboard with all components and lists", async () => {
 		renderWithProviders(<Dashboard />);
 		await waitFor(() => {
-			expect(screen.getByTestId("rocco-map")).toBeInTheDocument();
-			expect(screen.getByTestId("places-autocomplete")).toBeInTheDocument();
+			expect(screen.getByTestId("dashboard-scene")).toBeInTheDocument();
 			expect(screen.getByText(MOCK_LISTS[0].name)).toBeInTheDocument();
 			expect(screen.getByText(MOCK_LISTS[1].name)).toBeInTheDocument();
 		});
@@ -112,10 +111,9 @@ describe("Dashboard Component Tests", () => {
 
 		renderWithProviders(<Dashboard />);
 		await waitFor(() => {
+			expect(screen.getByText("No Lists Yet")).toBeInTheDocument();
 			expect(
-				screen.getByText(
-					"Create your first list to start organizing places you love or want to visit.",
-				),
+				screen.getByText("Start organizing places you love or want to visit."),
 			).toBeInTheDocument();
 		});
 	});
@@ -128,10 +126,7 @@ describe("Dashboard Component Tests", () => {
 		});
 		renderWithProviders(<Dashboard />);
 		await waitFor(() => {
-			expect(
-				screen.getByText("Loading location for search..."),
-			).toBeInTheDocument();
-			expect(screen.getByTestId("rocco-map")).toBeInTheDocument();
+			expect(screen.getByTestId("dashboard-scene")).toBeInTheDocument();
 			expect(screen.getByText(MOCK_LISTS[0].name)).toBeInTheDocument();
 			expect(screen.getByText(MOCK_LISTS[1].name)).toBeInTheDocument();
 		});
@@ -146,10 +141,14 @@ describe("Dashboard Component Tests", () => {
 
 		renderWithProviders(<Dashboard />);
 		await waitFor(() => {
-			expect(screen.getByTestId("rocco-map")).toBeInTheDocument();
-			expect(screen.getByTestId("places-autocomplete")).toBeInTheDocument();
+			expect(screen.getByTestId("dashboard-scene")).toBeInTheDocument();
 			// Should show loading spinner for lists
-			expect(screen.getByRole("status")).toBeInTheDocument();
+			expect(
+				screen.getByText(
+					(content, element) =>
+						element?.classList.contains("loading-spinner") || false,
+				),
+			).toBeInTheDocument();
 		});
 	});
 
@@ -162,8 +161,7 @@ describe("Dashboard Component Tests", () => {
 
 		renderWithProviders(<Dashboard />);
 		await waitFor(() => {
-			expect(screen.getByTestId("rocco-map")).toBeInTheDocument();
-			expect(screen.getByTestId("places-autocomplete")).toBeInTheDocument();
+			expect(screen.getByTestId("dashboard-scene")).toBeInTheDocument();
 			expect(
 				screen.getByText("Error loading lists: Failed to load lists"),
 			).toBeInTheDocument();

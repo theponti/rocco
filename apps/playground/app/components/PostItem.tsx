@@ -1,10 +1,10 @@
-import { EditIcon, Loader2, Save, Trash2, X } from 'lucide-react';
-import type React from 'react';
-import { useState } from 'react';
 import { Button } from '@hominem/ui';
 import { Card, CardContent, CardHeader } from '@hominem/ui';
 import { Input } from '@hominem/ui';
 import { Textarea } from '@hominem/ui';
+import { EditIcon, Loader2, Save, Trash2, X } from 'lucide-react';
+import type React from 'react';
+import { useState } from 'react';
 import type { SearchResult, SocialPost } from '../types/vector-search';
 
 interface PostItemProps {

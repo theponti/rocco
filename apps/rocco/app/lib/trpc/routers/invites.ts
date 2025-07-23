@@ -9,12 +9,66 @@ export const invitesRouter = router({
 			throw new Error("User not found in context");
 		}
 
+		// Query invites with related list data in a single request
 		const userInvites = await ctx.db.query.listInvite.findMany({
 			where: eq(listInvite.invitedUserEmail, ctx.user.email),
+			with: {
+				list: true, // Include the related list data
+			},
 		});
 
 		return userInvites;
 	}),
+
+	// Get invites sent by the current user (outbound)
+	getAllOutbound: protectedProcedure.query(async ({ ctx }) => {
+		if (!ctx.user) {
+			throw new Error("User not found in context");
+		}
+
+		const outboundInvites = await ctx.db.query.listInvite.findMany({
+			where: eq(listInvite.userId, ctx.user.id),
+		});
+
+		// Fetch related list and user info for each invite
+		const results = await Promise.all(
+			outboundInvites.map(async (invite) => {
+				const [listData] = await ctx.db.query.list.findMany({
+					where: eq(list.id, invite.listId),
+				});
+				return {
+					...invite,
+					list: listData,
+					user: null, // User info not available
+				};
+			}),
+		);
+		return results;
+	}),
+
+	// Get all invites for a specific list
+	getByList: protectedProcedure
+		.input(z.object({ listId: z.string().uuid() }))
+		.query(async ({ ctx, input }) => {
+			if (!ctx.user) {
+				throw new Error("User not found in context");
+			}
+
+			// Only allow if user owns the list
+			const listItem = await ctx.db.query.list.findFirst({
+				where: and(eq(list.id, input.listId), eq(list.userId, ctx.user.id)),
+			});
+			if (!listItem) {
+				throw new Error("List not found or you don't have permission");
+			}
+
+			const invites = await ctx.db.query.listInvite.findMany({
+				where: eq(listInvite.listId, input.listId),
+			});
+
+			// Attach list info to each invite
+			return invites.map((invite) => ({ ...invite, list: listItem }));
+		}),
 
 	create: protectedProcedure
 		.input(

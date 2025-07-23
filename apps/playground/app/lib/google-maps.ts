@@ -20,28 +20,17 @@ export interface DirectionsResult {
   }>;
 }
 
-const cleanHtmlFromInstructions = (htmlString: string): string => {
+export const cleanHtmlFromInstructions = (htmlString: string): string => {
   const tempDiv = document.createElement('div');
   tempDiv.innerHTML = htmlString;
 
   // Get text content (removes all HTML tags)
-  let text = tempDiv.textContent || tempDiv.innerText || '';
-
-  // Clean up common HTML entities and formatting
-  text = text
-    .replace(/&nbsp;/g, ' ') // Replace non-breaking spaces
-    .replace(/&lt;/g, '<') // Replace less than
-    .replace(/&gt;/g, '>') // Replace greater than
-    .replace(/&quot;/g, '"') // Replace quotes
-    .replace(/&#39;/g, "'") // Replace apostrophes
-    .replace(/&amp;/g, '&') // Replace ampersands
-    .replace(/\s+/g, ' ') // Replace multiple spaces with single space
-    .trim(); // Remove leading/trailing whitespace
+  const text = tempDiv.textContent || tempDiv.innerText || '';
 
   return text;
 };
 
-const geocodeLocation = async (address: string): Promise<Location[]> => {
+export const geocodeLocation = async (address: string): Promise<Location[]> => {
   if (!window.google) {
     throw new Error('Google Maps API not loaded');
   }
@@ -68,7 +57,10 @@ const geocodeLocation = async (address: string): Promise<Location[]> => {
   });
 };
 
-const getDirections = async (origin: string, destination: string): Promise<DirectionsResult> => {
+export const getDirections = async (
+  origin: string,
+  destination: string
+): Promise<DirectionsResult> => {
   if (!window.google) {
     throw new Error('Google Maps API not loaded');
   }

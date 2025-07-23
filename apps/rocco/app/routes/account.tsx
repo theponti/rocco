@@ -1,6 +1,6 @@
 import { UserCircle } from "lucide-react";
 import { useCallback } from "react";
-import { useNavigate } from "react-router";
+import { useLoaderData, useNavigate } from "react-router";
 import Alert from "~/components/alert";
 import { LoadingScreen } from "~/components/loading";
 import { Button } from "~/components/ui/button";
@@ -69,36 +69,42 @@ function DeleteAccount() {
 	);
 }
 
-export default function Account({ loaderData }: Route.ComponentProps) {
-	const { user } = loaderData;
+export default function Account() {
+	const loaderData = useLoaderData<typeof loader>();
+	// Add a check to handle the case when loaderData might be undefined (in tests)
+	const user = loaderData?.user;
+
+	// If no user is available, show a loading state
+	if (!user) {
+		return <LoadingScreen />;
+	}
 
 	return (
-		<div className="flex flex-col w-full">
-			<div className="col-span-12">
-				<h1 className="text-2xl font-semibold mb-4">Account</h1>
-				<div className="border border-gray-200 rounded-lg shadow-md md:max-w-sm p-4 flex flex-row justify-between items-center">
-					{user.user_metadata.image || user.user_metadata.picture ? (
-						<img
-							src={user.user_metadata.image || user.user_metadata.picture || ""}
-							alt="user avatar"
-							className="rounded-circle img-fluid profile-picture"
-						/>
-					) : (
-						<UserCircle data-testid="user-circle-icon" size={64} />
-					)}
-					<div className="flex flex-col">
-						<p className="text-lg text-right w-full px-1 h-fit">
-							{user.user_metadata.name}
-						</p>
-						<p className="text-sm text-black text-right w-full px-1 h-fit">
-							{user.email}
-						</p>
-						<p className="text-sm text-black text-right w-full px-1 h-fit">
-							<MemberSince createdAt={user.created_at} />
-						</p>
+		<div className="h-full overflow-y-auto p-6">
+			<div className="space-y-6">
+				<h1 className="text-2xl font-semibold">Account</h1>
+				<div className="border border-gray-200 rounded-lg shadow-md p-4 flex flex-col gap-4">
+					<div className="flex items-center gap-4">
+						{user.user_metadata.image || user.user_metadata.picture ? (
+							<img
+								src={
+									user.user_metadata.image || user.user_metadata.picture || ""
+								}
+								alt="user avatar"
+								className="w-16 h-16 rounded-full object-cover"
+							/>
+						) : (
+							<UserCircle data-testid="user-circle-icon" size={64} />
+						)}
+						<div className="flex flex-col">
+							<p className="text-lg font-medium">{user.user_metadata.name}</p>
+							<p className="text-sm text-gray-600">{user.email}</p>
+							<p className="text-sm text-gray-500">
+								<MemberSince createdAt={user.created_at} />
+							</p>
+						</div>
 					</div>
 				</div>
-				<div className="flex flex-col mb-8" />
 
 				<DeleteAccount />
 			</div>

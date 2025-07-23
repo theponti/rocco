@@ -1,7 +1,7 @@
+import { Input } from '@hominem/ui';
 import { useQuery } from '@tanstack/react-query';
 import { Loader2, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { Input } from '@hominem/ui';
 import type { SearchResult, SocialPost } from '../types/vector-search';
 import PostItem from './PostItem';
 

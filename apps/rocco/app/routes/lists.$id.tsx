@@ -92,38 +92,38 @@ export default function ListPage() {
 	}
 
 	return (
-		<div className="container mx-auto flex flex-col px-0.5 w-full">
+		<div className="h-full overflow-y-auto p-6">
 			{data && (
-				<div className="flex flex-col px-0.5">
-					<div className="flex justify-between items-center mb-6">
-						<h1 className="text-3xl font-semibold">{data.name}</h1>
-						<div className="flex gap-4">
+				<div className="space-y-6">
+					<div className="flex justify-between items-start">
+						<h1 className="text-2xl font-semibold">{data.name}</h1>
+						<div className="flex gap-2">
 							{/* Only list owners can invite others. */}
 							{data.userId === user?.id && !isAddToListOpen && (
 								<button
 									type="button"
 									data-testid="add-to-list-button"
 									onClick={() => setIsAddToListOpen(!isAddToListOpen)}
-									className="flex gap-2 text-black hover:bg-opacity-80 focus:bg-opacity-80 cursor-pointer"
+									className="flex gap-2 text-black hover:bg-opacity-80 focus:bg-opacity-80 cursor-pointer p-1"
 								>
-									<PlusCircle />
+									<PlusCircle size={20} />
 								</button>
 							)}
 							{/* Only list owners can share with others. */}
 							{data.userId === user?.id && (
 								<Link
 									to={`/lists/${data.id}/invites`}
-									className="flex gap-2 text-black hover:bg-opacity-80 focus:bg-opacity-80"
+									className="flex gap-2 text-black hover:bg-opacity-80 focus:bg-opacity-80 p-1"
 								>
-									<Share className="hover:cursor-pointer" />
+									<Share className="hover:cursor-pointer" size={20} />
 								</Link>
 							)}
 							<ListMenu list={data} isOwnList={data.userId === user?.id} />
 						</div>
 					</div>
 					{(data?.places?.length === 0 || isAddToListOpen) && (
-						<div data-testid="add-to-list" className="py-4">
-							<label className="label font-semibold" htmlFor="search">
+						<div data-testid="add-to-list" className="space-y-2">
+							<label className="block text-sm font-semibold" htmlFor="search">
 								Add a place
 							</label>
 							<PlacesAutocomplete
@@ -139,7 +139,7 @@ export default function ListPage() {
 						</Alert>
 					)}
 					{data.places && data.places.length > 0 && (
-						<div className="grid gap-x-6 gap-y-14 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+						<div className="space-y-4">
 							{data.places.map((place) => {
 								// Convert database place to GooglePlaceData format
 								const mappedPlace = {

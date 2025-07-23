@@ -1,7 +1,6 @@
 import { Plus } from "lucide-react";
 import { Link } from "react-router";
 import { trpc } from "~/lib/trpc/client";
-import type { ExtendedList } from "~/lib/types";
 import { cn } from "~/lib/utils";
 import styles from "./lists.module.css";
 

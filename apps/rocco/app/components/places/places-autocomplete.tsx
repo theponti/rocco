@@ -19,18 +19,13 @@ import {
 	type GooglePlacePrediction,
 	useGooglePlacesAutocomplete,
 } from "~/hooks/useGooglePlacesAutocomplete";
-import type { PlaceLocation } from "~/lib/types";
 import { cn } from "~/lib/utils";
 import styles from "./places-autocomplete.module.css";
 
 function PlacesAutocomplete({
-	center,
 	setSelected,
-	apiKey,
 }: {
-	center: PlaceLocation | null;
 	setSelected: (place: GooglePlacePrediction) => void;
-	apiKey: string;
 }) {
 	const [open, setOpen] = useState(false);
 	const [value, setValue] = useState("");
@@ -64,14 +59,8 @@ function PlacesAutocomplete({
 		[setSelected],
 	);
 
-	const hasResults = data && data.length > 0;
-	const shouldShowResults = isLoading || (hasResults && value.length > 0);
-
 	return (
-		<div
-			data-testid="places-autocomplete"
-			className="relative w-full max-w-3xl"
-		>
+		<div data-testid="places-autocomplete" className="relative w-md">
 			<Popover open={open} onOpenChange={setOpen}>
 				<PopoverTrigger asChild>
 					<Button
@@ -87,7 +76,7 @@ function PlacesAutocomplete({
 						<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 					</Button>
 				</PopoverTrigger>
-				<PopoverContent className="w-full p-0" align="start">
+				<PopoverContent className="w-md p-0" align="start">
 					<Command shouldFilter={false}>
 						<CommandInput
 							placeholder="Search for places..."

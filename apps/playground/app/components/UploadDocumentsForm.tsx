@@ -1,6 +1,6 @@
+import { Button } from '@hominem/ui';
 import { Loader } from 'lucide-react';
 import { type FormEvent, useState } from 'react';
-import { Button } from '@hominem/ui';
 
 export function UploadDocumentsForm() {
   const [isPending, setIsPending] = useState(false);

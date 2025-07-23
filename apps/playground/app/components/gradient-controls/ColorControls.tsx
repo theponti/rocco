@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
 import { Input } from '@hominem/ui';
+import { useMemo } from 'react';
 
 interface ColorControlsProps {
   colors: string[];

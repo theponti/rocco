@@ -1,14 +1,20 @@
-import { useLoaderData } from "react-router";
+import { useLoaderData, useRevalidator } from "react-router";
 import InviteListItem from "~/components/InviteListItem";
-import { trpc } from "~/lib/trpc/client";
+import { caller } from "~/lib/trpc/server";
+import type { Route } from "./+types";
 
 export async function loader() {
-	// For now, return empty data and let the client fetch with tRPC
-	return { invites: [] };
+	const invites = await caller.invites.getAll();
+	return { invites };
 }
 
-const Invites = () => {
-	const { data: invites = [], refetch } = trpc.invites.getAll.useQuery();
+const Invites = ({ loaderData }: Route.ComponentProps) => {
+	const { invites } = useLoaderData<typeof loader>();
+	const { revalidate } = useRevalidator();
+
+	const handleAccept = () => {
+		revalidate();
+	};
 
 	return (
 		<>
@@ -19,7 +25,7 @@ const Invites = () => {
 						<InviteListItem
 							key={listInvite.listId}
 							listInvite={listInvite}
-							onAccept={refetch}
+							onAccept={handleAccept}
 						/>
 					))}
 				</ul>
@@ -30,7 +36,6 @@ const Invites = () => {
 
 export default Invites;
 
-// ErrorBoundary to handle errors
 export function ErrorBoundary({ error }: { error: unknown }) {
 	console.error(error);
 	return <div>An unexpected error occurred while loading invites.</div>;

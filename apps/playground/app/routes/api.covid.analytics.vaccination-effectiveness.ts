@@ -2,13 +2,6 @@ import { and, eq, gte } from 'drizzle-orm';
 import type { LoaderFunctionArgs } from 'react-router';
 import { covidData, db } from '~/db';
 
-interface VaccinationEffectiveness {
-  overall: number;
-  againstHospitalization: number;
-  againstDeath: number;
-  breakthroughRate: number;
-}
-
 interface VaccinationTimeline {
   date: string;
   fullyVaccinatedPerHundred: number;
