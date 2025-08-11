@@ -1,4 +1,4 @@
-import { index, type RouteConfig, route } from "@react-router/dev/routes";
+import { index, route, type RouteConfig } from "@react-router/dev/routes";
 
 export default [
 	index("routes/home.tsx"),
@@ -11,6 +11,7 @@ export default [
 	// TFL cameras
 	route("/api/tfl", "routes/api.tfl.ts"),
 	route("/tfl", "routes/tfl.tsx"),
+	route("/infinite-header", "routes/infinite-header/infinite-header.tsx"),
 
 	// COVID-19 routes
 	route("/corona", "routes/corona.tsx"),
