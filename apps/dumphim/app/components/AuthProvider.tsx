@@ -1,7 +1,7 @@
 import type { Session, User } from "@supabase/supabase-js";
 import {
-	type ReactNode,
 	createContext,
+	type ReactNode,
 	useContext,
 	useEffect,
 	useState,
@@ -35,7 +35,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		const { data: authListener } = supabase.auth.onAuthStateChange(
 			async (_event, newSession) => {
 				setSession(newSession);
-				if (!newSession) {
+				if (newSession?.user) {
+					// Verify the user data by calling getUser
+					const {
+						data: { user: verifiedUser },
+					} = await supabase.auth.getUser();
+					setUser(verifiedUser);
+				} else {
 					setUser(null);
 				}
 				setIsLoading(false);
