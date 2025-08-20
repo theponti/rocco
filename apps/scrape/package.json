@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"private": true,
 	"scripts": {
-		"dev": "tsx smart-tax-asset.ts",
+		"start": "tsx smart-tax-asset.ts",
 		"build": "tsc",
 		"type-check": "tsc --noEmit"
 	},

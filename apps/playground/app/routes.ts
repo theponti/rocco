@@ -4,9 +4,9 @@ export default [
 	index("routes/home.tsx"),
 	route("/border-linear-gradient", "routes/border-linear-gradient.tsx"),
 	route("/svg-glass-test", "routes/svg-glass-test.tsx"),
-	route("/to-do", "routes/to-do.tsx"),
 	route("/vector-search", "routes/VectorSearchPage.tsx"),
 	route("/google-maps", "routes/google-maps.tsx"),
+	route("/to-do", "routes/to-do.tsx"),
 
 	// TFL cameras
 	route("/api/tfl", "routes/api.tfl.ts"),
@@ -59,5 +59,8 @@ export default [
 		"/api/covid/analytics/socioeconomic-analysis",
 		"routes/api.covid.analytics.socioeconomic-analysis.ts",
 	),
+
+	// API routes
 	route("/api/countries/list", "routes/api.countries.list.ts"),
+	route("/api/todos", "routes/api.todos.ts"),
 ] satisfies RouteConfig;
