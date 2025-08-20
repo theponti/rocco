@@ -4,7 +4,6 @@ import { db, todos } from "~/db";
 import { commitSession, getSession } from "~/lib/session";
 import type { TodoInsert } from "../../drizzle/schema";
 
-// Actions for handling session and cookies
 async function getOrCreateUserId(
 	request: Request,
 ): Promise<{ userId: string; session: any }> {
@@ -12,7 +11,7 @@ async function getOrCreateUserId(
 	let userId = session.get("userId");
 
 	if (!userId) {
-		userId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+		userId = `session_${Date.now()}_${crypto.randomUUID()}`;
 		session.set("userId", userId);
 	}
 
