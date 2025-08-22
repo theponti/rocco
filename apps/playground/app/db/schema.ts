@@ -112,7 +112,9 @@ export type TflCamera = typeof tflCameras.$inferSelect;
 export const todos = pgTable("todos", {
 	id: serial().primaryKey().notNull(),
 	userId: text("user_id").notNull(),
-	projectId: integer("project_id").notNull().references(() => projects.id),
+	projectId: integer("project_id")
+		.notNull()
+		.references(() => projects.id),
 	title: text().notNull(),
 	start: text().notNull(),
 	end: text().notNull(),

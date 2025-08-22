@@ -103,7 +103,8 @@ export default function App() {
 							No todos yet
 						</h3>
 						<p className="text-gray-500 mb-6">
-							Get started by creating your first project and adding some todos to keep track of your tasks.
+							Get started by creating your first project and adding some todos
+							to keep track of your tasks.
 						</p>
 					</div>
 				</div>
