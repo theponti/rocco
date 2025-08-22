@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { TodoInsert, TodoSelect } from "../../drizzle/schema";
+import type { Todo, TodoInsert } from "../db/schema";
 
 // Type for client-side todo data (without server-managed fields)
-export type TodoItem = TodoSelect;
+export type TodoItem = Todo;
 export type TodoCreateData = Omit<
 	TodoInsert,
 	"userId" | "id" | "createdAt" | "updatedAt"

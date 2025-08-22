@@ -227,7 +227,7 @@ importers:
         specifier: ^0.31.1
         version: 0.31.4
       drizzle-orm:
-        specifier: ^0.44.2
+        specifier: ^0.44.4
         version: 0.44.4(@types/pg@8.15.5)(postgres@3.4.7)
       framer-motion:
         specifier: ^12.18.1
@@ -299,6 +299,9 @@ importers:
       jsdom:
         specifier: ^26.1.0
         version: 26.1.0
+      lefthook:
+        specifier: ^1.7.18
+        version: 1.12.3
       tailwindcss:
         specifier: ^4.1.10
         version: 4.1.12

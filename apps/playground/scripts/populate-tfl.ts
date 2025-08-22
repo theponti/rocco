@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { db, tflCameras } from "../app/db/index";
 import formattedCameras from "../app/lib/tfl/cameras-formatted.json";
 
@@ -58,16 +59,13 @@ async function populateTflCameras() {
 }
 
 // Run the population if this file is executed directly
-if (require.main === module) {
-	populateTflCameras()
-		.then(() => {
-			console.log("Population completed!");
-			process.exit(0);
-		})
-		.catch((error) => {
-			console.error("Population failed:", error);
-			process.exit(1);
-		});
-}
 
-export { populateTflCameras };
+populateTflCameras()
+	.then(() => {
+		console.log("Population completed!");
+		process.exit(0);
+	})
+	.catch((error) => {
+		console.error("Population failed:", error);
+		process.exit(1);
+	});

@@ -2,10 +2,10 @@
 
 import { and, eq, isNotNull, sql } from "drizzle-orm";
 import { covidData, db } from "~/db";
-import type { CovidDataSelect } from "~/db/schema";
+import type { CovidData } from "~/db/schema";
 
 interface ApiResponse {
-	data: CovidDataSelect[];
+	data: CovidData[];
 	pagination: {
 		page: number;
 		limit: number;

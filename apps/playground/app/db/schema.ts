@@ -1,5 +1,6 @@
 import {
 	boolean,
+	integer,
 	pgTable,
 	real,
 	serial,
@@ -86,25 +87,8 @@ export const covidData = pgTable("covid_data", {
 		"excess_mortality_cumulative_per_million",
 	),
 });
-
-export type CovidDataSelect = typeof covidData.$inferSelect;
+export type CovidData = typeof covidData.$inferSelect;
 export type CovidDataInsert = typeof covidData.$inferInsert;
-
-export const todos = pgTable("todos", {
-	id: serial("id").primaryKey().notNull(),
-	userId: text("user_id").notNull(), // Session ID
-	project: text("project").notNull(),
-	title: text("title").notNull(),
-	start: text("start").notNull(),
-	end: text("end").notNull(),
-	duration: real("duration").notNull(),
-	completed: boolean("completed").default(false).notNull(),
-	createdAt: timestamp("created_at", { mode: "string" }).defaultNow(),
-	updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow(),
-});
-
-export type TodoSelect = typeof todos.$inferSelect;
-export type TodoInsert = typeof todos.$inferInsert;
 
 export const tflCameras = pgTable(
 	"tfl_cameras",
@@ -123,3 +107,29 @@ export const tflCameras = pgTable(
 	},
 	(table) => [unique("tfl_cameras_tfl_id_unique").on(table.tflId)],
 );
+export type TflCamera = typeof tflCameras.$inferSelect;
+
+export const todos = pgTable("todos", {
+	id: serial().primaryKey().notNull(),
+	userId: text("user_id").notNull(),
+	projectId: integer("project_id").notNull().references(() => projects.id),
+	title: text().notNull(),
+	start: text().notNull(),
+	end: text().notNull(),
+	completed: boolean().default(false).notNull(),
+	createdAt: timestamp("created_at", { mode: "string" }).defaultNow(),
+	updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow(),
+});
+export type Todo = typeof todos.$inferSelect;
+export type TodoInsert = typeof todos.$inferInsert;
+
+export const projects = pgTable("projects", {
+	id: serial().primaryKey().notNull(),
+	userId: text("user_id").notNull(),
+	name: text().notNull(),
+	description: text(),
+	createdAt: timestamp("created_at", { mode: "string" }).defaultNow(),
+	updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow(),
+});
+export type Project = typeof projects.$inferSelect;
+export type ProjectInsert = typeof projects.$inferInsert;

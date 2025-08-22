@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
-import { db, todos } from "~/db";
-import type { TodoInsert } from "~/db/schema";
+import { db, projects } from "~/db";
+import type { ProjectInsert } from "~/db/schema";
 import { commitSession, getSession } from "~/lib/session";
 
 async function getOrCreateUserId(
@@ -27,45 +27,45 @@ async function createResponseWithSession(data: any, session: any) {
 }
 
 // Data handling functions
-async function fetchUserTodos(userId: string) {
+async function fetchUserProjects(userId: string) {
 	return await db
 		.select()
-		.from(todos)
-		.where(eq(todos.userId, userId))
-		.orderBy(todos.createdAt);
+		.from(projects)
+		.where(eq(projects.userId, userId))
+		.orderBy(projects.createdAt);
 }
 
-async function createTodo(todoData: TodoInsert, userId: string) {
+async function createProject(projectData: ProjectInsert, userId: string) {
 	return await db
-		.insert(todos)
+		.insert(projects)
 		.values({
-			...todoData,
+			...projectData,
 			userId,
 		})
 		.returning()
 		.then((rows) => rows[0]);
 }
 
-async function updateTodo(
-	todoData: TodoInsert & { id: number },
+async function updateProject(
+	projectData: ProjectInsert & { id: number },
 	userId: string,
 ) {
 	return await db
-		.update(todos)
+		.update(projects)
 		.set({
-			...todoData,
+			...projectData,
 			userId,
 			updatedAt: new Date().toISOString(),
 		})
-		.where(eq(todos.id, todoData.id))
+		.where(eq(projects.id, projectData.id))
 		.returning()
 		.then((rows) => rows[0]);
 }
 
-async function deleteTodo(todoId: number) {
+async function deleteProject(projectId: number) {
 	return await db
-		.delete(todos)
-		.where(eq(todos.id, todoId))
+		.delete(projects)
+		.where(eq(projects.id, projectId))
 		.returning()
 		.then((rows) => rows[0]);
 }
@@ -74,11 +74,14 @@ async function deleteTodo(todoId: number) {
 export async function loader({ request }: LoaderFunctionArgs) {
 	try {
 		const { userId, session } = await getOrCreateUserId(request);
-		const userTodos = await fetchUserTodos(userId);
-		return createResponseWithSession(userTodos, session);
+		const userProjects = await fetchUserProjects(userId);
+		return createResponseWithSession(userProjects, session);
 	} catch (error) {
-		console.error("Error fetching todos:", error);
-		return Response.json({ error: "Failed to fetch todos" }, { status: 500 });
+		console.error("Error fetching projects:", error);
+		return Response.json(
+			{ error: "Failed to fetch projects" },
+			{ status: 500 },
+		);
 	}
 }
 
@@ -89,20 +92,20 @@ export async function action({ request }: ActionFunctionArgs) {
 
 		switch (request.method) {
 			case "POST": {
-				const body = (await request.json()) as TodoInsert;
-				const newTodo = await createTodo(body, userId);
-				return createResponseWithSession(newTodo, session);
+				const body = (await request.json()) as ProjectInsert;
+				const newProject = await createProject(body, userId);
+				return createResponseWithSession(newProject, session);
 			}
 
 			case "PUT": {
-				const body = (await request.json()) as TodoInsert & { id: number };
-				const updatedTodo = await updateTodo(body, userId);
+				const body = (await request.json()) as ProjectInsert & { id: number };
+				const updatedProject = await updateProject(body, userId);
 
-				if (!updatedTodo) {
-					return Response.json({ error: "Todo not found" }, { status: 404 });
+				if (!updatedProject) {
+					return Response.json({ error: "Project not found" }, { status: 404 });
 				}
 
-				return createResponseWithSession(updatedTodo, session);
+				return createResponseWithSession(updatedProject, session);
 			}
 
 			case "DELETE": {
@@ -111,15 +114,15 @@ export async function action({ request }: ActionFunctionArgs) {
 
 				if (!id) {
 					return Response.json(
-						{ error: "Todo ID is required" },
+						{ error: "Project ID is required" },
 						{ status: 400 },
 					);
 				}
 
-				const deletedTodo = await deleteTodo(parseInt(id));
+				const deletedProject = await deleteProject(parseInt(id));
 
-				if (!deletedTodo) {
-					return Response.json({ error: "Todo not found" }, { status: 404 });
+				if (!deletedProject) {
+					return Response.json({ error: "Project not found" }, { status: 404 });
 				}
 
 				return createResponseWithSession({ success: true }, session);

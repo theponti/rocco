@@ -63,4 +63,5 @@ export default [
 	// API routes
 	route("/api/countries/list", "routes/api.countries.list.ts"),
 	route("/api/todos", "routes/api.todos.ts"),
+	route("/api/projects", "routes/api.projects.ts"),
 ] satisfies RouteConfig;
