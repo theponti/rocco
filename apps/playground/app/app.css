@@ -14,6 +14,7 @@
 	/* Royal Blue */
 	--primary: rgba(0, 0, 128, 0.8);
 	--primary-foreground: rgba(255, 255, 255, 1);
+	--destructive: rgba(255, 0, 0, 0.8);
 
 	--background: oklch(0.985 0.002 247.839);
 	--foreground: oklch(0.13 0.028 261.692);

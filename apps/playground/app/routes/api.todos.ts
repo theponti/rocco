@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
-import { db, todos } from "~/db";
+import { db, todos, projects } from "~/db";
 import type { TodoInsert } from "~/db/schema";
 import { commitSession, getSession } from "~/lib/session";
 
@@ -26,11 +26,22 @@ async function createResponseWithSession(data: any, session: any) {
 	});
 }
 
-// Data handling functions
 async function fetchUserTodos(userId: string) {
 	return await db
-		.select()
+		.select({
+			id: todos.id,
+			userId: todos.userId,
+			projectId: todos.projectId,
+			title: todos.title,
+			start: todos.start,
+			end: todos.end,
+			completed: todos.completed,
+			createdAt: todos.createdAt,
+			updatedAt: todos.updatedAt,
+			projectName: projects.name,
+		})
 		.from(todos)
+		.leftJoin(projects, eq(todos.projectId, projects.id))
 		.where(eq(todos.userId, userId))
 		.orderBy(todos.createdAt);
 }
@@ -70,7 +81,6 @@ async function deleteTodo(todoId: number) {
 		.then((rows) => rows[0]);
 }
 
-// Loader function for GET requests
 export async function loader({ request }: LoaderFunctionArgs) {
 	try {
 		const { userId, session } = await getOrCreateUserId(request);
@@ -82,7 +92,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 	}
 }
 
-// Action function for POST, PUT, DELETE requests
 export async function action({ request }: ActionFunctionArgs) {
 	try {
 		const { userId, session } = await getOrCreateUserId(request);

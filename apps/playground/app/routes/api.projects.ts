@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
-import { db, projects } from "~/db";
+import { db, projects, todos } from "~/db";
 import type { ProjectInsert } from "~/db/schema";
 import { commitSession, getSession } from "~/lib/session";
 
@@ -29,9 +29,19 @@ async function createResponseWithSession(data: any, session: any) {
 // Data handling functions
 async function fetchUserProjects(userId: string) {
 	return await db
-		.select()
+		.select({
+			id: projects.id,
+			userId: projects.userId,
+			name: projects.name,
+			description: projects.description,
+			createdAt: projects.createdAt,
+			updatedAt: projects.updatedAt,
+			taskCount: sql<number>`COALESCE(COUNT(${todos.id}), 0)`.as('taskCount'),
+		})
 		.from(projects)
+		.leftJoin(todos, eq(projects.id, todos.projectId))
 		.where(eq(projects.userId, userId))
+		.groupBy(projects.id, projects.userId, projects.name, projects.description, projects.createdAt, projects.updatedAt)
 		.orderBy(projects.createdAt);
 }
 

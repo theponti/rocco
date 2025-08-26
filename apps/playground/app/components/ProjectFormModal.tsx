@@ -1,3 +1,4 @@
+import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import {
@@ -63,7 +64,9 @@ export function ProjectFormModal({
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				{trigger || <Button size="sm">Create New Project</Button>}
+				<Button size="sm">
+					<PlusIcon /> New Project
+				</Button>
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">
 				<DialogHeader>

@@ -34,4 +34,9 @@ export const routes = [
 		label: "To-Do App",
 		description: "Simple To-Do List Application",
 	},
+	{
+		path: "/projects",
+		label: "Projects",
+		description: "Project management with task counts",
+	},
 ];

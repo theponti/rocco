@@ -24,7 +24,7 @@ export const cleanHtmlFromInstructions = (htmlString: string): string => {
 	const tempDiv = document.createElement("div");
 	tempDiv.innerHTML = htmlString;
 
-	// Get text content (removes all HTML tags)
+	// Get text content (removes all HTML tags and decodes HTML entities)
 	const text = tempDiv.textContent || tempDiv.innerText || "";
 
 	return text;

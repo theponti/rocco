@@ -7,6 +7,8 @@ export default [
 	route("/vector-search", "routes/VectorSearchPage.tsx"),
 	route("/google-maps", "routes/google-maps.tsx"),
 	route("/to-do", "routes/to-do.tsx"),
+	route("/tasks/:projectId", "routes/tasks.$projectId.tsx"),
+	route("/projects", "routes/projects.tsx"),
 
 	// TFL cameras
 	route("/api/tfl", "routes/api.tfl.ts"),

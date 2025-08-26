@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Project, ProjectInsert } from "../db/schema";
 
 // Type for client-side project data (without server-managed fields)
-export type ProjectItem = Project;
+export type ProjectItem = Project & { taskCount: number };
 export type ProjectCreateData = Omit<
 	ProjectInsert,
 	"userId" | "id" | "createdAt" | "updatedAt"

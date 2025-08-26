@@ -1,14 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Todo, TodoInsert } from "../db/schema";
 
-// Type for client-side todo data (without server-managed fields)
-export type TodoItem = Todo;
+export type TodoItem = Todo & {
+	projectName?: string;
+};
 export type TodoCreateData = Omit<
 	TodoInsert,
 	"userId" | "id" | "createdAt" | "updatedAt"
 >;
 
-// Custom hooks for todo operations
 export const useTodos = () => {
 	return useQuery({
 		queryKey: ["todos"],
