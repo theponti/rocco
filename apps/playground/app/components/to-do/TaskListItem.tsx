@@ -3,9 +3,9 @@ import { Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
-import { TaskFormModal } from "./TaskFormModal";
 import type { TodoCreateData, TodoItem } from "~/lib/todos";
 import { useUpdateTodo } from "~/lib/todos";
+import { TaskFormModal } from "./TaskFormModal";
 
 interface TaskListItemProps {
 	todo: TodoItem;

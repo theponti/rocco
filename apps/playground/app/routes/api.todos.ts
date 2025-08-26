@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
-import { db, todos, projects } from "~/db";
+import { db, projects, todos } from "~/db";
 import type { TodoInsert } from "~/db/schema";
 import { commitSession, getSession } from "~/lib/session";
 

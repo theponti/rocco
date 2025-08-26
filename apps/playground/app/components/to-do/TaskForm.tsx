@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Select } from "~/components/ui/select";
+import { useProjects } from "~/lib/projects";
 import type { TodoItem } from "~/lib/todos";
 import { useCreateTodo } from "~/lib/todos";
-import { useProjects } from "~/lib/projects";
 
 interface TaskFormProps {
 	onTodoCreated?: (todo: TodoItem) => void;

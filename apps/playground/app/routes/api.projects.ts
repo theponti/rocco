@@ -36,12 +36,19 @@ async function fetchUserProjects(userId: string) {
 			description: projects.description,
 			createdAt: projects.createdAt,
 			updatedAt: projects.updatedAt,
-			taskCount: sql<number>`COALESCE(COUNT(${todos.id}), 0)`.as('taskCount'),
+			taskCount: sql<number>`COALESCE(COUNT(${todos.id}), 0)`.as("taskCount"),
 		})
 		.from(projects)
 		.leftJoin(todos, eq(projects.id, todos.projectId))
 		.where(eq(projects.userId, userId))
-		.groupBy(projects.id, projects.userId, projects.name, projects.description, projects.createdAt, projects.updatedAt)
+		.groupBy(
+			projects.id,
+			projects.userId,
+			projects.name,
+			projects.description,
+			projects.createdAt,
+			projects.updatedAt,
+		)
 		.orderBy(projects.createdAt);
 }
 

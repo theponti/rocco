@@ -1,9 +1,9 @@
+import { ArrowLeft } from "lucide-react";
+import { Link, useParams } from "react-router";
 import TaskForm from "~/components/to-do/TaskForm";
 import { TaskList } from "~/components/to-do/TaskList";
-import { useDeleteTodo, useTodos } from "~/lib/todos";
 import { useProjects } from "~/lib/projects";
-import { useParams, Link } from "react-router";
-import { ArrowLeft } from "lucide-react";
+import { useDeleteTodo, useTodos } from "~/lib/todos";
 
 export default function TasksByProject() {
 	const { projectId } = useParams();

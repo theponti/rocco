@@ -1,8 +1,8 @@
+import { ProjectList } from "~/components/ProjectList";
 import TaskForm from "~/components/to-do/TaskForm";
 import { TaskList } from "~/components/to-do/TaskList";
-import { ProjectList } from "~/components/ProjectList";
-import { useDeleteTodo, useTodos } from "~/lib/todos";
 import { useProjects } from "~/lib/projects";
+import { useDeleteTodo, useTodos } from "~/lib/todos";
 
 export default function App() {
 	const { data: todos = [], isLoading, error } = useTodos();

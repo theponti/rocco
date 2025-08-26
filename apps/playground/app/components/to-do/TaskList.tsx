@@ -1,6 +1,6 @@
+import { ListChecks } from "lucide-react";
 import type { TodoItem } from "~/lib/todos";
 import { TaskListItem } from "./TaskListItem";
-import { ListChecks } from "lucide-react";
 
 interface TaskListProps {
 	todos: TodoItem[];
